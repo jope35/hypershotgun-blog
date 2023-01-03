@@ -1,0 +1,41 @@
+project:
+  type: website
+  preview:
+    host: "127.0.0.1"
+    port: 4200
+    browser: true
+    watch-inputs: true
+
+website:
+  title: "hyper-shotgun"
+  description: yo
+  site-url: www.hypershotgun.com
+  favicon: favicons/hyper_favi.png
+  image: favicons/android-chrome-512x512.png
+  navbar:
+    logo: favicons/apple-touch-icon.png
+    right:
+      - about.qmd
+      - icon: linkedin
+        # text: LinkedIn
+        href: https://www.linkedin.com/in/joostdetheije/
+      - icon: github
+        # text: Github
+        href: https://github.com/jope35
+  # page-footer:
+  #   center:
+  #     - text: "About"
+  #       href: about.qmd
+  search:
+    location: navbar
+    type: textbox
+  # reader-mode: true
+format:
+  html:
+    theme:
+      dark: darkly
+      light: flatly
+    css: styles.css
+
+execute:
+  freeze: auto
