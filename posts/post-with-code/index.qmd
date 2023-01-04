@@ -75,6 +75,3 @@ regular_formatting = [
 ]
 
 ```
-
-
-{{< elevator >}}

@@ -1,16 +1,9 @@
 ---
-title: "post with math"
+title: "Post with math"
 author: "Joost de Theije"
 date: "2022-12-30"
 image: "image.jpg"
-filters:
-    - social-share
-share:
-    permalink: "https://www.hypershotgun.com/"
-    description: "the hypershotgun blog"
-    twitter: true
-    linkedin: true
-    email: true
+
 ---
 
 this is a post with math jax, so

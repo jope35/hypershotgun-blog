@@ -1,5 +1,5 @@
 ---
-title: "About"
+title: "🤖 About"
 image: favicons/HS_logo.png
 about:
   template: solana
@@ -16,10 +16,12 @@ about:
 
 ---
 ## About
+- Machine Learning Scientist 🤖
+- loves to puzzle 🧩
+- Amsterdam area 🇳🇱🇪🇺
+
+<!-- ## Education
 
 
-## Education
 
-
-
-## Experience
+## Experience -->

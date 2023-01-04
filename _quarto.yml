@@ -11,16 +11,16 @@ website:
   description: yo
   site-url: www.hypershotgun.com
   favicon: favicons/hyper_favi.png
-  image: favicons/android-chrome-512x512.png
+  image: favicons/HS_logo.png
   navbar:
     logo: favicons/apple-touch-icon.png
     right:
       - about.qmd
       - icon: linkedin
-        # text: LinkedIn
+        text: LinkedIn
         href: https://www.linkedin.com/in/joostdetheije/
       - icon: github
-        # text: Github
+        text: Github
         href: https://github.com/jope35
   # page-footer:
   #   center:
@@ -28,10 +28,11 @@ website:
   #       href: about.qmd
   search:
     location: navbar
-    type: textbox
-  # reader-mode: true
+    type: overlay
+
 format:
   html:
+    highlight-style: ayu #ayu, atom-one, arrow
     theme:
       dark: darkly
       light: flatly
