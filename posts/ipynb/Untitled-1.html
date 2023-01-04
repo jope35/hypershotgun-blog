@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.280">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joost de Theije">
+<meta name="dcterms.date" content="2022-12-30">
+
+<title>hyper-shotgun - Post with ipynb</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../favicons/apple-touch-icon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">hyper-shotgun</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">🤖 About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text">LinkedIn</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jope35"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text">Github</span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Post with ipynb</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joost de Theije </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 30, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#imports" id="toc-imports" class="nav-link active" data-scroll-target="#imports">imports</a></li>
+  <li><a href="#print-out" id="toc-print-out" class="nav-link" data-scroll-target="#print-out">print out</a></li>
+  <li><a href="#figures" id="toc-figures" class="nav-link" data-scroll-target="#figures">Figures</a></li>
+  <li><a href="#lorem-ipsum" id="toc-lorem-ipsum" class="nav-link" data-scroll-target="#lorem-ipsum">lorem ipsum</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">imports</h2>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-darkgrid'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="print-out" class="level2">
+<h2 class="anchored" data-anchor-id="print-out">print out</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'hello world'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>hello world</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">all</span> <span class="op">=</span> np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">10</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">all</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Untitled-1_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">A line plot on a cartesian axis</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="figures" class="level2">
+<h2 class="anchored" data-anchor-id="figures">Figures</h2>
+<p>this is some text in the cell</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_all <span class="op">=</span> pd.DataFrame(<span class="bu">all</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df_all.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.111111</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.222222</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.333333</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.444444</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="lorem-ipsum" class="level2">
+<h2 class="anchored" data-anchor-id="lorem-ipsum">lorem ipsum</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam quis molestie velit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec condimentum justo vitae dapibus aliquam. Curabitur pellentesque orci et sapien sodales, sed blandit dolor sagittis. Etiam gravida diam eget sapien viverra dapibus. In hac habitasse platea dictumst. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce a massa turpis. Aenean egestas orci nunc, ac faucibus elit placerat vel. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+<p>Nullam eget turpis ut odio tincidunt placerat at eget sem. Nunc ut nunc ultrices, suscipit mi eget, scelerisque lectus. Nam malesuada orci a ultrices aliquam. Vivamus bibendum elit sed mollis ultrices. Cras viverra elit id porta accumsan. Nulla vel dolor et quam venenatis mollis. Fusce at velit tempor, tincidunt orci vitae, consectetur mi. Etiam porttitor ante ipsum, sit amet commodo mi maximus sed. Nunc tincidunt urna quis enim auctor, a condimentum felis fermentum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+<p>Cras placerat egestas nibh, sit amet molestie odio aliquet ac. Donec ut urna elementum, vulputate erat vel, tristique ante. Sed nec dui libero. Nulla scelerisque varius eleifend. Nullam non leo mattis, interdum orci ut, efficitur lorem. Duis et lacus quis erat hendrerit dapibus nec quis mi. Nunc mattis ornare dui non semper. Ut facilisis ac nulla nec aliquet. Praesent tristique lacinia aliquet.</p>
+<p>Phasellus fringilla quam ut nisl bibendum malesuada. Fusce mattis eu lacus nec fringilla. Quisque vitae erat dignissim, pulvinar turpis laoreet, ultricies est. Vestibulum dignissim at tortor aliquam volutpat. Pellentesque ultrices malesuada interdum. In auctor fermentum commodo. Aliquam molestie elementum mi. Aenean elit lorem, tristique ut mattis sed, vestibulum et ipsum. Suspendisse sed libero pharetra elit finibus viverra. In hac habitasse platea dictumst. In mollis bibendum dapibus. Vivamus nec nisl ligula. Cras malesuada facilisis odio sit amet congue. Pellentesque a dignissim enim, eu mattis velit.</p>
+<p>Suspendisse convallis, eros vitae dictum posuere, lorem tortor finibus lectus, nec eleifend ex justo non mauris. Proin dui magna, efficitur et leo eget, venenatis elementum sapien. Donec commodo nibh bibendum sagittis facilisis. Ut nec sollicitudin mi. Cras leo elit, viverra aliquet purus vitae, hendrerit cursus arcu. Fusce vehicula elementum nibh, vitae dapibus ligula viverra at. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla suscipit augue sit amet lorem pulvinar tempor. Donec sit amet imperdiet lorem. Cras odio lectus, pellentesque sit amet turpis et, aliquam facilisis quam. Mauris cursus fringilla sapien quis condimentum. Aenean venenatis vestibulum luctus. Praesent viverra velit eget tortor fermentum, sit amet malesuada ipsum tempus. Mauris in lorem ultricies mi efficitur posuere non eget felis. Sed efficitur lacinia nisi, quis semper ante pretium in. Sed arcu nunc, posuere eu ante a, tincidunt aliquam mauris.</p>
+<p>Nunc vehicula sollicitudin iaculis. Nulla eu metus ac eros tincidunt ornare et finibus mauris. Ut commodo elit sit amet enim ornare, non gravida ligula finibus. Aliquam semper molestie sapien, et mattis neque laoreet eu. Donec cursus sapien ut enim iaculis, id porta libero ultrices. Nunc non dignissim arcu. Aenean porta turpis ipsum, at facilisis ante dapibus in. Nulla cursus, elit id imperdiet pretium, nibh nisi feugiat erat, sed semper risus lorem eu odio.</p>
+<p>Nullam eu semper libero. In hac habitasse platea dictumst. Mauris a justo vitae magna commodo sodales. In semper rhoncus magna, ac cursus ex hendrerit dapibus. Sed feugiat ipsum in felis fermentum semper vel quis nisi. Suspendisse dictum ante nisi, vel tincidunt est luctus sit amet. Etiam tristique maximus lectus id dignissim. Vestibulum vulputate lobortis venenatis. Ut molestie vitae sem id ultricies. Ut feugiat posuere metus, quis consequat metus maximus ac. Nunc sapien felis, tincidunt nec efficitur sit amet, volutpat eu dui. Aliquam erat volutpat.</p>
+<p>Donec a elit pretium, auctor turpis eget, placerat mi. Nullam nec consequat turpis. Curabitur leo turpis, varius in aliquet nec, suscipit et ex. Aliquam ut pellentesque ex. Proin vel velit vitae elit volutpat convallis. Nam rutrum lacinia eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer et placerat diam. Morbi et fringilla urna. Phasellus feugiat pharetra nulla a sollicitudin. Duis eget mollis mauris, sollicitudin rutrum odio. Duis lobortis vestibulum diam a vehicula. Nullam eget pulvinar leo, nec pharetra ligula. Integer condimentum libero metus, a consequat metus accumsan at. Donec laoreet metus non maximus fermentum.</p>
+<p>Aliquam erat volutpat. Aliquam ornare ante mi, eget lacinia nunc ultrices quis. Morbi suscipit, justo eget vehicula sagittis, nibh lorem finibus arcu, ut efficitur lorem ante accumsan magna. Proin eget dui pellentesque, gravida orci viverra, vestibulum sem. Cras scelerisque tincidunt nunc, in egestas augue semper in. Nunc sapien neque, consequat et pretium nec, imperdiet ornare quam. Morbi sem mi, fermentum sit amet sem non, dictum ullamcorper quam. Etiam scelerisque porttitor quam vitae cursus. Suspendisse quis est ac erat scelerisque dignissim. Aliquam at neque dolor. Vestibulum venenatis enim et mauris imperdiet, sed imperdiet enim euismod. Sed leo nisi, mattis nec iaculis ac, rhoncus non est. Sed quis mauris sit amet massa tempor iaculis ac in nibh. Nam sit amet nisl vel turpis malesuada ultrices a et turpis.</p>
+<p>Mauris vulputate, felis vehicula pretium dictum, nisl dui placerat nisl, non accumsan urna justo et felis. Cras finibus aliquet sem, et hendrerit leo ornare nec. Cras in nisl quis ante pellentesque dapibus vitae at lorem. Vestibulum mauris felis, commodo et viverra quis, sollicitudin vitae urna. Sed est ligula, aliquam id molestie nec, tempor eget turpis. Phasellus lacinia libero et magna lacinia, fringilla ultricies odio malesuada. Donec congue dapibus neque vel semper. Phasellus quis odio faucibus, hendrerit sem sit amet, finibus quam. Nunc laoreet consequat purus, id elementum ipsum auctor id.</p>
+<p>Nulla facilisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus finibus scelerisque ante, nec dignissim libero fermentum a. Curabitur eu ipsum ex. Sed et imperdiet diam. Curabitur aliquet molestie erat, sit amet iaculis velit tincidunt sit amet. Duis varius nisl vitae urna tincidunt dignissim. Duis venenatis, augue vitae rutrum blandit, ipsum ipsum semper erat, eu rutrum felis felis et odio. Morbi quis ornare neque. Aenean tortor mi, luctus eget dui a, gravida fermentum elit. Maecenas sollicitudin pretium augue, eu blandit leo ultrices non. Ut consectetur, mi sit amet hendrerit ultricies, ex lorem cursus elit, nec euismod lacus mi ut diam.</p>
+<p>Nam maximus convallis ultricies. Vestibulum metus ligula, lacinia sit amet ullamcorper ac, ullamcorper eu augue. Donec pharetra volutpat porta. Aenean nec est eu lacus varius efficitur at sed dolor. Pellentesque porttitor, arcu ac rutrum volutpat, ipsum turpis sagittis dolor, ut tincidunt metus ipsum nec erat. Cras eu ornare lacus. Vivamus ex est, semper sit amet ultrices ut, aliquam sit amet lorem. Quisque posuere diam vitae cursus placerat. Aenean sit amet mi tempus, interdum neque fermentum, egestas est. Nulla consectetur, turpis ac mollis gravida, ligula tortor dapibus arcu, vitae interdum turpis arcu sit amet massa. In varius nibh vitae neque gravida volutpat. Suspendisse in lectus mollis, semper purus a, hendrerit tellus. Morbi vel nunc interdum, consectetur nulla eget, aliquet magna.</p>
+<p>Nulla sagittis placerat dapibus. Nulla porttitor sagittis egestas. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec euismod, lacus pellentesque tempor rhoncus, nulla massa tincidunt nulla, id viverra sem tortor quis odio. Phasellus eu laoreet risus. Nunc ultrices, nisl ac volutpat vehicula, nisl massa consectetur nulla, non dapibus mauris nulla ut nisi. Duis ut justo viverra, pulvinar ex sed, faucibus purus. Donec dapibus nisl ac dictum aliquet. Ut venenatis, nibh eget pulvinar tempus, augue sem placerat odio, ac semper diam enim quis eros. Sed in neque sed magna maximus rhoncus. Aliquam sapien nisl, commodo quis faucibus at, aliquam sit amet nisi. Aenean lacinia mattis nulla vitae dictum. Donec sollicitudin tincidunt dui, a varius augue tempus sit amet. Nulla sed sollicitudin velit. Nullam quis diam quis ligula iaculis aliquet.</p>
+<p>Praesent mattis semper metus sit amet sagittis. In erat metus, maximus et ligula sit amet, semper porta ligula. Proin vitae mi elit. Donec malesuada mi sollicitudin nisl accumsan facilisis. Morbi consectetur urna eu ligula fermentum, id tempus orci tempor. Ut ligula massa, dapibus id felis in, rhoncus porttitor neque. Pellentesque massa odio, sollicitudin id varius quis, ultrices eu lacus. Morbi aliquam arcu mi, at volutpat nibh eleifend ac. Sed non pharetra diam, vel fringilla est. Vestibulum id lorem diam. Nulla laoreet, urna id lobortis facilisis, neque quam lobortis urna, eu aliquet mi arcu quis orci.</p>
+<p>Nullam lectus nunc, tristique et tincidunt vel, varius maximus orci. Morbi suscipit iaculis condimentum. Praesent pharetra iaculis sapien, vitae rhoncus massa varius id. Vestibulum id blandit diam. Curabitur blandit, magna id molestie eleifend, quam nulla feugiat metus, ac condimentum lorem lacus sed nisl. Ut quis vestibulum dui. Aliquam magna purus, efficitur vitae dignissim vitae, pharetra id ante. Morbi tortor quam, euismod nec faucibus vitae, tristique eget nisi.</p>
+<p>Sed ultricies ac augue quis pulvinar. Sed eget nulla aliquet, accumsan magna eu, lobortis magna. Aenean a sapien eget ante maximus commodo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer vitae sem eros. Integer convallis vehicula tempor. Phasellus quis dapibus quam. Maecenas nec rhoncus arcu. Nunc porttitor imperdiet dui eu venenatis. Phasellus dapibus non ligula porta finibus. Suspendisse vulputate sollicitudin diam, bibendum aliquet augue mollis pharetra. Sed nec nulla sed ante ornare placerat.</p>
+<p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas nec pulvinar massa. Fusce ac tristique nunc, ut feugiat massa. Nullam accumsan libero ac ullamcorper gravida. Nunc sit amet pulvinar orci. Aliquam posuere dui enim, vel volutpat ex tincidunt vulputate. Phasellus elementum molestie euismod. Nulla id ex turpis.</p>
+<p>Suspendisse ut vulputate lectus. Sed id magna ac lorem tristique blandit eu at orci. Morbi ac nulla lacinia, congue augue sit amet, convallis lectus. Vestibulum mollis accumsan turpis, ac finibus urna vulputate ac. Nunc imperdiet turpis at elit vehicula fringilla. Phasellus placerat convallis leo, faucibus consectetur lorem. Cras non aliquam lectus. Nam nibh ex, gravida non congue in, pulvinar ut ipsum.</p>
+<p>Aliquam massa ex, lacinia mattis rutrum non, tincidunt at nibh. Vestibulum nec dolor euismod, pulvinar libero sed, porta sapien. Aenean ullamcorper et nibh a sollicitudin. Integer porttitor velit et sem volutpat eleifend. Praesent mollis ultrices risus, at varius sem semper ac. Aliquam quis est ut urna varius dictum tincidunt et leo. Sed id justo quis enim lacinia lacinia. In vel magna et nulla aliquet mollis quis nec nunc. Integer venenatis orci ut mauris gravida feugiat. Vestibulum malesuada augue augue, vel volutpat arcu tincidunt vitae. In lobortis odio ac est rhoncus venenatis. Vivamus mollis risus eu velit semper mattis. Mauris nec augue dignissim, ultrices ligula sed, imperdiet ex. In hac habitasse platea dictumst.</p>
+<p>Vestibulum posuere augue non maximus vulputate. Vestibulum bibendum neque at lorem posuere ornare. Mauris pretium elit a nibh egestas, vel elementum dolor convallis. Mauris varius felis ut nulla dictum, eget bibendum orci venenatis. Proin neque erat, rutrum ac pellentesque eu, dapibus vel enim. Integer sed mi porta sem consectetur condimentum id eu nibh. Integer in sodales diam. Vestibulum aliquet tincidunt justo, at tincidunt massa placerat in. Mauris ante nunc, tempus in lectus sed, placerat scelerisque dui. Nulla non erat ut quam eleifend pulvinar sed vitae purus. Suspendisse consequat, felis vel sollicitudin dictum, nunc ligula facilisis ex, gravida ultricies diam dui sed risus. Sed vulputate purus ac eros posuere, ut faucibus magna venenatis. Duis blandit nulla id feugiat ultricies. Mauris felis lorem, fermentum eget odio sit amet, sollicitudin auctor elit. Sed non feugiat leo, non dapibus massa. Vestibulum pellentesque leo eget nulla rutrum volutpat.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'alternate';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
