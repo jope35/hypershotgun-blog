@@ -13,7 +13,7 @@ website:
   favicon: favicons/hyper_favi.png
   image: favicons/HS_logo.png
   navbar:
-    logo: favicons/apple-touch-icon.png
+    logo: apple-touch-icon.png
     right:
       - about.qmd
       - icon: linkedin
