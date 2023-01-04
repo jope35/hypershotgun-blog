@@ -1,1 +1,1 @@
-Sitemap: www.hypershotgun.com/sitemap.xml
+Sitemap: https://jope35.github.io/hypershotgun-blog/sitemap.xml
