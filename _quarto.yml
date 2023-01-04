@@ -8,8 +8,8 @@ project:
 
 website:
   title: "hyper-shotgun"
-  description: yo
-  site-url: www.hypershotgun.com
+  description: none
+  site-url: https://jope35.github.io/hypershotgun-blog/
   favicon: favicons/hyper_favi.png
   image: favicons/HS_logo.png
   navbar:
