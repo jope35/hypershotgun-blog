@@ -6,3 +6,12 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true
+
+format:
+  html:
+    code-fold: show
+    code-link: true
+    code-line-numbers: true
+    toc: true
+    toc-title: "Table of Contents"
+    link-external-icon: true

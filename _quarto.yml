@@ -6,6 +6,9 @@ project:
     browser: true
     watch-inputs: true
 
+metadata-files:
+  - posts/_metadata.yml
+
 website:
   title: "hyper-shotgun"
   description: none
