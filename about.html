@@ -108,7 +108,15 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">🤖 About</h1>
+                      </div>
+  </div>
+  <div class="quarto-title-meta">
+    </div>
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
@@ -116,13 +124,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-about-solana column-body">
   <div class="about-entity">
     <div class="entity-contents">
-      <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">🤖 About</h1>
-</div>
-<div class="quarto-title-meta">
-  </div>
-</header> <div class="about-links">
+       <div class="about-links">
   <a href="https://twitter.com/joostdetheije" class="about-link">
     <i class="bi bi-twitter"></i>
      <span class="about-link-text">Twitter</span>
@@ -136,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
      <span class="about-link-text">Github</span>
   </a>
 </div>
-      <div class="about-contents"><main class="content" id="quarto-document-content">
+      <div class="about-contents"><main class="content quarto-banner-title-block" id="quarto-document-content">
 <section id="about" class="level2">
 <h2 data-anchor-id="about">About</h2>
 <ul>
@@ -395,6 +397,20 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp(/https:\/\/jope35\.github\.io\/hypershotgun-blog\//);
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
 </script>
 </div> <!-- /content -->

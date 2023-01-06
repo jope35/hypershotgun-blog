@@ -32,21 +32,21 @@
     "href": "posts/ipynb/Untitled-1.html",
     "title": "Post with ipynb",
     "section": "",
-    "text": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\nplt.style.use('seaborn-darkgrid')"
+    "text": "Code\nimport matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\nplt.style.use('seaborn-darkgrid')"
   },
   {
     "objectID": "posts/ipynb/Untitled-1.html#print-out",
     "href": "posts/ipynb/Untitled-1.html#print-out",
     "title": "Post with ipynb",
     "section": "print out",
-    "text": "print out\n\nprint('hello world')\n\nhello world\n\n\n\nall = np.linspace(0,1,10)\nplt.plot(all)\n\n\n\n\nA line plot on a cartesian axis"
+    "text": "print out\n\n\nCode\nprint('hello world')\n\n\nhello world\n\n\n\n\nCode\nall = np.linspace(0,1,10)\nplt.plot(all)\n\n\n\n\n\nA line plot on a cartesian axis"
   },
   {
     "objectID": "posts/ipynb/Untitled-1.html#figures",
     "href": "posts/ipynb/Untitled-1.html#figures",
     "title": "Post with ipynb",
     "section": "Figures",
-    "text": "Figures\nthis is some text in the cell\n\ndf_all = pd.DataFrame(all)\ndf_all.head()\n\n\n\n\n\n  \n    \n      \n      0\n    \n  \n  \n    \n      0\n      0.000000\n    \n    \n      1\n      0.111111\n    \n    \n      2\n      0.222222\n    \n    \n      3\n      0.333333\n    \n    \n      4\n      0.444444"
+    "text": "Figures\nthis is some text in the cell\n\n\nCode\ndf_all = pd.DataFrame(all)\ndf_all.head()\n\n\n\n\n\n\n  \n    \n      \n      0\n    \n  \n  \n    \n      0\n      0.000000\n    \n    \n      1\n      0.111111\n    \n    \n      2\n      0.222222\n    \n    \n      3\n      0.333333\n    \n    \n      4\n      0.444444"
   },
   {
     "objectID": "posts/ipynb/Untitled-1.html#lorem-ipsum",

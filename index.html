@@ -160,7 +160,9 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page" id="quarto-document-content">
 
@@ -173,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1672358400000" data-listing-file-modified-sort="1672863742517" data-listing-reading-time-sort="0.06">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1672358400000" data-listing-file-modified-sort="1672993038012" data-listing-reading-time-sort="0.06">
 <div class="thumbnail">
 <p><a href="./posts/mathjax/index.html"> <img src="./posts/mathjax/image.jpg" class="thumnail-image"> </a></p>
 </div>
@@ -204,7 +206,7 @@ Joost de Theije
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1672358400000" data-listing-file-modified-sort="1672863742517" data-listing-reading-time-sort="9.45">
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1672358400000" data-listing-file-modified-sort="1672993038012" data-listing-reading-time-sort="9.45">
 <div class="thumbnail">
 <p><a href="./posts/ipynb/Untitled-1.html"> <img src="./posts/ipynb/image.jpg" class="thumnail-image"> </a></p>
 </div>
@@ -235,7 +237,7 @@ Joost de Theije
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1672272000000" data-listing-file-modified-sort="1672863742517" data-listing-reading-time-sort="1.26">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1672272000000" data-listing-file-modified-sort="1672993038012" data-listing-reading-time-sort="1.26">
 <div class="thumbnail">
 <p><a href="./posts/post-with-code/index.html"> <img src="./posts/post-with-code/image.jpg" class="thumnail-image"> </a></p>
 </div>
@@ -266,7 +268,7 @@ Harlow Malloc
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1672012800000" data-listing-file-modified-sort="1672863742517" data-listing-reading-time-sort="0.16">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1672012800000" data-listing-file-modified-sort="1672993038012" data-listing-reading-time-sort="0.16">
 <div class="thumbnail">
 <p><a href="./posts/welcome/index.html"> <img src="./posts/welcome/thumbnail.jpg" class="thumnail-image"> </a></p>
 </div>
@@ -548,6 +550,20 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp(/https:\/\/jope35\.github\.io\/hypershotgun-blog\//);
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // default icon
+          link.classList.add("external");
+      }
+    }
 });
 </script>
 </div> <!-- /content -->
