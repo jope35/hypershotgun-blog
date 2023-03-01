@@ -9,9 +9,13 @@ title-block-banner: true
 
 format:
   html:
-    code-fold: show
+    code-fold: true
     code-link: true
     code-line-numbers: true
     toc: true
     toc-title: "Table of Contents"
     link-external-icon: true
+    number-sections: true
+    number-depth: 3
+    fig-align: center
+    # extract-media: "./extract_media"
