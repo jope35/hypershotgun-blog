@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joost de Theije">
+<meta name="dcterms.date" content="2023-01-05">
+
+<title>hyper-shotgun - Boring linear forecast</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">hyper-shotgun</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">🤖 About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text">LinkedIn</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jope35"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text">Github</span></a>
+  </li>  
+</ul>
+              <div class="quarto-toggle-container">
+                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+              </div>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Boring linear forecast</h1>
+            <p class="subtitle lead">improving performance by adding some dummies</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joost de Theije </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 5, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link active" data-scroll-target="#tldr"><span class="toc-section-number">1</span>  TLDR;</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction"><span class="toc-section-number">2</span>  Introduction</a></li>
+  <li><a href="#imports" id="toc-imports" class="nav-link" data-scroll-target="#imports"><span class="toc-section-number">3</span>  Imports</a></li>
+  <li><a href="#reading-in-the-data" id="toc-reading-in-the-data" class="nav-link" data-scroll-target="#reading-in-the-data"><span class="toc-section-number">4</span>  Reading in the data</a></li>
+  <li><a href="#train-test-split" id="toc-train-test-split" class="nav-link" data-scroll-target="#train-test-split"><span class="toc-section-number">5</span>  Train-test split</a></li>
+  <li><a href="#setting-up-the-regression" id="toc-setting-up-the-regression" class="nav-link" data-scroll-target="#setting-up-the-regression"><span class="toc-section-number">6</span>  Setting up the regression</a></li>
+  <li><a href="#inspecting-the-seasonality" id="toc-inspecting-the-seasonality" class="nav-link" data-scroll-target="#inspecting-the-seasonality"><span class="toc-section-number">7</span>  Inspecting the seasonality</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="tldr" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="tldr"><span class="header-section-number">1</span> TLDR;</h2>
+<ul>
+<li>Linear regression on itself is not performant for longer time-scales</li>
+<li>Most systems have some capabilities for linear regression built-in</li>
+<li>Adding dummy variables for datetime features(i.e.&nbsp;months, weekday etc.) adds predictive power</li>
+</ul>
+</section>
+<section id="introduction" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2</span> Introduction</h2>
+<p>Most of the time ordinary linear regression is seen as a beginners model that is not particularly useful, and most of the time it is discarded and replaced by a shiny neural net or a fancy gradient-boosted model, but actually linear regression can be used to determine the (linear) relationship between a dependent and one or more independent variables. the direction and magnitude can also be estimated with the help of linear regression. This model type is used in many fields including but not limited to Economics, Finance, Social science, etc. The popularity of this model is model is likely due to the fact that most systems have built-in functionality that enables the training of linear models, they are also very cheap/fast to train, and one can also determine that the model has optimal parameters. all these features make linear regression an excellent model to start with.</p>
+<p>To extend the capabilities of the linear model for time series forecasting, dummy variables can be utilized. These dummies can provide additional information about the relationship over time, can help the model to identify seasonality over time and also gauge the effect of one-off events, examples are price reductions or natural disasters.</p>
+<p>For instance we can create a dummy to identify whether a particular day is a weekday or a weekend. These can also be applied to the months, the week of year, etc.</p>
+</section>
+<section id="imports" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="imports"><span class="header-section-number">3</span> Imports</h2>
+<p>first we import all the libraries, the default data science stuff and the sklearn for the linear model</p>
+<div class="cell" data-execution_count="30">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_error, mean_squared_error</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler, StandardScaler</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="reading-in-the-data" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="reading-in-the-data"><span class="header-section-number">4</span> Reading in the data</h2>
+<p>For this example we will be using a dataset form the prophet package. I have selected this one because in the prophet documentation this dataset is used in the section “Seasonality, Holiday Effects, And Regressors” so it seems fitting to use it. The prophet <a href="https://facebook.github.io/prophet/docs/quick_start.html">docs</a> describe the dataset in the following way:</p>
+<blockquote class="blockquote">
+<p>As an example, let’s look at a time series of the log daily page views for the Wikipedia page for Peyton Manning. We scraped this data using the Wikipedia trend package in R. Peyton Manning provides a nice example because it illustrates some of Prophet’s features, like multiple seasonality, changing growth rates, and the ability to model special days (such as Manning’s playoff and superbowl appearances).</p>
+</blockquote>
+<div class="cell" data-execution_count="33">
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>df_in <span class="op">=</span> pd.read_csv(</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    <span class="st">"https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv"</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>df_in <span class="op">=</span> df_in.assign(ds<span class="op">=</span>pd.to_datetime(df_in[<span class="st">"ds"</span>]))</span>
+<span id="cb2-5"><a href="#cb2-5"></a>df_in <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>)]  <span class="co"># selecting data after 2012</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>lets plot the data over time to see what we visually can extract from the plot.</p>
+<div class="cell" data-execution_count="34">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>plt.plot_date(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    x<span class="op">=</span>df_in[<span class="st">"ds"</span>],</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    y<span class="op">=</span>df_in[<span class="st">"y"</span>],</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    label<span class="op">=</span><span class="st">"input timeseries"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># plt.legend(loc="upper right")</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>plt.ylabel(<span class="st">"target variable - $y$"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>plt.title(<span class="st">"daily visits ot Peyton Manning wiki on a daily basis (log)"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11"></a>plt.show()</span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># df_in.sample(n=5)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="boring_linear_forecast_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>I have selected the data from 2012 onwards, for easy viewing. The first thing that i notice is that there is a dip around the 06, 07 months. Most likely the american football season (handegg?) is having its summer break then. also the same pattern repeates over the years start high then dips and then and high again. looks like there is some seaonality in the data. lets continue and train our first models. starting with a simple plain linear regression and then adding in the dummies to see if they improve the performance of the model.</p>
+</section>
+<section id="train-test-split" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="train-test-split"><span class="header-section-number">5</span> Train-test split</h2>
+<div class="cell" data-execution_count="35">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># train test split</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>df_train <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>) <span class="op">&amp;</span> (df_in[<span class="st">"ds"</span>] <span class="op">&lt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb4-3"><a href="#cb4-3"></a>df_test <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="36">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>plt.plot_date(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    x<span class="op">=</span>df_train[<span class="st">"ds"</span>],</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    y<span class="op">=</span>df_train[<span class="st">"y"</span>],</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    label<span class="op">=</span><span class="st">"train"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>plt.plot_date(</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12"></a>)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb5-15"><a href="#cb5-15"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16"></a>plt.title(<span class="st">"train-test split"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="boring_linear_forecast_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="setting-up-the-regression" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="setting-up-the-regression"><span class="header-section-number">6</span> Setting up the regression</h2>
+<div class="cell" data-execution_count="37">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>X_train <span class="op">=</span> df_train[<span class="st">"ds"</span>].astype(<span class="bu">int</span>).values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>y_train <span class="op">=</span> df_train[<span class="st">"y"</span>].values</span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a>X_test <span class="op">=</span> df_test[<span class="st">"ds"</span>].astype(<span class="bu">int</span>).values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>y_test <span class="op">=</span> df_test[<span class="st">"y"</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="38">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># creating, fit, and inference</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>linear <span class="op">=</span> LinearRegression()</span>
+<span id="cb7-3"><a href="#cb7-3"></a>linear.fit(X<span class="op">=</span>X_train, y<span class="op">=</span>y_train)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>y_pred <span class="op">=</span> linear.predict(X<span class="op">=</span>X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="39">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>mse <span class="op">=</span> mean_squared_error(y_test, y_pred)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>mae <span class="op">=</span> mean_absolute_error(y_test, y_pred)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="bu">print</span>(<span class="ss">f"mean squared error = </span><span class="sc">{</span>mse<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="bu">print</span>(<span class="ss">f"mean absolute error = </span><span class="sc">{</span>mae<span class="sc">:.3}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean squared error = 0.617
+mean absolute error = 0.615</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="40">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>plt.plot_date(</span>
+<span id="cb10-2"><a href="#cb10-2"></a>    x<span class="op">=</span>df_train[<span class="st">"ds"</span>],</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    y<span class="op">=</span>df_train[<span class="st">"y"</span>],</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    label<span class="op">=</span><span class="st">"train"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7"></a>plt.plot_date(</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
+<span id="cb10-10"><a href="#cb10-10"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12"></a>)</span>
+<span id="cb10-13"><a href="#cb10-13"></a></span>
+<span id="cb10-14"><a href="#cb10-14"></a>plt.plot_date(</span>
+<span id="cb10-15"><a href="#cb10-15"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb10-16"><a href="#cb10-16"></a>    y<span class="op">=</span>y_pred,</span>
+<span id="cb10-17"><a href="#cb10-17"></a>    label<span class="op">=</span><span class="st">"prediction"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19"></a>)</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb10-22"><a href="#cb10-22"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb10-23"><a href="#cb10-23"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb10-24"><a href="#cb10-24"></a>plt.title(<span class="ss">f"linear regression applied (MSE= </span><span class="sc">{</span>mse<span class="sc">:.3}</span><span class="ss">, MAE=</span><span class="sc">{</span>mae<span class="sc">:.3}</span><span class="ss">)"</span>)</span>
+<span id="cb10-25"><a href="#cb10-25"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="boring_linear_forecast_files/figure-html/cell-13-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="41">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># creating dummies for the months</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>df_dummies <span class="op">=</span> df_in.assign(</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    month<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.month.astype(<span class="st">"category"</span>), ds_int<span class="op">=</span>df_in[<span class="st">"ds"</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>)</span>
+<span id="cb11-5"><a href="#cb11-5"></a></span>
+<span id="cb11-6"><a href="#cb11-6"></a>not_dummy <span class="op">=</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>, <span class="st">"ds_int"</span>}</span>
+<span id="cb11-7"><a href="#cb11-7"></a>to_dummy <span class="op">=</span> <span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> not_dummy</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a>df_dummies <span class="op">=</span> pd.get_dummies(data<span class="op">=</span>df_dummies, columns<span class="op">=</span>[<span class="st">"month"</span>])</span>
+<span id="cb11-10"><a href="#cb11-10"></a>all_features <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>})</span>
+<span id="cb11-11"><a href="#cb11-11"></a></span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="co"># slicing the input in train test</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a>df_train_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>) <span class="op">&amp;</span> (df_dummies[<span class="st">"ds"</span>] <span class="op">&lt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb11-14"><a href="#cb11-14"></a>df_test_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb11-15"><a href="#cb11-15"></a></span>
+<span id="cb11-16"><a href="#cb11-16"></a>X_train <span class="op">=</span> df_train_dummies.loc[:, all_features]</span>
+<span id="cb11-17"><a href="#cb11-17"></a>y_train <span class="op">=</span> df_train_dummies[[<span class="st">"y"</span>]]</span>
+<span id="cb11-18"><a href="#cb11-18"></a></span>
+<span id="cb11-19"><a href="#cb11-19"></a>X_test <span class="op">=</span> df_test_dummies.loc[:, all_features]</span>
+<span id="cb11-20"><a href="#cb11-20"></a>y_test <span class="op">=</span> df_test_dummies[[<span class="st">"y"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="42">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>df_dummies.drop(columns<span class="op">=</span><span class="st">"ds_int"</span>).sample(n<span class="op">=</span><span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">1234567</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="42">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>ds</th>
+      <th>y</th>
+      <th>month_1</th>
+      <th>month_2</th>
+      <th>month_3</th>
+      <th>month_4</th>
+      <th>month_5</th>
+      <th>month_6</th>
+      <th>month_7</th>
+      <th>month_8</th>
+      <th>month_9</th>
+      <th>month_10</th>
+      <th>month_11</th>
+      <th>month_12</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1538</th>
+      <td>2012-04-18</td>
+      <td>8.335431</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1647</th>
+      <td>2012-08-06</td>
+      <td>8.144389</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2559</th>
+      <td>2015-02-08</td>
+      <td>7.812783</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1904</th>
+      <td>2013-04-20</td>
+      <td>7.311886</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2796</th>
+      <td>2015-10-03</td>
+      <td>7.459915</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="43">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># create the pipeline</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>pipeline <span class="op">=</span> make_pipeline(StandardScaler(), LinearRegression())</span>
+<span id="cb13-3"><a href="#cb13-3"></a>pipeline.fit(X<span class="op">=</span>X_train, y<span class="op">=</span>y_train)</span>
+<span id="cb13-4"><a href="#cb13-4"></a>y_pred_dummies <span class="op">=</span> pipeline.predict(X<span class="op">=</span>X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="44">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>mse_dummies <span class="op">=</span> mean_squared_error(y_test, y_pred_dummies)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>mae_dummies <span class="op">=</span> mean_absolute_error(y_test, y_pred_dummies)</span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="bu">print</span>(<span class="ss">f"mean squared error = </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="bu">print</span>(<span class="ss">f"mean absolute error = </span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean squared error = 0.326
+mean absolute error = 0.397</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="45">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>plt.plot_date(</span>
+<span id="cb16-2"><a href="#cb16-2"></a>    x<span class="op">=</span>df_train[<span class="st">"ds"</span>],</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    y<span class="op">=</span>df_train[<span class="st">"y"</span>],</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    label<span class="op">=</span><span class="st">"train"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>)</span>
+<span id="cb16-7"><a href="#cb16-7"></a>plt.plot_date(</span>
+<span id="cb16-8"><a href="#cb16-8"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb16-9"><a href="#cb16-9"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
+<span id="cb16-10"><a href="#cb16-10"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb16-12"><a href="#cb16-12"></a>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a>plt.plot_date(</span>
+<span id="cb16-15"><a href="#cb16-15"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb16-16"><a href="#cb16-16"></a>    y<span class="op">=</span>y_pred_dummies,</span>
+<span id="cb16-17"><a href="#cb16-17"></a>    label<span class="op">=</span><span class="st">"prediction /w dummies"</span>,</span>
+<span id="cb16-18"><a href="#cb16-18"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb16-19"><a href="#cb16-19"></a>)</span>
+<span id="cb16-20"><a href="#cb16-20"></a></span>
+<span id="cb16-21"><a href="#cb16-21"></a></span>
+<span id="cb16-22"><a href="#cb16-22"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb16-23"><a href="#cb16-23"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb16-24"><a href="#cb16-24"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb16-25"><a href="#cb16-25"></a>plt.title(</span>
+<span id="cb16-26"><a href="#cb16-26"></a>    <span class="ss">f"linear regression /w dummies applied (mse= </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">, mae=</span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">)"</span></span>
+<span id="cb16-27"><a href="#cb16-27"></a>)</span>
+<span id="cb16-28"><a href="#cb16-28"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="boring_linear_forecast_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="inspecting-the-seasonality" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="inspecting-the-seasonality"><span class="header-section-number">7</span> Inspecting the seasonality</h2>
+<div class="cell" data-execution_count="46">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># pull coefs into a seperate df, to plot the influence of time</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>lin_reg_coefs <span class="op">=</span> (</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    pd.DataFrame(data<span class="op">=</span>pipeline[<span class="st">"linearregression"</span>].coef_, columns<span class="op">=</span>X_train.columns)</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    .T.reset_index()</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    .rename(columns<span class="op">=</span>{<span class="st">"index"</span>: <span class="st">"month"</span>, <span class="dv">0</span>: <span class="st">"coefficient"</span>})</span>
+<span id="cb17-6"><a href="#cb17-6"></a>)</span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="co"># exclude the time col</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>lin_reg_coefs <span class="op">=</span> lin_reg_coefs[lin_reg_coefs[<span class="st">"month"</span>] <span class="op">!=</span> <span class="st">"ds_int"</span>]</span>
+<span id="cb17-9"><a href="#cb17-9"></a></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="co"># centering and scaling</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">=</span> (</span>
+<span id="cb17-12"><a href="#cb17-12"></a>    lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">-</span> lin_reg_coefs[<span class="st">"coefficient"</span>].mean()</span>
+<span id="cb17-13"><a href="#cb17-13"></a>) <span class="op">/</span> lin_reg_coefs[<span class="st">"coefficient"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="47">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>chart <span class="op">=</span> sns.barplot(</span>
+<span id="cb18-2"><a href="#cb18-2"></a>    data<span class="op">=</span>lin_reg_coefs,</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    x<span class="op">=</span><span class="st">"month"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    y<span class="op">=</span><span class="st">"coefficient"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
+<span id="cb18-6"><a href="#cb18-6"></a>    order<span class="op">=</span>[</span>
+<span id="cb18-7"><a href="#cb18-7"></a>        <span class="st">"month_1"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8"></a>        <span class="st">"month_2"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9"></a>        <span class="st">"month_3"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10"></a>        <span class="st">"month_4"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11"></a>        <span class="st">"month_5"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12"></a>        <span class="st">"month_6"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13"></a>        <span class="st">"month_7"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14"></a>        <span class="st">"month_8"</span>,</span>
+<span id="cb18-15"><a href="#cb18-15"></a>        <span class="st">"month_9"</span>,</span>
+<span id="cb18-16"><a href="#cb18-16"></a>        <span class="st">"month_10"</span>,</span>
+<span id="cb18-17"><a href="#cb18-17"></a>        <span class="st">"month_11"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18"></a>        <span class="st">"month_12"</span>,</span>
+<span id="cb18-19"><a href="#cb18-19"></a>    ],</span>
+<span id="cb18-20"><a href="#cb18-20"></a>)</span>
+<span id="cb18-21"><a href="#cb18-21"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb18-22"><a href="#cb18-22"></a>plt.ylabel(<span class="st">""</span>)</span>
+<span id="cb18-23"><a href="#cb18-23"></a>plt.title(<span class="st">"yearly seasonality"</span>)</span>
+<span id="cb18-24"><a href="#cb18-24"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="boring_linear_forecast_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">seasonality over the months aka yearly seasonality</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'alternate';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp(/https:\/\/jope35\.github\.io\/hypershotgun-blog\//);
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // default icon
+          link.classList.add("external");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

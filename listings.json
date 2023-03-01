@@ -2,10 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/mathjax/index.html",
-      "/posts/ipynb/Untitled-1.html",
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html"
+      "/posts/boring_forecast/boring_linear_forecast.html"
     ]
   }
 ]
