@@ -12,9 +12,19 @@ repos:
       rev: 22.10.0
       hooks:
           - id: black
-          - id: black-jupyter
+          #   - id: black-jupyter # this is done in nbqa
+    - repo: https://github.com/pycqa/isort
+      rev: 5.12.0
+      hooks:
+          - id: isort
+
+    # notebook quality hooks
     - repo: https://github.com/fastai/nbdev
       rev: 2.2.10
       hooks:
           - id: nbdev_clean
-          #   - id: nbdev_export
+    - repo: https://github.com/nbQA-dev/nbQA
+      rev: 1.6.3
+      hooks:
+          - id: nbqa-black
+          - id: nbqa-isort
