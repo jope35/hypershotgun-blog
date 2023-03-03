@@ -1,30 +1,30 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
-    - repo: https://github.com/pre-commit/pre-commit-hooks
-      rev: v3.2.0
-      hooks:
-          - id: trailing-whitespace
-          - id: end-of-file-fixer
-          - id: check-yaml
-          - id: check-added-large-files
-    - repo: https://github.com/psf/black
-      rev: 22.10.0
-      hooks:
-          - id: black
-          #   - id: black-jupyter # this is done in nbqa
-    - repo: https://github.com/pycqa/isort
-      rev: 5.12.0
-      hooks:
-          - id: isort
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+      #   - id: black-jupyter # this is done in nbqa
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
 
-    # notebook quality hooks
-    - repo: https://github.com/fastai/nbdev
-      rev: 2.2.10
-      hooks:
-          - id: nbdev_clean
-    - repo: https://github.com/nbQA-dev/nbQA
-      rev: 1.6.3
-      hooks:
-          - id: nbqa-black
-          - id: nbqa-isort
+  # notebook quality hooks
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.6.3
+    hooks:
+      - id: nbqa-black
+      - id: nbqa-isort
+  - repo: https://github.com/fastai/nbdev
+    rev: 2.2.10
+    hooks:
+      - id: nbdev_clean
