@@ -1,5 +1,19 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "🤖 About",
+    "section": "",
+    "text": "Machine Learning Scientist 🤖\nloves to puzzle 🧩\nAmsterdam area 🇳🇱🇪🇺"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "hyper-shotgun",
+    "section": "",
+    "text": "Boring linear forecast\n\n\nimproving performance by adding some dummies\n\n\nIn this article we will look at linear regression, and how dummies can be used to extend its capabilities\n\n\n\n\n\n\n2023-03-5\n\n\nJoost de Theije\n\n\n4 min\n\n\n\n\n\n\nNo matching items"
+  },
+  {
     "objectID": "posts/boring_forecast/boring_linear_forecast.html",
     "href": "posts/boring_forecast/boring_linear_forecast.html",
     "title": "Boring linear forecast",
@@ -54,19 +68,5 @@
     "title": "Boring linear forecast",
     "section": "8 Inspecting the seasonality",
     "text": "8 Inspecting the seasonality\n\n\nCode\n# pull coefs into a seperate df, to plot the influence of time\nlin_reg_coefs = (\n    pd.DataFrame(data=pipeline[\"linearregression\"].coef_, columns=X_train.columns)\n    .T.reset_index()\n    .rename(columns={\"index\": \"month\", 0: \"coefficient\"})\n)\n# exclude the time col\nlin_reg_coefs = lin_reg_coefs[lin_reg_coefs[\"month\"] != \"ds_int\"]\n\n# centering and scaling\nlin_reg_coefs[\"coefficient\"] = (\n    lin_reg_coefs[\"coefficient\"] - lin_reg_coefs[\"coefficient\"].mean()\n) / lin_reg_coefs[\"coefficient\"].mean()\n\n\n\n\nCode\nchart = sns.barplot(\n    data=lin_reg_coefs,\n    x=\"month\",\n    y=\"coefficient\",\n    color=sns.color_palette()[0],\n    order=[\n        \"month_1\",\n        \"month_2\",\n        \"month_3\",\n        \"month_4\",\n        \"month_5\",\n        \"month_6\",\n        \"month_7\",\n        \"month_8\",\n        \"month_9\",\n        \"month_10\",\n        \"month_11\",\n        \"month_12\",\n    ],\n)\nplt.tick_params(axis=\"x\", rotation=45)\nplt.ylabel(\"\")\nplt.title(\"yearly seasonality\")\nplt.show()\n\n\n\n\n\nseasonality over the months aka yearly seasonality"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "🤖 About",
-    "section": "",
-    "text": "Machine Learning Scientist 🤖\nloves to puzzle 🧩\nAmsterdam area 🇳🇱🇪🇺"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "hyper-shotgun",
-    "section": "",
-    "text": "Boring linear forecast\n\n\nimproving performance by adding some dummies\n\n\nIn this article we will look at linear regression, and how dummies can be used to extend its capabilities\n\n\n\n\n\n\n2023-03-5\n\n\nJoost de Theije\n\n\n4 min\n\n\n\n\n\n\nNo matching items"
   }
 ]
