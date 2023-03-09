@@ -22,8 +22,8 @@ repos:
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.6.3
     hooks:
-      - id: nbqa-black
       - id: nbqa-isort
+      - id: nbqa-black
   - repo: https://github.com/fastai/nbdev
     rev: 2.2.10
     hooks:
