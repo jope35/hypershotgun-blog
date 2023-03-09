@@ -126,6 +126,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -202,12 +205,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       
     </div>
     
-  <div>
-    <div class="abstract">
-      <div class="abstract-title">Abstract</div>
-      In this article we will look at linear regression, and how dummies can be used to extend its capabilities
-    </div>
-  </div>
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -223,8 +220,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#reading-in-the-data" id="toc-reading-in-the-data" class="nav-link" data-scroll-target="#reading-in-the-data"><span class="toc-section-number">4</span>  Reading in the data</a></li>
   <li><a href="#train-test-split" id="toc-train-test-split" class="nav-link" data-scroll-target="#train-test-split"><span class="toc-section-number">5</span>  Train-test split</a></li>
   <li><a href="#setting-up-the-regression" id="toc-setting-up-the-regression" class="nav-link" data-scroll-target="#setting-up-the-regression"><span class="toc-section-number">6</span>  Setting up the regression</a></li>
-  <li><a href="#adding-dummies" id="toc-adding-dummies" class="nav-link" data-scroll-target="#adding-dummies"><span class="toc-section-number">7</span>  adding dummies</a></li>
+  <li><a href="#adding-dummies" id="toc-adding-dummies" class="nav-link" data-scroll-target="#adding-dummies"><span class="toc-section-number">7</span>  Adding dummies</a></li>
   <li><a href="#inspecting-the-seasonality" id="toc-inspecting-the-seasonality" class="nav-link" data-scroll-target="#inspecting-the-seasonality"><span class="toc-section-number">8</span>  Inspecting the seasonality</a></li>
+  <li><a href="#recap" id="toc-recap" class="nav-link" data-scroll-target="#recap"><span class="toc-section-number">9</span>  Recap</a></li>
+  <li><a href="#encore" id="toc-encore" class="nav-link" data-scroll-target="#encore"><span class="toc-section-number">10</span>  Encore</a></li>
   </ul>
 </nav>
     </div>
@@ -237,17 +236,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="tldr" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="tldr"><span class="header-section-number">1</span> TLDR;</h2>
 <ul>
-<li>Linear regression on itself is not performant for longer time-scales</li>
+<li>Linear regression in itself is not performant for longer time-scales</li>
 <li>Most systems have some capabilities for linear regression built-in</li>
-<li>Adding dummy variables for datetime features(i.e.&nbsp;months, weekday etc.) adds predictive power</li>
+<li>Adding dummy variables for datetime features(i.e.&nbsp;month, weekday etc.) adds predictive power</li>
 </ul>
 </section>
 <section id="introduction" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2</span> Introduction</h2>
-<p>Linear regrerssion is a statistical model that can be used to determine the linear relationship between variables, most of the time this is seen as a beginners model that is not particularly useful, and most of the time it is discarded and replaced by a shiny neural net or a fancy gradient-boosted model.</p>
+<p>Linear regression is a statistical model that can be used to determine the linear relationship between variables, most of the time this is seen as a beginners model that is not particularly useful, and most of the time it is discarded and replaced by a shiny neural net or a fancy gradient-boosted model.</p>
 <p>the nice feature of linear regression is that the direction and magnitude of the relationship can be estimated with the help of linear regression. It is used in many fields including but not limited to Economics, Finance, Social science, etc. The popularity of this model is model is likely due to the fact that most systems have built-in functionality that enables the training of linear models, they are also very cheap/fast to train, and one can also determine that the model has optimal parameters. all these features make linear regression an excellent model to start with.</p>
-<p>To extend the capabilities of the linear model for time series forecasting, dummy variables can be utilized. These dummies can provide additional information about the relationship over time, can help the model to identify seasonality over time and also gauge the effect of one-off events, examples are price reductions or natural disasters.</p>
-<p>For instance we can create a dummy to identify certain datetime features such as what the month is orwhether a particular day is a weekday or a weekend.</p>
+<p>To extend the capabilities of the linear model for time series forecasting, dummy variables can be utilized. These dummies can provide additional information about the relationship over time, can help the model to identify seasonality over time, and also gauge the effect of one-off events, examples are price reductions or natural disasters.</p>
+<p>For instance, we can create a dummy to identify certain datetime features such as what the month is or whether a particular day is a weekday or a weekend.</p>
 </section>
 <section id="imports" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="imports"><span class="header-section-number">3</span> Imports</h2>
@@ -259,7 +258,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> ElasticNetCV, LinearRegression</span>
 <span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_error, mean_squared_error</span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
 <span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler, StandardScaler</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -268,9 +267,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="reading-in-the-data" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="reading-in-the-data"><span class="header-section-number">4</span> Reading in the data</h2>
-<p>For this example we will be using a dataset form the prophet package. I have selected this one because in the prophet documentation this dataset is used in the section “Seasonality, Holiday Effects, And Regressors” so it seems fitting to use it, to demonstrate the usefullness of seasonal dummies. The prophet <a href="https://facebook.github.io/prophet/docs/quick_start.html">docs</a> describe the dataset in the following way:</p>
+<p>For this example, we will be using a dataset form the prophet package. I have selected this one because, in the prophet documentation, this dataset is used in the section “Seasonality, Holiday Effects, And Regressors” so it seems fitting to use it, to demonstrate the usefulness of seasonal dummies. The prophet <a href="https://facebook.github.io/prophet/docs/quick_start.html">docs</a> describes the dataset in the following way:</p>
 <blockquote class="blockquote">
-<p>As an example, let’s look at a time series of the log daily page views for the Wikipedia page for Peyton Manning. We scraped this data using the Wikipedia trend package in R. Peyton Manning provides a nice example because it illustrates some of Prophet’s features, like multiple seasonality, changing growth rates, and the ability to model special days (such as Manning’s playoff and superbowl appearances).</p>
+<p>As an example, let’s look at a time series of the log daily page views for the Wikipedia page for Peyton Manning. We scraped this data using the Wikipedia trend package in R. Peyton Manning provides a nice example because it illustrates some of Prophet’s features, like multiple seasonality, changing growth rates, and the ability to model special days (such as Manning’s playoff and Superbowl appearances).</p>
 </blockquote>
 <div class="cell">
 <details open="">
@@ -282,7 +281,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-5"><a href="#cb2-5"></a>df_in <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>)]  <span class="co"># selecting data after 2012</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>it is always nice to actually see what we are working with so lets plot the data over time to see what we visually can extract from the plot. we are looking for patterns over time, and other behaviour and/or pattern that we can exploit.</p>
+<p>It is always nice to see what we are working with so let us plot the data over time to see what we visually can extract from the plot. we are looking for patterns over time and other behavior and/or pattern that we can exploit.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -301,7 +300,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="boring_linear_forecast_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>I have selected data from 2012 onwards, this should be enough to testdrive the seasonal dummies. The first thing that I notice is that there is a dip around month 06 and 07. Most likely the american football (handegg?) season is having its summer break then. Also the same pattern repeats over the years start high then dips and then and high again. so there is some repeating seasonality. Lets continue and train our first models. starting with a simple plain linear regression and then adding in the dummies to see if they improve the performance of the model.</p>
+<p>I have selected data from 2012 onwards, this should be enough to test drive the seasonal dummies. The first thing that I notice is that there is a dip around months 06 and 07. In early August teams play so <a href="https://en.wikipedia.org/wiki/NFL_preseason">exhibition games</a> before the start of the actual season.</p>
+<p>Also, we can observe a pattern over the year, it starts high then dips, and then and high again. This can be seen for the other years as well, so there is some repeating seasonality. Let us continue and train our first models. Starting with a simple ordinary linear regression and then adding dummies to see if they improve the performance of the model.</p>
 </section>
 <section id="train-test-split" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="train-test-split"><span class="header-section-number">5</span> Train-test split</h2>
@@ -313,7 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-3"><a href="#cb4-3"></a>df_test <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>To gauge the performance of the model the data is split in two parts, the train data 2012 onwards up to 2015 and the test data everything after 2015. The model will only see the train data and is asked to create a prediction for the test data, afterwards we will calcualte the perfomance.</p>
+<p>To gauge the performance of the model the data is split in two parts, the train data from 2012 up to 2015 and the test data everything after 2015. The model will only see the train data and is asked to create a prediction for the test data, after which we will calculate the perfomance with the predictions and the true observations.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -353,7 +353,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-5"><a href="#cb6-5"></a>y_test <span class="op">=</span> df_test[<span class="st">"y"</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Shaping and converting the data so that we can fit the linear model. In this case we are converting the date into an ever increasing integer.</p>
+<p>Shaping and converting the data so that we can fit the linear model. In this case, we are converting the date columns into an ever-increasing integer.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -363,8 +363,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-4"><a href="#cb7-4"></a>y_pred <span class="op">=</span> linear.predict(X<span class="op">=</span>X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Fitting the linear model is very fast, around 4 miliseconds on my machine, and yes I know the data volume is very low, but this allows me to fit 1000 models in 4 seconds. so we can make predictions on 1000 things instead of this single item, all in the time it takes to take a sip of coffee☕️.</p>
-<p>anyways lets us visually inspect the results of the model, by plotting all the components (train, test, predictions) that we have gathered. Also lets calculate two error metrics <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error">mse</a> and <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error">mae</a> that way we can quantify the performance of the model.</p>
+<p>Fitting the linear model is very fast, around 4 milliseconds on my machine, and yes, I know the data volume is low(actually for time series it is pretty decent), but this allows me to fit 1000 models in 4 seconds. So, we can make predictions on 1000 different time series, all in the time it takes to take a sip of coffee☕️.</p>
+<p>Anyways lets us visually inspect the results of the model, by plotting all the components (train, test, predictions) that we have gathered. Also, let us calculate two error metrics <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error">mse</a> and <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error">mae</a> that way we can quantify the performance of the model.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -403,128 +403,272 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="boring_linear_forecast_files/figure-html/cell-12-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>The model is just a boring staight line, but what did you expect with a linear model(?!). The green line is passing through the orange blob, and intuitively it kinda move in the right direction. however it doesn’t capture the seasonality or other patterns of the train set.</p>
+<p>The model is just a boring straight line, but what did you expect with a linear model ?! The green line is passing through the orange blob more or less, and intuitively it kind of moves in the right direction. However, it doesn’t capture the seasonality or other patterns of the train set. The two error metrics mse and mae are both around 0.6. this in itself does not say much, but we can use this as the ‘benchmark’ and try to improve on this with the addition of the dummies.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>mean squared error = 0.617
+<pre><code>mean squared error  = 0.617
 mean absolute error = 0.615</code></pre>
 </div>
 </div>
 </section>
 <section id="adding-dummies" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="adding-dummies"><span class="header-section-number">7</span> adding dummies</h2>
-<p>Lets add some dummies for the months and see if we can improve the performance of the model visually and on the metrics. For each month we create a column that can either have the value of <code>0</code> or <code>1</code>. if the value is <code>1</code> then that row corresponds to that particular month, in this way we are actively encoding this knowledge into the model. in this way the model can learn the magnitude and direction of each month and apply that to future predictions. at least that is the idea, lets test that!</p>
+<h2 data-number="7" class="anchored" data-anchor-id="adding-dummies"><span class="header-section-number">7</span> Adding dummies</h2>
+<p>Let us add some dummies for the months and see if we can improve the performance of the model visually and on the metrics. For each month we create a column that can either have the value of <code>0</code> or <code>1</code>. if the value is <code>1</code> then that row corresponds to that particular month, in this way we are actively encoding this knowledge into the model. in this way the model can learn the magnitude and direction of each month and apply that to future predictions. at least that is the idea, let us test that!</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># creating dummies for the months</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>df_dummies <span class="op">=</span> df_in.assign(</span>
-<span id="cb10-3"><a href="#cb10-3"></a>    month<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.month.astype(<span class="st">"category"</span>), ds_int<span class="op">=</span>df_in[<span class="st">"ds"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb10-4"><a href="#cb10-4"></a>)</span>
-<span id="cb10-5"><a href="#cb10-5"></a></span>
-<span id="cb10-6"><a href="#cb10-6"></a>not_dummy <span class="op">=</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>, <span class="st">"ds_int"</span>}</span>
-<span id="cb10-7"><a href="#cb10-7"></a>to_dummy <span class="op">=</span> <span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> not_dummy</span>
-<span id="cb10-8"><a href="#cb10-8"></a></span>
-<span id="cb10-9"><a href="#cb10-9"></a>df_dummies <span class="op">=</span> pd.get_dummies(data<span class="op">=</span>df_dummies, columns<span class="op">=</span>[<span class="st">"month"</span>])</span>
-<span id="cb10-10"><a href="#cb10-10"></a>all_features <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>})</span>
-<span id="cb10-11"><a href="#cb10-11"></a></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="co"># slicing the input in train test</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a>df_train_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>) <span class="op">&amp;</span> (df_dummies[<span class="st">"ds"</span>] <span class="op">&lt;</span> <span class="st">"2015"</span>)]</span>
-<span id="cb10-14"><a href="#cb10-14"></a>df_test_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span>
-<span id="cb10-15"><a href="#cb10-15"></a></span>
-<span id="cb10-16"><a href="#cb10-16"></a>X_train <span class="op">=</span> df_train_dummies.loc[:, all_features]</span>
-<span id="cb10-17"><a href="#cb10-17"></a>y_train <span class="op">=</span> df_train_dummies[[<span class="st">"y"</span>]]</span>
-<span id="cb10-18"><a href="#cb10-18"></a></span>
-<span id="cb10-19"><a href="#cb10-19"></a>X_test <span class="op">=</span> df_test_dummies.loc[:, all_features]</span>
-<span id="cb10-20"><a href="#cb10-20"></a>y_test <span class="op">=</span> df_test_dummies[[<span class="st">"y"</span>]]</span>
-<span id="cb10-21"><a href="#cb10-21"></a></span>
-<span id="cb10-22"><a href="#cb10-22"></a>df_dummies.drop(columns<span class="op">=</span><span class="st">"ds_int"</span>).sample(n<span class="op">=</span><span class="dv">5</span>, random_state<span class="op">=</span><span class="dv">1234567</span>)</span>
-<span id="cb10-23"><a href="#cb10-23"></a></span>
-<span id="cb10-24"><a href="#cb10-24"></a><span class="co"># create the pipeline</span></span>
-<span id="cb10-25"><a href="#cb10-25"></a>pipeline <span class="op">=</span> make_pipeline(StandardScaler(), LinearRegression())</span>
-<span id="cb10-26"><a href="#cb10-26"></a>pipeline.fit(X<span class="op">=</span>X_train, y<span class="op">=</span>y_train)</span>
-<span id="cb10-27"><a href="#cb10-27"></a>y_pred_dummies <span class="op">=</span> pipeline.predict(X<span class="op">=</span>X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3"></a>    month<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.month.astype(<span class="st">"category"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    ds_int<span class="op">=</span>df_in[<span class="st">"ds"</span>].astype(<span class="bu">int</span>),</span>
+<span id="cb10-5"><a href="#cb10-5"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>not_dummy <span class="op">=</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>, <span class="st">"ds_int"</span>}</span>
+<span id="cb10-8"><a href="#cb10-8"></a>to_dummy <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> not_dummy)</span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a>df_dummies <span class="op">=</span> pd.get_dummies(data<span class="op">=</span>df_dummies, columns<span class="op">=</span>to_dummy)</span>
+<span id="cb10-11"><a href="#cb10-11"></a>all_features <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies.columns) <span class="op">-</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>})</span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># slicing the input in train test</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>df_train_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>) <span class="op">&amp;</span> (df_dummies[<span class="st">"ds"</span>] <span class="op">&lt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb10-15"><a href="#cb10-15"></a>df_test_dummies <span class="op">=</span> df_dummies[(df_dummies[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb10-16"><a href="#cb10-16"></a></span>
+<span id="cb10-17"><a href="#cb10-17"></a>X_train <span class="op">=</span> df_train_dummies.loc[:, all_features]</span>
+<span id="cb10-18"><a href="#cb10-18"></a>y_train <span class="op">=</span> df_train_dummies[[<span class="st">"y"</span>]]</span>
+<span id="cb10-19"><a href="#cb10-19"></a></span>
+<span id="cb10-20"><a href="#cb10-20"></a>X_test <span class="op">=</span> df_test_dummies.loc[:, all_features]</span>
+<span id="cb10-21"><a href="#cb10-21"></a>y_test <span class="op">=</span> df_test_dummies[[<span class="st">"y"</span>]]</span>
+<span id="cb10-22"><a href="#cb10-22"></a></span>
+<span id="cb10-23"><a href="#cb10-23"></a>df_dummies.drop(columns<span class="op">=</span>[<span class="st">"ds_int"</span>, <span class="st">"y"</span>]).sample(</span>
+<span id="cb10-24"><a href="#cb10-24"></a>    n<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    ignore_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb10-27"><a href="#cb10-27"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>ds</th>
+      <th>month_1</th>
+      <th>month_2</th>
+      <th>month_3</th>
+      <th>month_4</th>
+      <th>month_5</th>
+      <th>month_6</th>
+      <th>month_7</th>
+      <th>month_8</th>
+      <th>month_9</th>
+      <th>month_10</th>
+      <th>month_11</th>
+      <th>month_12</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-05-06</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2012-07-05</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015-06-21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2012-03-09</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2013-05-11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
 </div>
-<p>In the code block above we are adding the dummies for the month to the data and passing that data to the linear model. plotting the results</p>
+</div>
+</div>
+<p>In the code block above we are adding the dummies for the month to the data. In this case <code>month_1</code> is jan and <code>month_12</code> is dec.</p>
+<p>Next up we are training the model with the added dummies and plotting the results next to the model without the dummies.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>mse_dummies <span class="op">=</span> mean_squared_error(y_test, y_pred_dummies)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>mae_dummies <span class="op">=</span> mean_absolute_error(y_test, y_pred_dummies)</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a>plt.plot_date(</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    x<span class="op">=</span>df_train[<span class="st">"ds"</span>],</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    y<span class="op">=</span>df_train[<span class="st">"y"</span>],</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    label<span class="op">=</span><span class="st">"train"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb11-9"><a href="#cb11-9"></a>)</span>
-<span id="cb11-10"><a href="#cb11-10"></a>plt.plot_date(</span>
-<span id="cb11-11"><a href="#cb11-11"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
-<span id="cb11-12"><a href="#cb11-12"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
-<span id="cb11-13"><a href="#cb11-13"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
-<span id="cb11-14"><a href="#cb11-14"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb11-15"><a href="#cb11-15"></a>)</span>
-<span id="cb11-16"><a href="#cb11-16"></a></span>
-<span id="cb11-17"><a href="#cb11-17"></a>plt.plot_date(</span>
-<span id="cb11-18"><a href="#cb11-18"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
-<span id="cb11-19"><a href="#cb11-19"></a>    y<span class="op">=</span>y_pred,</span>
-<span id="cb11-20"><a href="#cb11-20"></a>    label<span class="op">=</span><span class="st">"prediction"</span>,</span>
-<span id="cb11-21"><a href="#cb11-21"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb11-22"><a href="#cb11-22"></a>)</span>
-<span id="cb11-23"><a href="#cb11-23"></a></span>
-<span id="cb11-24"><a href="#cb11-24"></a></span>
-<span id="cb11-25"><a href="#cb11-25"></a>plt.plot_date(</span>
-<span id="cb11-26"><a href="#cb11-26"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
-<span id="cb11-27"><a href="#cb11-27"></a>    y<span class="op">=</span>y_pred_dummies,</span>
-<span id="cb11-28"><a href="#cb11-28"></a>    label<span class="op">=</span><span class="st">"prediction with dummies"</span>,</span>
-<span id="cb11-29"><a href="#cb11-29"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb11-30"><a href="#cb11-30"></a>)</span>
-<span id="cb11-31"><a href="#cb11-31"></a></span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># create the pipeline and fit pipeline</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># scaler is there so that the coefs can be interpeted later</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># pipeline = make_pipeline(StandardScaler(), LinearRegression())</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>pipeline <span class="op">=</span> make_pipeline(MinMaxScaler(), LinearRegression())</span>
+<span id="cb11-5"><a href="#cb11-5"></a></span>
+<span id="cb11-6"><a href="#cb11-6"></a>pipeline.fit(X<span class="op">=</span>X_train, y<span class="op">=</span>y_train)</span>
+<span id="cb11-7"><a href="#cb11-7"></a>y_pred_dummies <span class="op">=</span> pipeline.predict(X<span class="op">=</span>X_test)</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a>mse_dummies <span class="op">=</span> mean_squared_error(y_test, y_pred_dummies)</span>
+<span id="cb11-10"><a href="#cb11-10"></a>mae_dummies <span class="op">=</span> mean_absolute_error(y_test, y_pred_dummies)</span>
+<span id="cb11-11"><a href="#cb11-11"></a></span>
+<span id="cb11-12"><a href="#cb11-12"></a>plt.plot_date(</span>
+<span id="cb11-13"><a href="#cb11-13"></a>    x<span class="op">=</span>df_train[<span class="st">"ds"</span>],</span>
+<span id="cb11-14"><a href="#cb11-14"></a>    y<span class="op">=</span>df_train[<span class="st">"y"</span>],</span>
+<span id="cb11-15"><a href="#cb11-15"></a>    label<span class="op">=</span><span class="st">"train"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17"></a>)</span>
+<span id="cb11-18"><a href="#cb11-18"></a></span>
+<span id="cb11-19"><a href="#cb11-19"></a>plt.plot_date(</span>
+<span id="cb11-20"><a href="#cb11-20"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb11-21"><a href="#cb11-21"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
+<span id="cb11-22"><a href="#cb11-22"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
+<span id="cb11-23"><a href="#cb11-23"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb11-24"><a href="#cb11-24"></a>)</span>
+<span id="cb11-25"><a href="#cb11-25"></a></span>
+<span id="cb11-26"><a href="#cb11-26"></a>plt.plot_date(</span>
+<span id="cb11-27"><a href="#cb11-27"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb11-28"><a href="#cb11-28"></a>    y<span class="op">=</span>y_pred,</span>
+<span id="cb11-29"><a href="#cb11-29"></a>    label<span class="op">=</span><span class="st">"prediction"</span>,</span>
+<span id="cb11-30"><a href="#cb11-30"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb11-31"><a href="#cb11-31"></a>)</span>
 <span id="cb11-32"><a href="#cb11-32"></a></span>
-<span id="cb11-33"><a href="#cb11-33"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
-<span id="cb11-34"><a href="#cb11-34"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb11-35"><a href="#cb11-35"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
-<span id="cb11-36"><a href="#cb11-36"></a>plt.title(</span>
-<span id="cb11-37"><a href="#cb11-37"></a>    <span class="ss">f"linear regression with dummies applied (mse= </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">, mae=</span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">)"</span></span>
+<span id="cb11-33"><a href="#cb11-33"></a>plt.plot_date(</span>
+<span id="cb11-34"><a href="#cb11-34"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb11-35"><a href="#cb11-35"></a>    y<span class="op">=</span>y_pred_dummies,</span>
+<span id="cb11-36"><a href="#cb11-36"></a>    label<span class="op">=</span><span class="st">"prediction with dummies"</span>,</span>
+<span id="cb11-37"><a href="#cb11-37"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
 <span id="cb11-38"><a href="#cb11-38"></a>)</span>
-<span id="cb11-39"><a href="#cb11-39"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-39"><a href="#cb11-39"></a></span>
+<span id="cb11-40"><a href="#cb11-40"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb11-41"><a href="#cb11-41"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb11-42"><a href="#cb11-42"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb11-43"><a href="#cb11-43"></a>plt.title(</span>
+<span id="cb11-44"><a href="#cb11-44"></a>    <span class="ss">f"linear regression with dummies applied (mse= </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">, mae=</span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">)"</span></span>
+<span id="cb11-45"><a href="#cb11-45"></a>)</span>
+<span id="cb11-46"><a href="#cb11-46"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="boring_linear_forecast_files/figure-html/cell-15-output-1.png" class="img-fluid"></p>
 </div>
 </div>
+<p>Visually the forecast already looks a lot better. It follows the peaks and valleys of the time-series, and it captures the overall trend better. this is also reflected when we look at the error metrics and the improvement factor that we have achieved. the mean squared error improved with a factor of 1.89 and the mean absolute error improved with a factor of 1.54. That is impressive for just adding a bunch of ones and zeros.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="bu">print</span>(<span class="ss">f"mean squared error = </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="bu">print</span>(<span class="ss">f"mean absolute error = </span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="bu">print</span>(<span class="ss">f"mean squared error  = </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mse month dummies -&gt; </span><span class="sc">{</span>mse<span class="op">/</span>mse_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">79</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="bu">print</span>(<span class="ss">f"mean absolute error = </span><span class="sc">{</span>mae_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mea month dummies -&gt; </span><span class="sc">{</span>mae<span class="op">/</span>mae_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>mean squared error = 0.323
-mean absolute error = 0.397</code></pre>
+<pre><code>mean squared error  = 0.323
+improvement factor mse month dummies -&gt; 1.91x
+-------------------------------------------------------------------------------
+mean absolute error = 0.398
+improvement factor mea month dummies -&gt; 1.55x</code></pre>
 </div>
 </div>
 </section>
 <section id="inspecting-the-seasonality" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="inspecting-the-seasonality"><span class="header-section-number">8</span> Inspecting the seasonality</h2>
+<p>Now that we have encoded the information about the seasonality in the model, this also allows us to inspect that seasonality by itself. this would give us some insight into the inner workings of the underlying time series model. first we access the coefficients of the linear model and put them into a separate dataframe. then we need to scale them so that the relative difference is more apparent. looking at the raw coefficients would not yield any information as the scale is not relatable to the original problem.</p>
 <div class="cell">
-<details>
+<details open="">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># pull coefs into a seperate df, to plot the influence of time</span></span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># pull coefs into a seperate df, to inspect the seasonality</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a>lin_reg_coefs <span class="op">=</span> (</span>
-<span id="cb14-3"><a href="#cb14-3"></a>    pd.DataFrame(data<span class="op">=</span>pipeline[<span class="st">"linearregression"</span>].coef_, columns<span class="op">=</span>X_train.columns)</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    .T.reset_index()</span>
-<span id="cb14-5"><a href="#cb14-5"></a>    .rename(columns<span class="op">=</span>{<span class="st">"index"</span>: <span class="st">"month"</span>, <span class="dv">0</span>: <span class="st">"coefficient"</span>})</span>
-<span id="cb14-6"><a href="#cb14-6"></a>)</span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="co"># exclude the time col</span></span>
-<span id="cb14-8"><a href="#cb14-8"></a>lin_reg_coefs <span class="op">=</span> lin_reg_coefs[lin_reg_coefs[<span class="st">"month"</span>] <span class="op">!=</span> <span class="st">"ds_int"</span>]</span>
-<span id="cb14-9"><a href="#cb14-9"></a></span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="co"># centering and scaling</span></span>
-<span id="cb14-11"><a href="#cb14-11"></a>lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">=</span> (</span>
-<span id="cb14-12"><a href="#cb14-12"></a>    lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">-</span> lin_reg_coefs[<span class="st">"coefficient"</span>].mean()</span>
-<span id="cb14-13"><a href="#cb14-13"></a>) <span class="op">/</span> lin_reg_coefs[<span class="st">"coefficient"</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3"></a>    pd.DataFrame(</span>
+<span id="cb14-4"><a href="#cb14-4"></a>        data<span class="op">=</span>pipeline[<span class="st">"linearregression"</span>].coef_,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>        columns<span class="op">=</span>X_train.columns,</span>
+<span id="cb14-6"><a href="#cb14-6"></a>    )</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    .T.reset_index()</span>
+<span id="cb14-8"><a href="#cb14-8"></a>    .rename(columns<span class="op">=</span>{<span class="st">"index"</span>: <span class="st">"month"</span>, <span class="dv">0</span>: <span class="st">"coefficient"</span>})</span>
+<span id="cb14-9"><a href="#cb14-9"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="co"># exclude the time col</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>lin_reg_coefs <span class="op">=</span> lin_reg_coefs[lin_reg_coefs[<span class="st">"month"</span>] <span class="op">!=</span> <span class="st">"ds_int"</span>]</span>
+<span id="cb14-12"><a href="#cb14-12"></a></span>
+<span id="cb14-13"><a href="#cb14-13"></a><span class="co"># subtract mean to get the relative difference between the coefs</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a>lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">=</span> (</span>
+<span id="cb14-15"><a href="#cb14-15"></a>    lin_reg_coefs[<span class="st">"coefficient"</span>] <span class="op">-</span> lin_reg_coefs[<span class="st">"coefficient"</span>].mean()</span>
+<span id="cb14-16"><a href="#cb14-16"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -535,33 +679,334 @@ mean absolute error = 0.397</code></pre>
 <span id="cb15-3"><a href="#cb15-3"></a>    x<span class="op">=</span><span class="st">"month"</span>,</span>
 <span id="cb15-4"><a href="#cb15-4"></a>    y<span class="op">=</span><span class="st">"coefficient"</span>,</span>
 <span id="cb15-5"><a href="#cb15-5"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
-<span id="cb15-6"><a href="#cb15-6"></a>    order<span class="op">=</span>[</span>
-<span id="cb15-7"><a href="#cb15-7"></a>        <span class="st">"month_1"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8"></a>        <span class="st">"month_2"</span>,</span>
-<span id="cb15-9"><a href="#cb15-9"></a>        <span class="st">"month_3"</span>,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>        <span class="st">"month_4"</span>,</span>
-<span id="cb15-11"><a href="#cb15-11"></a>        <span class="st">"month_5"</span>,</span>
-<span id="cb15-12"><a href="#cb15-12"></a>        <span class="st">"month_6"</span>,</span>
-<span id="cb15-13"><a href="#cb15-13"></a>        <span class="st">"month_7"</span>,</span>
-<span id="cb15-14"><a href="#cb15-14"></a>        <span class="st">"month_8"</span>,</span>
-<span id="cb15-15"><a href="#cb15-15"></a>        <span class="st">"month_9"</span>,</span>
-<span id="cb15-16"><a href="#cb15-16"></a>        <span class="st">"month_10"</span>,</span>
-<span id="cb15-17"><a href="#cb15-17"></a>        <span class="st">"month_11"</span>,</span>
-<span id="cb15-18"><a href="#cb15-18"></a>        <span class="st">"month_12"</span>,</span>
-<span id="cb15-19"><a href="#cb15-19"></a>    ],</span>
-<span id="cb15-20"><a href="#cb15-20"></a>)</span>
-<span id="cb15-21"><a href="#cb15-21"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
-<span id="cb15-22"><a href="#cb15-22"></a>plt.ylabel(<span class="st">""</span>)</span>
-<span id="cb15-23"><a href="#cb15-23"></a>plt.title(<span class="st">"yearly seasonality"</span>)</span>
-<span id="cb15-24"><a href="#cb15-24"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-6"><a href="#cb15-6"></a>    order<span class="op">=</span>[<span class="ss">f"month_</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">13</span>)],</span>
+<span id="cb15-7"><a href="#cb15-7"></a>)</span>
+<span id="cb15-8"><a href="#cb15-8"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb15-9"><a href="#cb15-9"></a>plt.ylabel(<span class="st">""</span>)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>plt.title(<span class="st">"yearly seasonality"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="boring_linear_forecast_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">seasonality over the months aka yearly seasonality</figcaption><p></p>
-</figure>
+<p><img src="boring_linear_forecast_files/figure-html/cell-18-output-1.png" class="img-fluid"></p>
 </div>
+</div>
+<p>Now we have a beautiful overview of the seasonality over the year. we can clearly see a dip in the middle of the year and a significant uptick in the month of January. in the first week of February, the super bowl is played which is a major factor in the traffic to the wiki page. Also, we noticed that there was a dip in the middle of the year which we can also clearly see at the <code>month_6</code> mark.</p>
+</section>
+<section id="recap" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="recap"><span class="header-section-number">9</span> Recap</h2>
+<p>In this blog post I have demonstrated that the performance of a simple linear regression for time series forecasting can be improved by a factor of 1.54 up to 1.89 by simply adding dummy variables for the months. the nice thing about this is that the linear regression is available in most systems that have some kind of analytical capability (yes even in <a href="https://exceljet.net/functions/linest-function">excel</a>) and adding the dummies is so simple that you can even do it in a SQL server, the added benefit of this all is that the fitting of the model is quick, therefore you can retrain the model monthly 😉, weekly, daily, hourly.</p>
+</section>
+<section id="encore" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="encore"><span class="header-section-number">10</span> Encore</h2>
+<p>What if we were to dummies not just for the months, but also for other datetime features and really turn it up to <a href="https://www.youtube.com/watch?v=4xgx4k83zzc">eleven</a></p>
+<p><img src="artifacts/all_the_things.jpg" class="img-fluid"></p>
+<p>Let us create dummies for the following datetime features:</p>
+<ul>
+<li>month</li>
+<li>week</li>
+<li>dayofweek</li>
+<li>is_weekend</li>
+<li>quarter</li>
+</ul>
+<p>when converting this to dummies it will result in a tremendous number of extra features and therefore we will apply a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html">Elasticnet</a> linear model. Usually, this type of model can handle lots of features better than an ordinary linear regression because of the regularization, this will be left as an exercise for the reader.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># creating dummies for the months</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>df_dummies_all <span class="op">=</span> df_in.assign(</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    month<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.month.astype(<span class="st">"category"</span>),</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    week<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.isocalendar().week.astype(<span class="st">"category"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    dayofweek<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.dayofweek.astype(<span class="st">"category"</span>),</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    is_weekend<span class="op">=</span>(df_in[<span class="st">"ds"</span>].dt.dayofweek) <span class="op">&gt;=</span> <span class="dv">5</span>,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    quarter<span class="op">=</span>df_in[<span class="st">"ds"</span>].dt.quarter.astype(<span class="st">"category"</span>),</span>
+<span id="cb16-8"><a href="#cb16-8"></a>    ds_int<span class="op">=</span>df_in[<span class="st">"ds"</span>].astype(<span class="bu">int</span>),</span>
+<span id="cb16-9"><a href="#cb16-9"></a>)</span>
+<span id="cb16-10"><a href="#cb16-10"></a></span>
+<span id="cb16-11"><a href="#cb16-11"></a>not_dummy <span class="op">=</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>, <span class="st">"ds_int"</span>}</span>
+<span id="cb16-12"><a href="#cb16-12"></a>to_dummy <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies_all.columns) <span class="op">-</span> not_dummy)</span>
+<span id="cb16-13"><a href="#cb16-13"></a></span>
+<span id="cb16-14"><a href="#cb16-14"></a>df_dummies_all <span class="op">=</span> pd.get_dummies(</span>
+<span id="cb16-15"><a href="#cb16-15"></a>    data<span class="op">=</span>df_dummies_all,</span>
+<span id="cb16-16"><a href="#cb16-16"></a>    columns<span class="op">=</span>to_dummy,</span>
+<span id="cb16-17"><a href="#cb16-17"></a>    drop_first<span class="op">=</span><span class="va">True</span>,  <span class="co"># reduce the amount of cols with no additional info</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a>)</span>
+<span id="cb16-19"><a href="#cb16-19"></a>all_features <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>(df_dummies_all.columns) <span class="op">-</span> {<span class="st">"y"</span>, <span class="st">"ds"</span>})</span>
+<span id="cb16-20"><a href="#cb16-20"></a></span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="co"># slicing the input in train test</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a>df_train_dummies_all <span class="op">=</span> df_dummies_all[</span>
+<span id="cb16-23"><a href="#cb16-23"></a>    (df_dummies_all[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>) <span class="op">&amp;</span> (df_dummies_all[<span class="st">"ds"</span>] <span class="op">&lt;</span> <span class="st">"2015"</span>)</span>
+<span id="cb16-24"><a href="#cb16-24"></a>]</span>
+<span id="cb16-25"><a href="#cb16-25"></a>df_test_dummies_all <span class="op">=</span> df_dummies_all[(df_dummies_all[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span>
+<span id="cb16-26"><a href="#cb16-26"></a></span>
+<span id="cb16-27"><a href="#cb16-27"></a>X_train <span class="op">=</span> df_train_dummies_all.loc[:, all_features]</span>
+<span id="cb16-28"><a href="#cb16-28"></a>y_train <span class="op">=</span> df_train_dummies_all[[<span class="st">"y"</span>]]</span>
+<span id="cb16-29"><a href="#cb16-29"></a></span>
+<span id="cb16-30"><a href="#cb16-30"></a>X_test <span class="op">=</span> df_test_dummies_all.loc[:, all_features]</span>
+<span id="cb16-31"><a href="#cb16-31"></a>y_test <span class="op">=</span> df_test_dummies_all[[<span class="st">"y"</span>]]</span>
+<span id="cb16-32"><a href="#cb16-32"></a></span>
+<span id="cb16-33"><a href="#cb16-33"></a>df_dummies_all.drop(columns<span class="op">=</span>[<span class="st">"ds_int"</span>, <span class="st">"y"</span>]).sample(</span>
+<span id="cb16-34"><a href="#cb16-34"></a>    n<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb16-35"><a href="#cb16-35"></a>    ignore_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb16-36"><a href="#cb16-36"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb16-37"><a href="#cb16-37"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>ds</th>
+      <th>dayofweek_1</th>
+      <th>dayofweek_2</th>
+      <th>dayofweek_3</th>
+      <th>dayofweek_4</th>
+      <th>dayofweek_5</th>
+      <th>dayofweek_6</th>
+      <th>week_2</th>
+      <th>week_3</th>
+      <th>week_4</th>
+      <th>...</th>
+      <th>month_6</th>
+      <th>month_7</th>
+      <th>month_8</th>
+      <th>month_9</th>
+      <th>month_10</th>
+      <th>month_11</th>
+      <th>month_12</th>
+      <th>quarter_2</th>
+      <th>quarter_3</th>
+      <th>quarter_4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014-05-06</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2012-07-05</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2015-06-21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2012-03-09</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2012-08-10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2013-05-11</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>6 rows × 74 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># utilzing an elasticnet linear model to compensate for the amount of features</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>elastic_params <span class="op">=</span> {</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    <span class="st">"l1_ratio"</span>: np.linspace(start<span class="op">=</span><span class="fl">0.000001</span>, stop<span class="op">=</span><span class="dv">1</span>, num<span class="op">=</span><span class="dv">100</span>),</span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="st">"cv"</span>: <span class="dv">7</span>,</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="st">"n_alphas"</span>: <span class="dv">1_00</span>,</span>
+<span id="cb17-6"><a href="#cb17-6"></a>    <span class="st">"n_jobs"</span>: <span class="op">-</span><span class="dv">1</span>,</span>
+<span id="cb17-7"><a href="#cb17-7"></a>}</span>
+<span id="cb17-8"><a href="#cb17-8"></a></span>
+<span id="cb17-9"><a href="#cb17-9"></a>pipeline_all <span class="op">=</span> make_pipeline(MinMaxScaler(), ElasticNetCV(<span class="op">**</span>elastic_params))</span>
+<span id="cb17-10"><a href="#cb17-10"></a></span>
+<span id="cb17-11"><a href="#cb17-11"></a>pipeline_all.fit(X<span class="op">=</span>X_train, y<span class="op">=</span>y_train.values.ravel())</span>
+<span id="cb17-12"><a href="#cb17-12"></a>y_pred_dummies_all <span class="op">=</span> pipeline_all.predict(X<span class="op">=</span>X_test)</span>
+<span id="cb17-13"><a href="#cb17-13"></a></span>
+<span id="cb17-14"><a href="#cb17-14"></a>mse_dummies_all <span class="op">=</span> mean_squared_error(y_test, y_pred_dummies_all)</span>
+<span id="cb17-15"><a href="#cb17-15"></a>mae_dummies_all <span class="op">=</span> mean_absolute_error(y_test, y_pred_dummies_all)</span>
+<span id="cb17-16"><a href="#cb17-16"></a></span>
+<span id="cb17-17"><a href="#cb17-17"></a>plt.plot_date(</span>
+<span id="cb17-18"><a href="#cb17-18"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb17-19"><a href="#cb17-19"></a>    y<span class="op">=</span>df_test[<span class="st">"y"</span>],</span>
+<span id="cb17-20"><a href="#cb17-20"></a>    label<span class="op">=</span><span class="st">"test"</span>,</span>
+<span id="cb17-21"><a href="#cb17-21"></a>    fmt<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb17-22"><a href="#cb17-22"></a>    alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb17-23"><a href="#cb17-23"></a>)</span>
+<span id="cb17-24"><a href="#cb17-24"></a></span>
+<span id="cb17-25"><a href="#cb17-25"></a>plt.plot_date(</span>
+<span id="cb17-26"><a href="#cb17-26"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb17-27"><a href="#cb17-27"></a>    y<span class="op">=</span>y_pred_dummies,</span>
+<span id="cb17-28"><a href="#cb17-28"></a>    label<span class="op">=</span><span class="st">"prediction with dummies"</span>,</span>
+<span id="cb17-29"><a href="#cb17-29"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb17-30"><a href="#cb17-30"></a>)</span>
+<span id="cb17-31"><a href="#cb17-31"></a></span>
+<span id="cb17-32"><a href="#cb17-32"></a>plt.plot_date(</span>
+<span id="cb17-33"><a href="#cb17-33"></a>    x<span class="op">=</span>df_test[<span class="st">"ds"</span>],</span>
+<span id="cb17-34"><a href="#cb17-34"></a>    y<span class="op">=</span>y_pred_dummies_all,</span>
+<span id="cb17-35"><a href="#cb17-35"></a>    label<span class="op">=</span><span class="st">"prediction with all dummies"</span>,</span>
+<span id="cb17-36"><a href="#cb17-36"></a>    fmt<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb17-37"><a href="#cb17-37"></a>)</span>
+<span id="cb17-38"><a href="#cb17-38"></a></span>
+<span id="cb17-39"><a href="#cb17-39"></a></span>
+<span id="cb17-40"><a href="#cb17-40"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
+<span id="cb17-41"><a href="#cb17-41"></a>plt.tick_params(axis<span class="op">=</span><span class="st">"x"</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb17-42"><a href="#cb17-42"></a>plt.ylabel(<span class="st">"$y$"</span>)</span>
+<span id="cb17-43"><a href="#cb17-43"></a>plt.title(</span>
+<span id="cb17-44"><a href="#cb17-44"></a>    <span class="ss">f"linear regression with dummies applied (mse= </span><span class="sc">{</span>mse_dummies_all<span class="sc">:.3}</span><span class="ss">, mae=</span><span class="sc">{</span>mae_dummies_all<span class="sc">:.3}</span><span class="ss">)"</span></span>
+<span id="cb17-45"><a href="#cb17-45"></a>)</span>
+<span id="cb17-46"><a href="#cb17-46"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="boring_linear_forecast_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Immediately it becomes obvious that the model captures more of the fine-grained movement of the time series. this is also reflected in the fact that both error metrics have improved.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="bu">print</span>(<span class="ss">f"mean squared error = </span><span class="sc">{</span>mse_dummies_all<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mse month dummies -&gt; </span><span class="sc">{</span>mse<span class="op">/</span>mse_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mse all dummies   -&gt; </span><span class="sc">{</span>mse<span class="op">/</span>mse_dummies_all<span class="sc">:.3}</span><span class="ss">x"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">79</span>)</span>
+<span id="cb18-5"><a href="#cb18-5"></a></span>
+<span id="cb18-6"><a href="#cb18-6"></a><span class="bu">print</span>(<span class="ss">f"mean absolute error = </span><span class="sc">{</span>mae_dummies_all<span class="sc">:.3}</span><span class="ss">"</span>)</span>
+<span id="cb18-7"><a href="#cb18-7"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mea month dummies -&gt; </span><span class="sc">{</span>mae<span class="op">/</span>mae_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mea all dummies   -&gt; </span><span class="sc">{</span>mae<span class="op">/</span>mae_dummies_all<span class="sc">:.3}</span><span class="ss">x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>mean squared error = 0.262
+improvement factor mse month dummies -&gt; 1.91x
+improvement factor mse all dummies   -&gt; 2.35x
+-------------------------------------------------------------------------------
+mean absolute error = 0.356
+improvement factor mea month dummies -&gt; 1.55x
+improvement factor mea all dummies   -&gt; 1.73x</code></pre>
 </div>
 </div>
 
