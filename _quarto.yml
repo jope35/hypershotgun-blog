@@ -18,7 +18,7 @@ website:
   navbar:
     logo: apple-touch-icon.png
     right:
-      - about.qmd
+      - whois.qmd
       - icon: linkedin
         text: LinkedIn
         href: https://www.linkedin.com/in/joostdetheije/

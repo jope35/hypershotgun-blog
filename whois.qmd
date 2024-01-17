@@ -1,5 +1,5 @@
 ---
-title: "🤖 About"
+title: "whois 🤖"
 image: favicons/HS_logo.png
 about:
   template: solana
@@ -15,7 +15,7 @@ about:
       href: https://github.com/jope35
 
 ---
-## About
+## whois
 - Machine Learning Scientist 🤖
 - loves to puzzle 🧩
 - Amsterdam area 🇳🇱🇪🇺
