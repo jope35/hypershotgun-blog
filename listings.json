@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/cluster/cluster.html",
       "/posts/boring_forecast/boring_linear_forecast.html"
     ]
   }

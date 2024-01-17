@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/about.html</loc>
-    <lastmod>2023-03-09T14:21:56.226Z</lastmod>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
+    <lastmod>2024-01-17T21:02:45.884Z</lastmod>
   </url>
   <url>
     <loc>https://jope35.github.io/hypershotgun-blog/index.html</loc>
-    <lastmod>2023-03-09T14:21:57.478Z</lastmod>
+    <lastmod>2024-01-17T21:02:44.380Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2023-03-09T14:21:58.250Z</lastmod>
+    <loc>https://jope35.github.io/hypershotgun-blog/whois.html</loc>
+    <lastmod>2024-01-17T21:02:43.400Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/cluster/cluster.html</loc>
+    <lastmod>2024-01-17T21:02:44.996Z</lastmod>
   </url>
 </urlset>
