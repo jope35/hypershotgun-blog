@@ -282,14 +282,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div class="cell" data-execution_count="31">
+<div class="cell" data-execution_count="1">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="32">
+<div class="cell" data-execution_count="2">
 <details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Load the customer dataset to analyze shopping patterns</span></span>
@@ -329,52 +332,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">103</td>
-<td>104</td>
+<td data-quarto-table-cell-role="th">104</td>
+<td>105</td>
 <td>male</td>
-<td>26</td>
+<td>49</td>
 <td>62</td>
-<td>55</td>
+<td>56</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">177</td>
-<td>178</td>
-<td>male</td>
-<td>27</td>
-<td>88</td>
-<td>69</td>
+<td data-quarto-table-cell-role="th">78</td>
+<td>79</td>
+<td>female</td>
+<td>23</td>
+<td>54</td>
+<td>52</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">43</td>
-<td>44</td>
+<td data-quarto-table-cell-role="th">80</td>
+<td>81</td>
+<td>male</td>
+<td>57</td>
+<td>54</td>
+<td>51</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">163</td>
+<td>164</td>
 <td>female</td>
 <td>31</td>
-<td>39</td>
-<td>61</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">81</td>
-<td>82</td>
-<td>male</td>
-<td>38</td>
-<td>54</td>
-<td>55</td>
+<td>81</td>
+<td>93</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">169</td>
-<td>170</td>
-<td>male</td>
-<td>32</td>
-<td>87</td>
-<td>63</td>
+<td data-quarto-table-cell-role="th">34</td>
+<td>35</td>
+<td>female</td>
+<td>49</td>
+<td>33</td>
+<td>14</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">99</td>
-<td>100</td>
-<td>male</td>
-<td>20</td>
-<td>61</td>
-<td>49</td>
+<td data-quarto-table-cell-role="th">153</td>
+<td>154</td>
+<td>female</td>
+<td>38</td>
+<td>78</td>
+<td>76</td>
 </tr>
 </tbody>
 </table>
@@ -388,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Additionally, when performing exploratory analysis, a numeric encoding often allows easier visualization of the impact of gender relative to the other numeric features. Box plots, scatter plots with color-coded points, and other techniques can provide better insights into how gender correlates with shopper age, income or spending habits when mapped to a numeric form.</p>
 <p>Therefore, to enable the application of clustering algorithms and more impactful analysis, we need to process the ‘gender’ column by encoding the categories as numbers. Common encoding schemes include mapping “Male” and “Female” to 0 and 1 respectively, or using one-hot encoding to create an additional binary feature column for each category. After encoding, gender will be represented numerically like the other existing features.</p>
 <p>In summary, as gender is the only non-numeric column, and ID has high cardinality unsuitable for clustering, effectively preparing the data requires encoding the gender categorical data and excluding the customer ID column.</p>
-<div class="cell" data-execution_count="33">
+<div class="cell" data-execution_count="3">
 <details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
@@ -403,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
 <span id="cb3-11"><a href="#cb3-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -419,18 +422,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">65</td>
-<td>18</td>
-<td>48</td>
-<td>59</td>
+<td data-quarto-table-cell-role="th">32</td>
+<td>53</td>
+<td>33</td>
+<td>4</td>
 <td>True</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">11</td>
-<td>35</td>
-<td>19</td>
-<td>99</td>
+<td data-quarto-table-cell-role="th">39</td>
+<td>20</td>
+<td>37</td>
+<td>75</td>
 <td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">67</td>
+<td>68</td>
+<td>48</td>
+<td>48</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">123</td>
+<td>39</td>
+<td>69</td>
+<td>91</td>
+<td>True</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">184</td>
@@ -439,27 +456,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>39</td>
 <td>False</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">50</td>
-<td>49</td>
-<td>42</td>
-<td>52</td>
-<td>False</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">159</td>
-<td>30</td>
-<td>78</td>
-<td>73</td>
-<td>False</td>
-</tr>
 </tbody>
 </table>
 
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="34">
+<div class="cell" data-execution_count="4">
 <details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>df_feature.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -482,7 +485,7 @@ memory usage: 5.0 KB</code></pre>
 <section id="exploratory-data-analysis" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">3</span> Exploratory Data Analysis</h2>
 <p>Visualize the data and derive initial insights.</p>
-<div class="cell" data-execution_count="35">
+<div class="cell" data-execution_count="5">
 <details open="">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>display(df_feature.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -549,10 +552,10 @@ memory usage: 5.0 KB</code></pre>
 <p>The average annual income is $60,560, ranging from $15,000 to $137,000. 50% of customers earn $61,500 or less.</p>
 <p>For the spending score (1-100), the average is 50.2. Half the customers have a spending score of 50 or below. The minimum is 1 and maximum 99, showing a wide range in spending habits.</p>
 <p>Overall, we see variation among customers in age, income levels, and purchasing patterns. Clustering algorithms can help segment customers into groups based on these attributes to develop targeted marketing approaches. let us first look at the distributions of the features.</p>
-<div class="cell" data-execution_count="41">
+<div class="cell" data-execution_count="6">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>sns.pairplot(df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, corner<span class="op">=</span><span class="va">True</span>, diag_kind<span class="op">=</span><span class="st">"hist"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>sns.pairplot(df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, corner<span class="op">=</span><span class="va">True</span>, diag_kind<span class="op">=</span><span class="st">"kde"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>/Users/JdeTheije/mambaforge/envs/hypershotgun/lib/python3.11/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
@@ -563,7 +566,7 @@ memory usage: 5.0 KB</code></pre>
   with pd.option_context('mode.use_inf_as_na', True):</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+<p><img src="cluster_files/figure-html/cell-7-output-2.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
