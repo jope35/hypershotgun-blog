@@ -223,33 +223,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>#TODO add intro to the dataset dataset can be found <a href="https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python">here</a></p>
 <table class="table">
 <colgroup>
-<col style="width: 19%">
-<col style="width: 12%">
-<col style="width: 10%">
-<col style="width: 16%">
-<col style="width: 41%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>CustomerID</th>
-<th>Gender</th>
-<th>Age</th>
-<th>Annual Income (k$)</th>
-<th>Spending Score (1-100)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Unique ID assigned to the customer</td>
-<td>Gender of the customer</td>
-<td>Age of the customer</td>
-<td>Annual income of the customer</td>
-<td>Score assigned by the mall based on customer behavior and spending nature</td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<colgroup>
 <col style="width: 50%">
 <col style="width: 50%">
 </colgroup>
@@ -286,10 +259,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> umap</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11"></a>plt.style.use(<span class="st">"seaborn-v0_8-darkgrid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="2">
@@ -332,52 +311,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">104</td>
-<td>105</td>
+<td data-quarto-table-cell-role="th">164</td>
+<td>165</td>
 <td>male</td>
-<td>49</td>
-<td>62</td>
-<td>56</td>
+<td>50</td>
+<td>85</td>
+<td>26</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">78</td>
-<td>79</td>
-<td>female</td>
-<td>23</td>
-<td>54</td>
-<td>52</td>
+<td data-quarto-table-cell-role="th">123</td>
+<td>124</td>
+<td>male</td>
+<td>39</td>
+<td>69</td>
+<td>91</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">80</td>
-<td>81</td>
-<td>male</td>
-<td>57</td>
-<td>54</td>
-<td>51</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">163</td>
-<td>164</td>
-<td>female</td>
-<td>31</td>
-<td>81</td>
-<td>93</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">34</td>
-<td>35</td>
-<td>female</td>
-<td>49</td>
-<td>33</td>
-<td>14</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">153</td>
-<td>154</td>
+<td data-quarto-table-cell-role="th">193</td>
+<td>194</td>
 <td>female</td>
 <td>38</td>
-<td>78</td>
-<td>76</td>
+<td>113</td>
+<td>91</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">51</td>
+<td>52</td>
+<td>male</td>
+<td>33</td>
+<td>42</td>
+<td>60</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">23</td>
+<td>24</td>
+<td>male</td>
+<td>31</td>
+<td>25</td>
+<td>73</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">60</td>
+<td>61</td>
+<td>male</td>
+<td>70</td>
+<td>46</td>
+<td>56</td>
 </tr>
 </tbody>
 </table>
@@ -422,38 +401,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">32</td>
-<td>53</td>
-<td>33</td>
-<td>4</td>
-<td>True</td>
+<td data-quarto-table-cell-role="th">153</td>
+<td>38</td>
+<td>78</td>
+<td>76</td>
+<td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">39</td>
-<td>20</td>
-<td>37</td>
-<td>75</td>
+<td data-quarto-table-cell-role="th">97</td>
+<td>27</td>
+<td>60</td>
+<td>50</td>
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">67</td>
-<td>68</td>
-<td>48</td>
-<td>48</td>
+<td data-quarto-table-cell-role="th">118</td>
+<td>51</td>
+<td>67</td>
+<td>43</td>
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">123</td>
-<td>39</td>
+<td data-quarto-table-cell-role="th">191</td>
+<td>32</td>
+<td>103</td>
 <td>69</td>
-<td>91</td>
-<td>True</td>
+<td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">184</td>
-<td>41</td>
-<td>99</td>
-<td>39</td>
+<td data-quarto-table-cell-role="th">186</td>
+<td>54</td>
+<td>101</td>
+<td>24</td>
 <td>False</td>
 </tr>
 </tbody>
@@ -555,24 +534,224 @@ memory usage: 5.0 KB</code></pre>
 <div class="cell" data-execution_count="6">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>sns.pairplot(df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, corner<span class="op">=</span><span class="va">True</span>, diag_kind<span class="op">=</span><span class="st">"kde"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>sns.countplot(data<span class="op">=</span>df_feature, x<span class="op">=</span><span class="st">"gender_male"</span>, stat<span class="op">=</span><span class="st">"percent"</span>, hue<span class="op">=</span><span class="st">"gender_male"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>/Users/JdeTheije/mambaforge/envs/hypershotgun/lib/python3.11/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
-  with pd.option_context('mode.use_inf_as_na', True):
-/Users/JdeTheije/mambaforge/envs/hypershotgun/lib/python3.11/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
-  with pd.option_context('mode.use_inf_as_na', True):
-/Users/JdeTheije/mambaforge/envs/hypershotgun/lib/python3.11/site-packages/seaborn/_oldcore.py:1119: FutureWarning: use_inf_as_na option is deprecated and will be removed in a future version. Convert inf values to NaN before operating instead.
-  with pd.option_context('mode.use_inf_as_na', True):</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>&lt;Axes: xlabel='gender_male', ylabel='percent'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="cluster_files/figure-html/cell-7-output-2.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>sns.violinplot(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>    split<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>    gap<span class="op">=</span><span class="fl">0.05</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>&lt;Axes: ylabel='age'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="cluster_files/figure-html/cell-8-output-2.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>sns.lmplot(</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
+<span id="cb11-9"><a href="#cb11-9"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10"></a></span>
+<span id="cb11-11"><a href="#cb11-11"></a>sns.lmplot(</span>
+<span id="cb11-12"><a href="#cb11-12"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb11-13"><a href="#cb11-13"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-14"><a href="#cb11-14"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb11-16"><a href="#cb11-16"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-17"><a href="#cb11-17"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-18"><a href="#cb11-18"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
+<span id="cb11-19"><a href="#cb11-19"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="cluster_files/figure-html/cell-9-output-1.svg" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="cluster_files/figure-html/cell-9-output-2.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>sns.pairplot(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    df_feature,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>    corner<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    diag_kind<span class="op">=</span><span class="st">"kde"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
+<span id="cb12-7"><a href="#cb12-7"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="cluster_files/figure-html/cell-10-output-1.svg" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="31">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># UMAP is set up with chosen parameters to balance capturing both local and global</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># data structure, with the goal of a 2D representation.</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>reducer <span class="op">=</span> umap.UMAP(n_neighbors<span class="op">=</span><span class="dv">15</span>, n_components<span class="op">=</span><span class="dv">2</span>, metric<span class="op">=</span><span class="st">"euclidean"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># fit the data to the reducer</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a>embeddings <span class="op">=</span> reducer.fit_transform(df_feature)</span>
+<span id="cb13-7"><a href="#cb13-7"></a></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># using the color_palette to obtain the correct coloring for plot</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>labels <span class="op">=</span> [sns.color_palette()[x] <span class="cf">for</span> x <span class="kw">in</span> df_feature[<span class="st">"gender_male"</span>]]</span>
+<span id="cb13-10"><a href="#cb13-10"></a>plt.scatter(embeddings[:, <span class="dv">0</span>], embeddings[:, <span class="dv">1</span>], c<span class="op">=</span>labels)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="cluster_files/figure-html/cell-11-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 </section>
 <section id="feature-engineering" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="feature-engineering"><span class="header-section-number">4</span> Feature Engineering</h2>
 <p>Based on your EDA, create features that might help define customer segmentation, such as total purchase value, average purchase size, frequency of purchase, etc.</p>
+<ul>
+<li>create bins for the age bracket</li>
+<li>calculate descriptive stats for each bracket i.e mean spending size, income</li>
+<li>ratio of income of spending</li>
+<li>normalization of variables -&gt; make comment on the distance calculations</li>
+</ul>
+<div class="cell" data-execution_count="43">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>binned, bins <span class="op">=</span> pd.cut(df_feature[<span class="st">"age"</span>], bins<span class="op">=</span><span class="dv">6</span>, retbins<span class="op">=</span><span class="va">True</span>, labels<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">6</span>)))</span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a>df_feature.assign(binned<span class="op">=</span>binned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">spending</th>
+<th data-quarto-table-cell-role="th">gender_male</th>
+<th data-quarto-table-cell-role="th">binned</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>19</td>
+<td>15</td>
+<td>39</td>
+<td>True</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>21</td>
+<td>15</td>
+<td>81</td>
+<td>True</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>20</td>
+<td>16</td>
+<td>6</td>
+<td>False</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>23</td>
+<td>16</td>
+<td>77</td>
+<td>False</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>31</td>
+<td>17</td>
+<td>40</td>
+<td>False</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">195</td>
+<td>35</td>
+<td>120</td>
+<td>79</td>
+<td>False</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">196</td>
+<td>45</td>
+<td>126</td>
+<td>28</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">197</td>
+<td>32</td>
+<td>126</td>
+<td>74</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">198</td>
+<td>32</td>
+<td>137</td>
+<td>18</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">199</td>
+<td>30</td>
+<td>137</td>
+<td>83</td>
+<td>True</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 5 columns</p>
+</div>
+</div>
+</div>
 </section>
 <section id="clustering" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="clustering"><span class="header-section-number">5</span> Clustering</h2>
