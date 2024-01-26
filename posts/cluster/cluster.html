@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -59,7 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -84,7 +84,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -93,13 +98,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
@@ -109,10 +115,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../../apple-touch-icon.png" alt="" class="navbar-logo">
     </a>
@@ -127,24 +133,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../whois.html" rel="" target="">
- <span class="menu-text">whois 🤖</span></a>
+    <a class="nav-link" href="../../whois.html"> 
+<span class="menu-text">whois 🤖</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text">LinkedIn</span></a>
+<span class="menu-text">LinkedIn</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="https://github.com/jope35" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/jope35"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text">Github</span></a>
+<span class="menu-text">Github</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -202,6 +208,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+
 <section id="tldr" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="tldr"><span class="header-section-number">1</span> TLDR;</h2>
 <ul>
@@ -223,8 +230,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>#TODO add intro to the dataset dataset can be found <a href="https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python">here</a></p>
 <table class="table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 23%">
+<col style="width: 76%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -255,24 +262,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div class="cell" data-execution_count="1">
-<details>
+<div id="cell-4" class="cell" data-execution_count="253">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> umap</span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a>plt.style.use(<span class="st">"seaborn-v0_8-darkgrid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> umap</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>plt.style.use(<span class="st">"seaborn-v0_8-darkgrid"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell" data-execution_count="2">
-<details open="">
+<div id="cell-5" class="cell" data-execution_count="254">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Load the customer dataset to analyze shopping patterns</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>df_mall <span class="op">=</span> pd.read_csv(<span class="st">"artifacts/Mall_Customers.csv"</span>)</span>
@@ -311,52 +318,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">164</td>
-<td>165</td>
-<td>male</td>
-<td>50</td>
-<td>85</td>
-<td>26</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">123</td>
-<td>124</td>
-<td>male</td>
-<td>39</td>
-<td>69</td>
-<td>91</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">193</td>
-<td>194</td>
+<td data-quarto-table-cell-role="th">43</td>
+<td>44</td>
 <td>female</td>
-<td>38</td>
-<td>113</td>
-<td>91</td>
+<td>31</td>
+<td>39</td>
+<td>61</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">51</td>
-<td>52</td>
+<td data-quarto-table-cell-role="th">25</td>
+<td>26</td>
 <td>male</td>
-<td>33</td>
-<td>42</td>
-<td>60</td>
+<td>29</td>
+<td>28</td>
+<td>82</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">23</td>
-<td>24</td>
+<td data-quarto-table-cell-role="th">172</td>
+<td>173</td>
 <td>male</td>
-<td>31</td>
-<td>25</td>
-<td>73</td>
+<td>36</td>
+<td>87</td>
+<td>10</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">60</td>
-<td>61</td>
+<td data-quarto-table-cell-role="th">28</td>
+<td>29</td>
+<td>female</td>
+<td>40</td>
+<td>29</td>
+<td>31</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">44</td>
+<td>45</td>
+<td>female</td>
+<td>49</td>
+<td>39</td>
+<td>28</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">75</td>
+<td>76</td>
 <td>male</td>
-<td>70</td>
-<td>46</td>
-<td>56</td>
+<td>26</td>
+<td>54</td>
+<td>54</td>
 </tr>
 </tbody>
 </table>
@@ -370,8 +377,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Additionally, when performing exploratory analysis, a numeric encoding often allows easier visualization of the impact of gender relative to the other numeric features. Box plots, scatter plots with color-coded points, and other techniques can provide better insights into how gender correlates with shopper age, income or spending habits when mapped to a numeric form.</p>
 <p>Therefore, to enable the application of clustering algorithms and more impactful analysis, we need to process the ‘gender’ column by encoding the categories as numbers. Common encoding schemes include mapping “Male” and “Female” to 0 and 1 respectively, or using one-hot encoding to create an additional binary feature column for each category. After encoding, gender will be represented numerically like the other existing features.</p>
 <p>In summary, as gender is the only non-numeric column, and ID has high cardinality unsuitable for clustering, effectively preparing the data requires encoding the gender categorical data and excluding the customer ID column.</p>
-<div class="cell" data-execution_count="3">
-<details open="">
+<div id="cell-7" class="cell" data-execution_count="255">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># clustering models usally need numerical values</span></span>
@@ -385,7 +392,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
 <span id="cb3-11"><a href="#cb3-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="255">
 <div>
 
 
@@ -401,39 +408,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">153</td>
-<td>38</td>
-<td>78</td>
-<td>76</td>
-<td>False</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">97</td>
-<td>27</td>
-<td>60</td>
-<td>50</td>
-<td>False</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">118</td>
-<td>51</td>
-<td>67</td>
-<td>43</td>
-<td>False</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">191</td>
-<td>32</td>
-<td>103</td>
-<td>69</td>
-<td>False</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">186</td>
-<td>54</td>
-<td>101</td>
+<td data-quarto-table-cell-role="th">95</td>
 <td>24</td>
+<td>60</td>
+<td>52</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">133</td>
+<td>31</td>
+<td>72</td>
+<td>71</td>
 <td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">43</td>
+<td>31</td>
+<td>39</td>
+<td>61</td>
+<td>False</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">155</td>
+<td>27</td>
+<td>78</td>
+<td>89</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">182</td>
+<td>46</td>
+<td>98</td>
+<td>15</td>
+<td>True</td>
 </tr>
 </tbody>
 </table>
@@ -441,8 +448,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="4">
-<details open="">
+<div id="cell-8" class="cell" data-execution_count="256">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>df_feature.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -464,8 +471,8 @@ memory usage: 5.0 KB</code></pre>
 <section id="exploratory-data-analysis" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">3</span> Exploratory Data Analysis</h2>
 <p>Visualize the data and derive initial insights.</p>
-<div class="cell" data-execution_count="5">
-<details open="">
+<div id="cell-10" class="cell" data-execution_count="257">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>display(df_feature.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -531,97 +538,282 @@ memory usage: 5.0 KB</code></pre>
 <p>The average annual income is $60,560, ranging from $15,000 to $137,000. 50% of customers earn $61,500 or less.</p>
 <p>For the spending score (1-100), the average is 50.2. Half the customers have a spending score of 50 or below. The minimum is 1 and maximum 99, showing a wide range in spending habits.</p>
 <p>Overall, we see variation among customers in age, income levels, and purchasing patterns. Clustering algorithms can help segment customers into groups based on these attributes to develop targeted marketing approaches. let us first look at the distributions of the features.</p>
-<div class="cell" data-execution_count="6">
-<details>
+<div id="cell-12" class="cell" data-execution_count="258">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>sns.countplot(data<span class="op">=</span>df_feature, x<span class="op">=</span><span class="st">"gender_male"</span>, stat<span class="op">=</span><span class="st">"percent"</span>, hue<span class="op">=</span><span class="st">"gender_male"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>&lt;Axes: xlabel='gender_male', ylabel='percent'&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-7-output-2.svg" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="7">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>sns.violinplot(</span>
-<span id="cb9-2"><a href="#cb9-2"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3"></a>    data<span class="op">=</span>df_feature,</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>    split<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    gap<span class="op">=</span><span class="fl">0.05</span>,</span>
-<span id="cb9-7"><a href="#cb9-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>&lt;Axes: ylabel='age'&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-8-output-2.svg" class="img-fluid"></p>
-</div>
-</div>
-<div class="cell" data-execution_count="8">
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>sns.lmplot(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>    data<span class="op">=</span>df_feature,</span>
-<span id="cb11-3"><a href="#cb11-3"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb11-8"><a href="#cb11-8"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
-<span id="cb11-9"><a href="#cb11-9"></a>)</span>
-<span id="cb11-10"><a href="#cb11-10"></a></span>
-<span id="cb11-11"><a href="#cb11-11"></a>sns.lmplot(</span>
-<span id="cb11-12"><a href="#cb11-12"></a>    data<span class="op">=</span>df_feature,</span>
-<span id="cb11-13"><a href="#cb11-13"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb11-14"><a href="#cb11-14"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb11-15"><a href="#cb11-15"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb11-16"><a href="#cb11-16"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb11-17"><a href="#cb11-17"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb11-18"><a href="#cb11-18"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
-<span id="cb11-19"><a href="#cb11-19"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb7-2"><a href="#cb7-2"></a></span>
+<span id="cb7-3"><a href="#cb7-3"></a>sns.countplot(</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    data<span class="op">=</span>df_feature, x<span class="op">=</span><span class="st">"gender_male"</span>, stat<span class="op">=</span><span class="st">"percent"</span>, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>]</span>
+<span id="cb7-5"><a href="#cb7-5"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a>sns.kdeplot(x<span class="op">=</span><span class="st">"age"</span>, data<span class="op">=</span>df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-9-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-7-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-13" class="cell" data-execution_count="259">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
+<span id="cb8-4"><a href="#cb8-4"></a>sns.regplot(</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
+<span id="cb8-9"><a href="#cb8-9"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb8-10"><a href="#cb8-10"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-11"><a href="#cb8-11"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-12"><a href="#cb8-12"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb8-13"><a href="#cb8-13"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14"></a></span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
+<span id="cb8-17"><a href="#cb8-17"></a>sns.regplot(</span>
+<span id="cb8-18"><a href="#cb8-18"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
+<span id="cb8-19"><a href="#cb8-19"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb8-21"><a href="#cb8-21"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
+<span id="cb8-22"><a href="#cb8-22"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb8-23"><a href="#cb8-23"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-24"><a href="#cb8-24"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-25"><a href="#cb8-25"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb8-26"><a href="#cb8-26"></a>)</span>
+<span id="cb8-27"><a href="#cb8-27"></a>curr_ax.legend(</span>
+<span id="cb8-28"><a href="#cb8-28"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
+<span id="cb8-29"><a href="#cb8-29"></a>)</span>
+<span id="cb8-30"><a href="#cb8-30"></a>curr_ax.set_title(<span class="st">"age vs. income"</span>)</span>
+<span id="cb8-31"><a href="#cb8-31"></a></span>
+<span id="cb8-32"><a href="#cb8-32"></a></span>
+<span id="cb8-33"><a href="#cb8-33"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb8-34"><a href="#cb8-34"></a>sns.regplot(</span>
+<span id="cb8-35"><a href="#cb8-35"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
+<span id="cb8-36"><a href="#cb8-36"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb8-37"><a href="#cb8-37"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb8-38"><a href="#cb8-38"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
+<span id="cb8-39"><a href="#cb8-39"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb8-40"><a href="#cb8-40"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-41"><a href="#cb8-41"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-42"><a href="#cb8-42"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb8-43"><a href="#cb8-43"></a>)</span>
+<span id="cb8-44"><a href="#cb8-44"></a></span>
+<span id="cb8-45"><a href="#cb8-45"></a></span>
+<span id="cb8-46"><a href="#cb8-46"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb8-47"><a href="#cb8-47"></a>sns.regplot(</span>
+<span id="cb8-48"><a href="#cb8-48"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
+<span id="cb8-49"><a href="#cb8-49"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb8-50"><a href="#cb8-50"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb8-51"><a href="#cb8-51"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
+<span id="cb8-52"><a href="#cb8-52"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb8-53"><a href="#cb8-53"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-54"><a href="#cb8-54"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb8-55"><a href="#cb8-55"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb8-56"><a href="#cb8-56"></a>)</span>
+<span id="cb8-57"><a href="#cb8-57"></a>curr_ax.legend(</span>
+<span id="cb8-58"><a href="#cb8-58"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
+<span id="cb8-59"><a href="#cb8-59"></a>)</span>
+<span id="cb8-60"><a href="#cb8-60"></a>curr_ax.set_title(<span class="st">"age vs. spending"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="259">
+<pre><code>Text(0.5, 1.0, 'age vs. spending')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-9-output-2.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-8-output-2.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-execution_count="9">
-<details>
+</div>
+<div id="cell-14" class="cell" data-execution_count="260">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>sns.pairplot(</span>
-<span id="cb12-2"><a href="#cb12-2"></a>    df_feature,</span>
-<span id="cb12-3"><a href="#cb12-3"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4"></a>    corner<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-5"><a href="#cb12-5"></a>    diag_kind<span class="op">=</span><span class="st">"kde"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6"></a>    markers<span class="op">=</span>[<span class="st">"D"</span>, <span class="st">"s"</span>],</span>
-<span id="cb12-7"><a href="#cb12-7"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>sns.scatterplot(</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>    hue<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"viridis"</span>, as_cmap<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-10-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-9-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-execution_count="31">
-<details>
+</div>
+<div id="cell-15" class="cell" data-execution_count="261">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># UMAP is set up with chosen parameters to balance capturing both local and global</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># data structure, with the goal of a 2D representation.</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a>reducer <span class="op">=</span> umap.UMAP(n_neighbors<span class="op">=</span><span class="dv">15</span>, n_components<span class="op">=</span><span class="dv">2</span>, metric<span class="op">=</span><span class="st">"euclidean"</span>)</span>
-<span id="cb13-4"><a href="#cb13-4"></a></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># fit the data to the reducer</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a>embeddings <span class="op">=</span> reducer.fit_transform(df_feature)</span>
-<span id="cb13-7"><a href="#cb13-7"></a></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># using the color_palette to obtain the correct coloring for plot</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a>labels <span class="op">=</span> [sns.color_palette()[x] <span class="cf">for</span> x <span class="kw">in</span> df_feature[<span class="st">"gender_male"</span>]]</span>
-<span id="cb13-10"><a href="#cb13-10"></a>plt.scatter(embeddings[:, <span class="dv">0</span>], embeddings[:, <span class="dv">1</span>], c<span class="op">=</span>labels)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># fig, ax = plt.subplots(1, figsize=FIGSIZE)</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>ax <span class="op">=</span> sns.jointplot(</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    kind<span class="op">=</span><span class="st">"hex"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    joint_kws<span class="op">=</span>{</span>
+<span id="cb11-8"><a href="#cb11-8"></a>        <span class="st">"gridsize"</span>: <span class="dv">20</span>,</span>
+<span id="cb11-9"><a href="#cb11-9"></a>    },</span>
+<span id="cb11-10"><a href="#cb11-10"></a>    marginal_kws<span class="op">=</span>{<span class="st">"bins"</span>: <span class="dv">23</span>},</span>
+<span id="cb11-11"><a href="#cb11-11"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="cluster_files/figure-html/cell-11-output-1.svg" class="img-fluid"></p>
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-10-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="262">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># UMAP is set up with chosen parameters to balance capturing both local and global</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># data structure, with the goal of a 2D representation.</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>reducer <span class="op">=</span> umap.UMAP(n_neighbors<span class="op">=</span><span class="dv">15</span>, n_components<span class="op">=</span><span class="dv">2</span>, min_dist<span class="op">=</span><span class="fl">0.15</span>, metric<span class="op">=</span><span class="st">"euclidean"</span>)</span>
+<span id="cb12-4"><a href="#cb12-4"></a></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="co"># fit the data to the reducer</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>embeddings <span class="op">=</span> reducer.fit_transform(df_feature)</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co"># using the color_palette to obtain the correct coloring for plot</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>labels <span class="op">=</span> [sns.color_palette()[x] <span class="cf">for</span> x <span class="kw">in</span> df_feature[<span class="st">"gender_male"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-17" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a>sns.scatterplot(x<span class="op">=</span>embeddings[:, <span class="dv">0</span>], y<span class="op">=</span>embeddings[:, <span class="dv">1</span>], hue<span class="op">=</span>labels, ax<span class="op">=</span>ax, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb13-4"><a href="#cb13-4"></a>ax.legend(<span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-12-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-18" class="cell" data-execution_count="335">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> plot_umap(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    n_neighbors<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb14-3"><a href="#cb14-3"></a>    min_dist<span class="op">=</span><span class="fl">0.15</span>,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>    n_components<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>    ax: plt.axes <span class="op">=</span> <span class="va">None</span>,</span>
+<span id="cb14-6"><a href="#cb14-6"></a>):</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    <span class="co"># data structure, with the goal of a 2D representation.</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a>    reducer <span class="op">=</span> umap.UMAP(</span>
+<span id="cb14-9"><a href="#cb14-9"></a>        n_neighbors<span class="op">=</span>n_neighbors,</span>
+<span id="cb14-10"><a href="#cb14-10"></a>        n_components<span class="op">=</span>n_components,</span>
+<span id="cb14-11"><a href="#cb14-11"></a>        min_dist<span class="op">=</span>min_dist,</span>
+<span id="cb14-12"><a href="#cb14-12"></a>        metric<span class="op">=</span><span class="st">"euclidean"</span>,</span>
+<span id="cb14-13"><a href="#cb14-13"></a>    )</span>
+<span id="cb14-14"><a href="#cb14-14"></a></span>
+<span id="cb14-15"><a href="#cb14-15"></a>    <span class="co"># fit the data to the reducer</span></span>
+<span id="cb14-16"><a href="#cb14-16"></a>    embeddings <span class="op">=</span> reducer.fit_transform(df_feature)</span>
+<span id="cb14-17"><a href="#cb14-17"></a></span>
+<span id="cb14-18"><a href="#cb14-18"></a>    <span class="co"># using the color_palette to obtain the correct coloring for plot</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a>    labels <span class="op">=</span> [sns.color_palette()[x] <span class="cf">for</span> x <span class="kw">in</span> df_feature[<span class="st">"gender_male"</span>]]</span>
+<span id="cb14-20"><a href="#cb14-20"></a></span>
+<span id="cb14-21"><a href="#cb14-21"></a>    <span class="co"># create the scatter plot of the 2 component embedding</span></span>
+<span id="cb14-22"><a href="#cb14-22"></a>    <span class="co"># the order of x,y doesnt matter, the relative distance does</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a>    ax.scatter(x<span class="op">=</span>embeddings[:, <span class="dv">0</span>], y<span class="op">=</span>embeddings[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">12</span>, c<span class="op">=</span>labels, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb14-24"><a href="#cb14-24"></a></span>
+<span id="cb14-25"><a href="#cb14-25"></a></span>
+<span id="cb14-26"><a href="#cb14-26"></a>    <span class="co"># remove axis labels and ticks</span></span>
+<span id="cb14-27"><a href="#cb14-27"></a>    <span class="co"># as these are meaningless for umap</span></span>
+<span id="cb14-28"><a href="#cb14-28"></a>    ax.set_xticklabels([])</span>
+<span id="cb14-29"><a href="#cb14-29"></a>    ax.set_yticklabels([])</span>
+<span id="cb14-30"><a href="#cb14-30"></a></span>
+<span id="cb14-31"><a href="#cb14-31"></a>    ax.set_title(<span class="ss">f"</span><span class="sc">{</span>n_neighbors<span class="op">=</span><span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>min_dist<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-19" class="cell" data-execution_count="340">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>range_min_dist <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)  <span class="co"># min_dist</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>range_n_neighbors <span class="op">=</span> np.arange(<span class="dv">10</span>, <span class="dv">12</span>)  <span class="co"># n_neighbors</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-20" class="cell" data-execution_count="343">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
+<span id="cb16-2"><a href="#cb16-2"></a>    nrows<span class="op">=</span><span class="bu">len</span>(range_min_dist), ncols<span class="op">=</span><span class="bu">len</span>(range_n_neighbors), figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">10</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>)</span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="cf">for</span> i_min_dist, min_dist <span class="kw">in</span> <span class="bu">enumerate</span>(range_min_dist):</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    <span class="cf">for</span> i_n_neighbors, n_neighbors <span class="kw">in</span> <span class="bu">enumerate</span>(range_n_neighbors):</span>
+<span id="cb16-7"><a href="#cb16-7"></a>        plot_umap(</span>
+<span id="cb16-8"><a href="#cb16-8"></a>            n_neighbors<span class="op">=</span>n_neighbors, min_dist<span class="op">=</span>min_dist, ax<span class="op">=</span>ax[i_min_dist, i_n_neighbors]</span>
+<span id="cb16-9"><a href="#cb16-9"></a>        )</span>
+<span id="cb16-10"><a href="#cb16-10"></a></span>
+<span id="cb16-11"><a href="#cb16-11"></a>fig.tight_layout()</span>
+<span id="cb16-12"><a href="#cb16-12"></a>fig. (<span class="st">' -&gt; n_neighbors'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13"></a>fig.ylabel(<span class="st">' -&gt; min_dist'</span>)</span>
+<span id="cb16-14"><a href="#cb16-14"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<pre><code>AttributeError: 'Figure' object has no attribute 'xlabel'</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-15-output-2.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-21" class="cell" data-execution_count="320">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a>fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">4</span>, ncols<span class="op">=</span><span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">10</span>))</span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a></span>
+<span id="cb18-4"><a href="#cb18-4"></a>plot_umap(min_dist<span class="op">=</span><span class="fl">0.05</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>, <span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-16-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-22" class="cell" data-execution_count="281">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>fig, ax <span class="op">=</span> plt.subplots(nrows<span class="op">=</span><span class="dv">1</span>, ncols<span class="op">=</span><span class="dv">4</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb19-2"><a href="#cb19-2"></a>ax[<span class="dv">0</span>].scatter(</span>
+<span id="cb19-3"><a href="#cb19-3"></a>    x<span class="op">=</span>embeddings[:, <span class="dv">0</span>],</span>
+<span id="cb19-4"><a href="#cb19-4"></a>    y<span class="op">=</span>embeddings[:, <span class="dv">1</span>],</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    c<span class="op">=</span>labels,</span>
+<span id="cb19-6"><a href="#cb19-6"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"asdas, asda"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8"></a></span>
+<span id="cb19-9"><a href="#cb19-9"></a>fig.suptitle(<span class="st">"cool cool"</span>)</span>
+<span id="cb19-10"><a href="#cb19-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -634,14 +826,19 @@ memory usage: 5.0 KB</code></pre>
 <li>ratio of income of spending</li>
 <li>normalization of variables -&gt; make comment on the distance calculations</li>
 </ul>
-<div class="cell" data-execution_count="43">
-<details>
+<div id="cell-27" class="cell">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>binned, bins <span class="op">=</span> pd.cut(df_feature[<span class="st">"age"</span>], bins<span class="op">=</span><span class="dv">6</span>, retbins<span class="op">=</span><span class="va">True</span>, labels<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">6</span>)))</span>
-<span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a>df_feature.assign(binned<span class="op">=</span>binned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>binned, bins <span class="op">=</span> pd.cut(</span>
+<span id="cb20-2"><a href="#cb20-2"></a>    df_feature[<span class="st">"age"</span>], bins<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>], retbins<span class="op">=</span><span class="va">True</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>)</span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="bu">print</span>(bins)</span>
+<span id="cb20-5"><a href="#cb20-5"></a>df_feature.assign(binned<span class="op">=</span>binned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="43">
+<div class="cell-output cell-output-stdout">
+<pre><code>[ 0 20 30 40 50 60 70 80]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="194">
 <div>
 
 
@@ -663,7 +860,7 @@ memory usage: 5.0 KB</code></pre>
 <td>15</td>
 <td>39</td>
 <td>True</td>
-<td>0</td>
+<td>(0, 20]</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
@@ -671,7 +868,7 @@ memory usage: 5.0 KB</code></pre>
 <td>15</td>
 <td>81</td>
 <td>True</td>
-<td>0</td>
+<td>(20, 30]</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
@@ -679,7 +876,7 @@ memory usage: 5.0 KB</code></pre>
 <td>16</td>
 <td>6</td>
 <td>False</td>
-<td>0</td>
+<td>(0, 20]</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
@@ -687,7 +884,7 @@ memory usage: 5.0 KB</code></pre>
 <td>16</td>
 <td>77</td>
 <td>False</td>
-<td>0</td>
+<td>(20, 30]</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
@@ -695,7 +892,7 @@ memory usage: 5.0 KB</code></pre>
 <td>17</td>
 <td>40</td>
 <td>False</td>
-<td>1</td>
+<td>(30, 40]</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">...</td>
@@ -711,7 +908,7 @@ memory usage: 5.0 KB</code></pre>
 <td>120</td>
 <td>79</td>
 <td>False</td>
-<td>1</td>
+<td>(30, 40]</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">196</td>
@@ -719,7 +916,7 @@ memory usage: 5.0 KB</code></pre>
 <td>126</td>
 <td>28</td>
 <td>False</td>
-<td>3</td>
+<td>(40, 50]</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">197</td>
@@ -727,7 +924,7 @@ memory usage: 5.0 KB</code></pre>
 <td>126</td>
 <td>74</td>
 <td>True</td>
-<td>1</td>
+<td>(30, 40]</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">198</td>
@@ -735,7 +932,7 @@ memory usage: 5.0 KB</code></pre>
 <td>137</td>
 <td>18</td>
 <td>True</td>
-<td>1</td>
+<td>(30, 40]</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">199</td>
@@ -743,7 +940,7 @@ memory usage: 5.0 KB</code></pre>
 <td>137</td>
 <td>83</td>
 <td>True</td>
-<td>1</td>
+<td>(20, 30]</td>
 </tr>
 </tbody>
 </table>
@@ -812,6 +1009,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -878,13 +1102,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'alternate';
+  const darkModeDefault = true;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -963,10 +1189,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jope35\.github\.io\/hypershotgun-blog\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -976,8 +1216,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -990,6 +1239,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1033,6 +1401,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1058,6 +1427,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1115,23 +1510,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/jope35\.github\.io\/hypershotgun-blog\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // default icon
-          link.classList.add("external");
-      }
-    }
 });
 </script>
 </div> <!-- /content -->
+
 
 
 
