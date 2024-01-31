@@ -4,7 +4,7 @@ exclude: "^pumaplot/pumaplot|^setup.py"
 # sensible default hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -17,21 +17,28 @@ repos:
     hooks:
       - id: nbdev_clean
 
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      - id: nbqa-black
+      # - id: nbqa-ruff
+      #   # args: [".", "--config", ".ruff.toml", "--fix"]
+      #   name: "runn ruff linter on notebook"
+      # - id: nbqa-ruff
+      #   args: [".", "--config", ".ruff.toml"]
+      #   name: "runn ruff formatter on notebook"
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.1.7
+    rev: v0.1.15
     hooks:
       # run the linter with the .ruff.toml file for config
       # fix all fixable errors
       - id: ruff
+        name: "runn ruff linter on files"
         args: [".", "--config", ".ruff.toml", "--fix"]
 
       #   # run the formatter with the .ruff.toml file for config
       - id: ruff-format
         args: [".", "--config", ".ruff.toml"]
-
-  # export the relevant files as modified by ruff
-  - repo: https://github.com/fastai/nbdev
-    rev: 2.3.13
-    hooks:
-      - id: nbdev_export
+        name: "runn ruff formatter on files"

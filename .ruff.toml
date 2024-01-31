@@ -22,9 +22,6 @@ exclude = [
     "node_modules",
     "venv",
     # custom added below
-    "pumaplot/",
-    "setup.py",
-    "_modidx.py",
 ]
 
 # extende the inclusion list to also include jupyternotebooks
@@ -35,7 +32,7 @@ extend-include = ["*.ipynb"]
 # N -> pep8 naming
 # PD -> pandas-vet
 
-extend-select = ['I','N','PD']
+extend-select = ['I', 'N', 'PD']
 
 # Same as Black.
 line-length = 88
