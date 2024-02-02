@@ -1320,16 +1320,16 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb35-2"><a href="#cb35-2"></a>df_all <span class="op">=</span> pd.concat([df_mall.drop(columns<span class="op">=</span>[<span class="st">"id"</span>]), df_cluster], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-39" class="cell" data-execution_count="30">
+<div id="cell-39" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>df_all.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>).agg([<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>df_all.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>).agg([<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>, <span class="st">"std"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80155/705137821.py:1: PerformanceWarning: indexing past lexsort depth may impact performance.
-  df_all.groupby("cluster", as_index=False).agg(["mean", "median", "min", "max"])</code></pre>
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80155/397775450.py:1: PerformanceWarning: indexing past lexsort depth may impact performance.
+  df_all.groupby("cluster", as_index=False).agg(["mean" ,"median", "min", "max",'std'])</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="33">
 <div>
 
 
@@ -1338,13 +1338,11 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">cluster</th>
-<th colspan="4" data-quarto-table-cell-role="th" data-halign="left">age</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">age</th>
 <th colspan="4" data-quarto-table-cell-role="th" data-halign="left">income</th>
-<th data-quarto-table-cell-role="th">spending</th>
 <th data-quarto-table-cell-role="th">...</th>
-<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">ratio_spend_to_age</th>
-<th colspan="4" data-quarto-table-cell-role="th" data-halign="left">income_vs_gender_mean</th>
-<th colspan="4" data-quarto-table-cell-role="th" data-halign="left">spending_vs_gender_mean</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">income_vs_gender_mean</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">spending_vs_gender_mean</th>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th"></th>
@@ -1353,22 +1351,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <th data-quarto-table-cell-role="th">median</th>
 <th data-quarto-table-cell-role="th">min</th>
 <th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">std</th>
 <th data-quarto-table-cell-role="th">mean</th>
 <th data-quarto-table-cell-role="th">median</th>
 <th data-quarto-table-cell-role="th">min</th>
 <th data-quarto-table-cell-role="th">max</th>
-<th data-quarto-table-cell-role="th">mean</th>
 <th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">max</th>
 <th data-quarto-table-cell-role="th">mean</th>
 <th data-quarto-table-cell-role="th">median</th>
 <th data-quarto-table-cell-role="th">min</th>
 <th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">std</th>
 <th data-quarto-table-cell-role="th">mean</th>
 <th data-quarto-table-cell-role="th">median</th>
 <th data-quarto-table-cell-role="th">min</th>
 <th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">std</th>
 </tr>
 </thead>
 <tbody>
@@ -1379,22 +1377,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>54.0</td>
 <td>43</td>
 <td>70</td>
+<td>8.453079</td>
 <td>54.266667</td>
 <td>54.0</td>
 <td>38</td>
 <td>79</td>
-<td>49.066667</td>
 <td>...</td>
-<td>-0.941666</td>
-<td>-0.324228</td>
 <td>-0.238573</td>
 <td>-0.314531</td>
 <td>-0.812394</td>
 <td>0.755048</td>
+<td>0.347557</td>
 <td>-0.046157</td>
 <td>-0.059373</td>
 <td>-0.642682</td>
 <td>0.446762</td>
+<td>0.253046</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
@@ -1403,22 +1401,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>32.0</td>
 <td>27</td>
 <td>40</td>
+<td>3.728650</td>
 <td>86.538462</td>
 <td>79.0</td>
 <td>69</td>
 <td>137</td>
-<td>82.128205</td>
 <td>...</td>
-<td>0.342721</td>
-<td>1.772366</td>
 <td>0.990713</td>
 <td>0.755048</td>
 <td>0.258923</td>
 <td>2.858584</td>
+<td>0.624387</td>
 <td>1.244126</td>
 <td>1.301682</td>
 <td>0.563424</td>
 <td>1.885591</td>
+<td>0.372082</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
@@ -1427,22 +1425,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>26.5</td>
 <td>18</td>
 <td>40</td>
+<td>6.984185</td>
 <td>55.500000</td>
 <td>58.5</td>
 <td>28</td>
 <td>76</td>
-<td>49.825000</td>
 <td>...</td>
-<td>-0.513537</td>
-<td>1.599359</td>
 <td>-0.183201</td>
 <td>-0.085584</td>
 <td>-1.308519</td>
 <td>0.640358</td>
+<td>0.431542</td>
 <td>-0.025136</td>
 <td>-0.000742</td>
 <td>-0.876005</td>
 <td>0.523937</td>
+<td>0.344167</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
@@ -1451,22 +1449,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>42.5</td>
 <td>19</td>
 <td>59</td>
+<td>10.768385</td>
 <td>88.500000</td>
 <td>85.5</td>
 <td>71</td>
 <td>137</td>
-<td>16.764706</td>
 <td>...</td>
-<td>-1.416079</td>
-<td>-0.558786</td>
 <td>1.051282</td>
 <td>0.889723</td>
 <td>0.335384</td>
 <td>2.858584</td>
+<td>0.648396</td>
 <td>-1.282825</td>
 <td>-1.342353</td>
 <td>-1.847587</td>
 <td>-0.486533</td>
+<td>0.368890</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
@@ -1475,22 +1473,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>23.0</td>
 <td>18</td>
 <td>35</td>
+<td>5.065288</td>
 <td>24.476190</td>
 <td>23.0</td>
 <td>15</td>
 <td>38</td>
-<td>79.000000</td>
 <td>...</td>
-<td>0.462898</td>
-<td>3.299983</td>
 <td>-1.378194</td>
 <td>-1.461440</td>
 <td>-1.805513</td>
 <td>-0.850624</td>
+<td>0.290711</td>
 <td>1.118613</td>
 <td>0.990584</td>
 <td>-0.369871</td>
 <td>1.846104</td>
+<td>0.495085</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
@@ -1499,27 +1497,27 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>46.0</td>
 <td>20</td>
 <td>67</td>
+<td>11.766984</td>
 <td>26.285714</td>
 <td>25.0</td>
 <td>16</td>
 <td>39</td>
-<td>19.380952</td>
 <td>...</td>
-<td>-1.397668</td>
-<td>-0.244230</td>
 <td>-1.303595</td>
 <td>-1.309388</td>
 <td>-1.653461</td>
 <td>-0.774164</td>
+<td>0.292374</td>
 <td>-1.205393</td>
 <td>-1.342652</td>
 <td>-1.809300</td>
 <td>-0.448245</td>
+<td>0.483765</td>
 </tr>
 </tbody>
 </table>
 
-<p>6 rows × 53 columns</p>
+<p>6 rows × 66 columns</p>
 </div>
 </div>
 </div>
