@@ -1320,16 +1320,16 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb35-2"><a href="#cb35-2"></a>df_all <span class="op">=</span> pd.concat([df_mall.drop(columns<span class="op">=</span>[<span class="st">"id"</span>]), df_cluster], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-39" class="cell" data-execution_count="28">
+<div id="cell-39" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>df_all.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>).agg([<span class="st">"mean"</span>, <span class="st">"median"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80155/756706601.py:1: PerformanceWarning: indexing past lexsort depth may impact performance.
-  df_all.groupby('cluster', as_index=False).agg(['mean','median', 'min','max'])</code></pre>
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80155/705137821.py:1: PerformanceWarning: indexing past lexsort depth may impact performance.
+  df_all.groupby("cluster", as_index=False).agg(["mean", "median", "min", "max"])</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="30">
 <div>
 
 
