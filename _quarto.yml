@@ -37,8 +37,8 @@ format:
   html:
     # highlight-style: ayu #ayu, atom-one, arrow
     theme:
-      dark: darkly
       light: flatly
+      dark: darkly
     css: styles.css
 
 execute:
