@@ -41,5 +41,5 @@ repos:
 
       #   # run the formatter with the .ruff.toml file for config
       - id: ruff-format
-        args: [".", "--config", ".ruff.toml"]
         name: "runn ruff formatter on files"
+        args: [".", "--config", ".ruff.toml"]
