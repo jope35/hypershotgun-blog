@@ -22,12 +22,12 @@ repos:
     hooks:
       - id: nbqa-black
       - id: nbqa-isort
-      # - id: nbqa-ruff
-      #   # args: [".", "--config", ".ruff.toml", "--fix"]
-      #   name: "runn ruff linter on notebook"
-      # - id: nbqa-ruff
-      #   args: [".", "--config", ".ruff.toml"]
-      #   name: "runn ruff formatter on notebook"
+      - id: nbqa-ruff
+        # args: [".", "--config", ".ruff.toml", "--fix"]
+        name: "runn ruff linter on notebook"
+      - id: nbqa-ruff
+        args: [".", "--config", ".ruff.toml"]
+        name: "runn ruff formatter on notebook"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
