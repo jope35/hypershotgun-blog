@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div id="cell-4" class="cell" data-execution_count="1">
+<div id="cell-4" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> functools <span class="im">import</span> lru_cache</span>
@@ -273,9 +273,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> umap</span>
 <span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> HDBSCAN, KMeans</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> power_transform, scale</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> power_transform</span>
 <span id="cb1-12"><a href="#cb1-12"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> kelbow_visualizer, silhouette_visualizer</span>
 <span id="cb1-13"><a href="#cb1-13"></a></span>
 <span id="cb1-14"><a href="#cb1-14"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
@@ -289,16 +289,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   from .autonotebook import tqdm as notebook_tqdm</code></pre>
 </div>
 </div>
-<div id="cell-5" class="cell" data-execution_count="2">
+<div id="cell-5" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>sns.color_palette()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <svg width="550" height="55"><rect x="0" y="0" width="55" height="55" style="fill:#1f77b4;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="55" y="0" width="55" height="55" style="fill:#ff7f0e;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="110" y="0" width="55" height="55" style="fill:#2ca02c;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="165" y="0" width="55" height="55" style="fill:#d62728;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="220" y="0" width="55" height="55" style="fill:#9467bd;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="275" y="0" width="55" height="55" style="fill:#8c564b;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="330" y="0" width="55" height="55" style="fill:#e377c2;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="385" y="0" width="55" height="55" style="fill:#7f7f7f;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="440" y="0" width="55" height="55" style="fill:#bcbd22;stroke-width:2;stroke:rgb(255,255,255)"></rect><rect x="495" y="0" width="55" height="55" style="fill:#17becf;stroke-width:2;stroke:rgb(255,255,255)"></rect></svg>
 </div>
 </div>
-<div id="cell-6" class="cell" data-execution_count="3">
+<div id="cell-6" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Load the customer dataset to analyze shopping patterns</span></span>
@@ -323,12 +323,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      id  gender  age  income  spending
-43    44  female   31      39        61
-103  104    male   26      62        55
-77    78    male   40      54        48
-149  150    male   34      78        90
-158  159    male   34      78         1
-2      3  female   20      16         6</code></pre>
+52    53  female   31      43        54
+31    32  female   21      30        73
+188  189  female   41     103        17
+11    12  female   35      19        99
+37    38  female   30      34        73
+82    83    male   67      54        41</code></pre>
 </div>
 </div>
 <p>Upon examination of the dataset, it appears that the ‘gender’ column is the only non-numeric feature. Specifically, it contains string values categorizing customers as either “Male” or “Female”. All other columns - ‘id’, ‘age’, ‘income’, and ‘spending’ - are numeric data types.</p>
@@ -337,7 +337,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Additionally, when performing exploratory analysis, a numeric encoding often allows easier visualization of the impact of gender relative to the other numeric features. Box plots, scatter plots with color-coded points, and other techniques can provide better insights into how gender correlates with shopper age, income or spending habits when mapped to a numeric form.</p>
 <p>Therefore, to enable the application of clustering algorithms and more impactful analysis, we need to process the ‘gender’ column by encoding the categories as numbers. Common encoding schemes include mapping “Male” and “Female” to 0 and 1 respectively, or using one-hot encoding to create an additional binary feature column for each category. After encoding, gender will be represented numerically like the other existing features.</p>
 <p>In summary, as gender is the only non-numeric column, and ID has high cardinality unsuitable for clustering, effectively preparing the data requires encoding the gender categorical data and excluding the customer ID column.</p>
-<div id="cell-8" class="cell" data-execution_count="4">
+<div id="cell-8" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
@@ -352,7 +352,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-10"><a href="#cb6-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
 <span id="cb6-11"><a href="#cb6-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -368,38 +368,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">169</td>
-<td>32</td>
-<td>87</td>
-<td>63</td>
-<td>True</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">138</td>
-<td>19</td>
-<td>74</td>
-<td>10</td>
-<td>True</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">130</td>
+<td data-quarto-table-cell-role="th">74</td>
+<td>59</td>
+<td>54</td>
 <td>47</td>
-<td>71</td>
-<td>9</td>
 <td>True</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">20</td>
-<td>35</td>
-<td>24</td>
-<td>35</td>
+<td data-quarto-table-cell-role="th">190</td>
+<td>34</td>
+<td>103</td>
+<td>23</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">57</td>
+<td>69</td>
+<td>44</td>
+<td>46</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">177</td>
+<td>27</td>
+<td>88</td>
+<td>69</td>
 <td>True</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">32</td>
-<td>53</td>
-<td>33</td>
-<td>4</td>
+<td data-quarto-table-cell-role="th">99</td>
+<td>20</td>
+<td>61</td>
+<td>49</td>
 <td>True</td>
 </tr>
 </tbody>
@@ -408,7 +408,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-9" class="cell" data-execution_count="5">
+<div id="cell-9" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>df_feature.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -431,7 +431,7 @@ memory usage: 5.0 KB</code></pre>
 <section id="exploratory-data-analysis" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">3</span> Exploratory Data Analysis</h2>
 <p>Visualize the data and derive initial insights.</p>
-<div id="cell-11" class="cell" data-execution_count="6">
+<div id="cell-11" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="bu">print</span>(df_feature.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -447,7 +447,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <p>The average annual income is $60,560, ranging from $15,000 to $137,000. 50% of customers earn $61,500 or less.</p>
 <p>For the spending score (1-100), the average is 50.2. Half the customers have a spending score of 50 or below. The minimum is 1 and maximum 99, showing a wide range in spending habits.</p>
 <p>Overall, we see variation among customers in age, income levels, and purchasing patterns. Clustering algorithms can help segment customers into groups based on these attributes to develop targeted marketing approaches. let us first look at the distributions of the features.</p>
-<div id="cell-13" class="cell" data-execution_count="7">
+<div id="cell-13" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
@@ -467,7 +467,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-14" class="cell" data-execution_count="8">
+<div id="cell-14" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
@@ -540,7 +540,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-15" class="cell" data-execution_count="9">
+<div id="cell-15" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
@@ -570,7 +570,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb13-25"><a href="#cb13-25"></a></span>
 <span id="cb13-26"><a href="#cb13-26"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>Text(0.5, 0.98, 'Age vs. Spending')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -581,7 +581,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="10">
+<div id="cell-16" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># fig, ax = plt.subplots(1, 2, figsize=FIGSIZE)</span></span>
@@ -610,7 +610,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb15-24"><a href="#cb15-24"></a><span class="co"># plt.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-17" class="cell" data-execution_count="11">
+<div id="cell-17" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># create a ratio between income and spending</span></span>
@@ -651,12 +651,12 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-18" class="cell" data-execution_count="12">
+<div id="cell-18" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>df_ratio <span class="op">=</span> df_ratio.assign(</span>
 <span id="cb17-2"><a href="#cb17-2"></a>    si_ratio_transform<span class="op">=</span>power_transform(</span>
-<span id="cb17-3"><a href="#cb17-3"></a>        df_ratio[<span class="st">"si_ratio"</span>].values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), method<span class="op">=</span><span class="st">"yeo-johnson"</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>        df_ratio[<span class="st">"si_ratio"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), method<span class="op">=</span><span class="st">"yeo-johnson"</span></span>
 <span id="cb17-4"><a href="#cb17-4"></a>    )</span>
 <span id="cb17-5"><a href="#cb17-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -812,84 +812,84 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">85</td>
-<td>48</td>
-<td>54</td>
-<td>46</td>
-<td>True</td>
-<td>4</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">67</td>
-<td>68</td>
-<td>48</td>
-<td>48</td>
-<td>False</td>
-<td>6</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">11</td>
-<td>35</td>
-<td>19</td>
-<td>99</td>
-<td>False</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">149</td>
-<td>34</td>
-<td>78</td>
-<td>90</td>
-<td>True</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">185</td>
-<td>30</td>
-<td>99</td>
-<td>97</td>
-<td>True</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">184</td>
-<td>41</td>
-<td>99</td>
+<td data-quarto-table-cell-role="th">44</td>
+<td>49</td>
 <td>39</td>
+<td>28</td>
+<td>False</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">121</td>
+<td>38</td>
+<td>67</td>
+<td>40</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">74</td>
+<td>59</td>
+<td>54</td>
+<td>47</td>
+<td>True</td>
+<td>5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">37</td>
+<td>30</td>
+<td>34</td>
+<td>73</td>
+<td>False</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">143</td>
+<td>32</td>
+<td>76</td>
+<td>87</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">147</td>
+<td>32</td>
+<td>77</td>
+<td>74</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">96</td>
+<td>47</td>
+<td>60</td>
+<td>47</td>
+<td>False</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">89</td>
+<td>50</td>
+<td>58</td>
+<td>46</td>
 <td>False</td>
 <td>4</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">135</td>
-<td>29</td>
+<td data-quarto-table-cell-role="th">136</td>
+<td>44</td>
 <td>73</td>
-<td>88</td>
+<td>7</td>
 <td>False</td>
-<td>2</td>
+<td>4</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">173</td>
+<td data-quarto-table-cell-role="th">189</td>
 <td>36</td>
-<td>87</td>
-<td>92</td>
-<td>True</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">153</td>
-<td>38</td>
-<td>78</td>
-<td>76</td>
+<td>103</td>
+<td>85</td>
 <td>False</td>
 <td>3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">111</td>
-<td>19</td>
-<td>63</td>
-<td>54</td>
-<td>False</td>
-<td>1</td>
 </tr>
 </tbody>
 </table>
@@ -926,104 +926,104 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">68</td>
+<td data-quarto-table-cell-role="th">180</td>
+<td>37</td>
+<td>97</td>
+<td>32</td>
+<td>False</td>
+<td>3</td>
+<td>3.031250</td>
+<td>1.156250</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>35</td>
 <td>19</td>
+<td>99</td>
+<td>False</td>
+<td>3</td>
+<td>0.191919</td>
+<td>0.353535</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">146</td>
+<td>48</td>
+<td>77</td>
+<td>36</td>
+<td>True</td>
+<td>4</td>
+<td>2.138889</td>
+<td>1.333333</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">49</td>
+<td>31</td>
+<td>40</td>
+<td>42</td>
+<td>False</td>
+<td>3</td>
+<td>0.952381</td>
+<td>0.738095</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">21</td>
+<td>25</td>
+<td>24</td>
+<td>73</td>
+<td>True</td>
+<td>2</td>
+<td>0.328767</td>
+<td>0.342466</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">39</td>
+<td>20</td>
+<td>37</td>
+<td>75</td>
+<td>False</td>
+<td>1</td>
+<td>0.493333</td>
+<td>0.266667</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">65</td>
+<td>18</td>
 <td>48</td>
 <td>59</td>
 <td>True</td>
 <td>1</td>
 <td>0.813559</td>
-<td>0.322034</td>
+<td>0.305085</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">130</td>
-<td>47</td>
-<td>71</td>
-<td>9</td>
-<td>True</td>
-<td>4</td>
-<td>7.888889</td>
-<td>5.222222</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">52</td>
-<td>31</td>
-<td>43</td>
-<td>54</td>
-<td>False</td>
-<td>3</td>
-<td>0.796296</td>
-<td>0.574074</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">189</td>
-<td>36</td>
-<td>103</td>
-<td>85</td>
-<td>False</td>
-<td>3</td>
-<td>1.211765</td>
-<td>0.423529</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">126</td>
-<td>43</td>
-<td>71</td>
-<td>35</td>
-<td>True</td>
-<td>4</td>
-<td>2.028571</td>
-<td>1.228571</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">94</td>
-<td>32</td>
+<td data-quarto-table-cell-role="th">97</td>
+<td>27</td>
 <td>60</td>
-<td>42</td>
+<td>50</td>
 <td>False</td>
-<td>3</td>
-<td>1.428571</td>
-<td>0.761905</td>
+<td>2</td>
+<td>1.200000</td>
+<td>0.540000</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">190</td>
-<td>34</td>
-<td>103</td>
-<td>23</td>
-<td>False</td>
-<td>3</td>
-<td>4.478261</td>
-<td>1.478261</td>
+<td data-quarto-table-cell-role="th">134</td>
+<td>20</td>
+<td>73</td>
+<td>5</td>
+<td>True</td>
+<td>1</td>
+<td>14.600000</td>
+<td>4.000000</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">153</td>
+<td data-quarto-table-cell-role="th">193</td>
 <td>38</td>
-<td>78</td>
-<td>76</td>
+<td>113</td>
+<td>91</td>
 <td>False</td>
 <td>3</td>
-<td>1.026316</td>
-<td>0.500000</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">55</td>
-<td>47</td>
-<td>43</td>
-<td>41</td>
-<td>True</td>
-<td>4</td>
-<td>1.048780</td>
-<td>1.146341</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">77</td>
-<td>40</td>
-<td>54</td>
-<td>48</td>
-<td>True</td>
-<td>3</td>
-<td>1.125000</td>
-<td>0.833333</td>
+<td>1.241758</td>
+<td>0.417582</td>
 </tr>
 </tbody>
 </table>
@@ -1073,74 +1073,130 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">151</td>
-<td>39</td>
-<td>78</td>
-<td>88</td>
-<td>True</td>
-<td>3</td>
-<td>0.886364</td>
-<td>0.443182</td>
-<td>15.772727</td>
-<td>39.488636</td>
-<td>30.500000</td>
-<td>19.366667</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">133</td>
-<td>31</td>
-<td>72</td>
-<td>71</td>
-<td>False</td>
-<td>3</td>
-<td>1.014085</td>
-<td>0.436620</td>
-<td>12.750000</td>
-<td>19.473214</td>
-<td>13.500000</td>
-<td>2.366667</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">120</td>
-<td>27</td>
-<td>67</td>
-<td>56</td>
-<td>True</td>
-<td>2</td>
-<td>1.196429</td>
-<td>0.482143</td>
-<td>4.772727</td>
-<td>7.488636</td>
-<td>-11.222222</td>
-<td>-0.755556</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">84</td>
-<td>21</td>
-<td>54</td>
-<td>57</td>
-<td>False</td>
-<td>2</td>
-<td>0.947368</td>
-<td>0.368421</td>
-<td>-5.250000</td>
-<td>5.473214</td>
-<td>-10.222222</td>
-<td>0.244444</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">75</td>
+<td data-quarto-table-cell-role="th">164</td>
+<td>50</td>
+<td>85</td>
 <td>26</td>
-<td>54</td>
-<td>54</td>
+<td>True</td>
+<td>4</td>
+<td>3.269231</td>
+<td>1.923077</td>
+<td>22.772727</td>
+<td>-22.511364</td>
+<td>-8.394737</td>
+<td>-37.605263</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">47</td>
+<td>27</td>
+<td>40</td>
+<td>47</td>
+<td>False</td>
+<td>2</td>
+<td>0.851064</td>
+<td>0.574468</td>
+<td>-19.250000</td>
+<td>-4.526786</td>
+<td>-20.222222</td>
+<td>-9.755556</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">171</td>
+<td>28</td>
+<td>87</td>
+<td>75</td>
 <td>True</td>
 <td>2</td>
-<td>1.000000</td>
-<td>0.481481</td>
-<td>-8.227273</td>
-<td>5.488636</td>
-<td>-13.222222</td>
-<td>-2.755556</td>
+<td>1.160000</td>
+<td>0.373333</td>
+<td>24.772727</td>
+<td>26.488636</td>
+<td>7.777778</td>
+<td>18.244444</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">69</td>
+<td>32</td>
+<td>48</td>
+<td>47</td>
+<td>False</td>
+<td>3</td>
+<td>1.021277</td>
+<td>0.680851</td>
+<td>-11.250000</td>
+<td>-4.526786</td>
+<td>-10.500000</td>
+<td>-21.633333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>67</td>
+<td>19</td>
+<td>14</td>
+<td>True</td>
+<td>6</td>
+<td>1.357143</td>
+<td>4.785714</td>
+<td>-43.227273</td>
+<td>-34.511364</td>
+<td>-30.176471</td>
+<td>-36.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">45</td>
+<td>24</td>
+<td>39</td>
+<td>65</td>
+<td>False</td>
+<td>2</td>
+<td>0.600000</td>
+<td>0.369231</td>
+<td>-20.250000</td>
+<td>13.473214</td>
+<td>-2.222222</td>
+<td>8.244444</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>35</td>
+<td>18</td>
+<td>6</td>
+<td>False</td>
+<td>3</td>
+<td>3.000000</td>
+<td>5.833333</td>
+<td>-41.250000</td>
+<td>-45.526786</td>
+<td>-51.500000</td>
+<td>-62.633333</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">112</td>
+<td>38</td>
+<td>64</td>
+<td>42</td>
+<td>False</td>
+<td>3</td>
+<td>1.523810</td>
+<td>0.904762</td>
+<td>4.750000</td>
+<td>-9.526786</td>
+<td>-15.500000</td>
+<td>-26.633333</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">62</td>
+<td>67</td>
+<td>47</td>
+<td>52</td>
+<td>False</td>
+<td>6</td>
+<td>0.903846</td>
+<td>1.288462</td>
+<td>-12.250000</td>
+<td>0.473214</td>
+<td>7.823529</td>
+<td>2.000000</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">44</td>
@@ -1155,62 +1211,6 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>-23.526786</td>
 <td>-6.394737</td>
 <td>-35.605263</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">16</td>
-<td>35</td>
-<td>21</td>
-<td>35</td>
-<td>False</td>
-<td>3</td>
-<td>0.600000</td>
-<td>1.000000</td>
-<td>-38.250000</td>
-<td>-16.526786</td>
-<td>-22.500000</td>
-<td>-33.633333</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">99</td>
-<td>20</td>
-<td>61</td>
-<td>49</td>
-<td>True</td>
-<td>1</td>
-<td>1.244898</td>
-<td>0.408163</td>
-<td>-1.227273</td>
-<td>0.488636</td>
-<td>4.352941</td>
-<td>-2.117647</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">198</td>
-<td>32</td>
-<td>137</td>
-<td>18</td>
-<td>True</td>
-<td>3</td>
-<td>7.611111</td>
-<td>1.777778</td>
-<td>74.772727</td>
-<td>-30.511364</td>
-<td>-39.500000</td>
-<td>-50.633333</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">88</td>
-<td>34</td>
-<td>58</td>
-<td>60</td>
-<td>False</td>
-<td>3</td>
-<td>0.966667</td>
-<td>0.566667</td>
-<td>-1.250000</td>
-<td>8.473214</td>
-<td>2.500000</td>
-<td>-8.633333</td>
 </tr>
 </tbody>
 </table>
@@ -1273,144 +1273,144 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">77</td>
-<td>0.233319</td>
-<td>-0.170436</td>
-<td>-0.037540</td>
-<td>True</td>
-<td>-0.113303</td>
-<td>-0.126075</td>
-<td>-0.001269</td>
-<td>-0.279316</td>
-<td>-0.020591</td>
-<td>-0.537953</td>
-<td>-0.431404</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">121</td>
-<td>0.091408</td>
-<td>0.315793</td>
-<td>-0.346103</td>
+<td data-quarto-table-cell-role="th">52</td>
+<td>-0.461118</td>
+<td>-0.614792</td>
+<td>0.188655</td>
 <td>False</td>
 <td>-0.113303</td>
-<td>0.410752</td>
-<td>0.171627</td>
-<td>0.334914</td>
-<td>-0.448683</td>
-<td>-0.830815</td>
-<td>-0.712264</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>-1.718993</td>
-<td>-1.989930</td>
-<td>-0.385308</td>
-<td>True</td>
-<td>-1.892399</td>
-<td>-1.563718</td>
-<td>-0.708222</td>
-<td>-1.895689</td>
-<td>-0.370375</td>
-<td>-0.390820</td>
-<td>-0.127627</td>
+<td>-0.612015</td>
+<td>-0.496126</td>
+<td>-0.606341</td>
+<td>0.095496</td>
+<td>-0.305931</td>
+<td>-0.218024</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">124</td>
+<td data-quarto-table-cell-role="th">92</td>
+<td>0.746587</td>
+<td>0.058529</td>
+<td>0.000449</td>
+<td>True</td>
+<td>0.585358</td>
+<td>-0.008416</td>
+<td>0.211683</td>
+<td>-0.039215</td>
+<td>0.018297</td>
+<td>0.618943</td>
+<td>-0.217019</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">172</td>
+<td>-0.056996</td>
+<td>1.003720</td>
+<td>-1.621509</td>
+<td>True</td>
+<td>-0.113303</td>
+<td>1.834374</td>
+<td>1.533763</td>
+<td>0.945926</td>
+<td>-1.496878</td>
+<td>-1.858962</td>
+<td>-1.742823</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">78</td>
 <td>-1.240020</td>
-<td>0.423150</td>
-<td>-0.786696</td>
+<td>-0.170436</td>
+<td>0.113709</td>
 <td>False</td>
 <td>-0.918216</td>
-<td>0.850576</td>
-<td>-0.067075</td>
-<td>0.443827</td>
-<td>-0.876019</td>
-<td>-1.548798</td>
-<td>-0.681614</td>
+<td>-0.238177</td>
+<td>-0.829623</td>
+<td>-0.159462</td>
+<td>0.017697</td>
+<td>-0.748729</td>
+<td>0.141742</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">136</td>
-<td>0.499911</td>
-<td>0.528911</td>
-<td>-1.769322</td>
+<td data-quarto-table-cell-role="th">122</td>
+<td>0.233319</td>
+<td>0.387546</td>
+<td>0.337282</td>
+<td>False</td>
+<td>-0.113303</td>
+<td>-0.048344</td>
+<td>-0.253395</td>
+<td>0.407605</td>
+<td>0.251137</td>
+<td>-0.135343</td>
+<td>-0.073968</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">103</td>
+<td>-0.924589</td>
+<td>0.133054</td>
+<td>0.225966</td>
+<td>True</td>
+<td>-0.918216</td>
+<td>-0.123259</td>
+<td>-0.746371</td>
+<td>0.038904</td>
+<td>0.251737</td>
+<td>-0.639149</td>
+<td>0.255073</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">154</td>
+<td>0.686612</td>
+<td>0.701866</td>
+<td>-1.343172</td>
 <td>False</td>
 <td>0.585358</td>
-<td>1.910492</td>
-<td>1.820575</td>
-<td>0.552075</td>
-<td>-1.730499</td>
-<td>-1.179020</td>
-<td>-1.673974</td>
+<td>1.496642</td>
+<td>1.388605</td>
+<td>0.731371</td>
+<td>-1.380962</td>
+<td>-0.862830</td>
+<td>-1.367206</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">186</td>
-<td>1.085525</td>
-<td>1.452380</td>
-<td>-0.995062</td>
-<td>False</td>
-<td>1.209560</td>
-<td>1.384239</td>
-<td>1.161656</td>
-<td>1.545006</td>
-<td>-1.070237</td>
-<td>-0.501089</td>
-<td>-0.853650</td>
+<td data-quarto-table-cell-role="th">146</td>
+<td>0.746587</td>
+<td>0.667593</td>
+<td>-0.503866</td>
+<td>True</td>
+<td>0.585358</td>
+<td>0.712115</td>
+<td>0.599600</td>
+<td>0.588853</td>
+<td>-0.486937</td>
+<td>-0.082168</td>
+<td>-0.676363</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">34</td>
-<td>0.805504</td>
-<td>-1.054501</td>
-<td>-1.433908</td>
+<td data-quarto-table-cell-role="th">196</td>
+<td>0.563320</td>
+<td>2.202670</td>
+<td>-0.827902</td>
 <td>False</td>
 <td>0.585358</td>
-<td>0.823976</td>
-<td>1.515059</td>
-<td>-1.019077</td>
-<td>-1.458639</td>
-<td>-0.933968</td>
-<td>-1.435562</td>
+<td>1.436913</td>
+<td>0.816540</td>
+<td>2.417222</td>
+<td>-0.914864</td>
+<td>-0.419818</td>
+<td>-0.954488</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">74</td>
-<td>1.344168</td>
-<td>-0.170436</td>
-<td>-0.075650</td>
-<td>True</td>
-<td>1.209560</td>
-<td>-0.096729</td>
-<td>0.526302</td>
-<td>-0.279316</td>
-<td>-0.059469</td>
-<td>0.611735</td>
-<td>-0.039930</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">18</td>
-<td>0.976291</td>
-<td>-1.543402</td>
-<td>-0.786696</td>
-<td>True</td>
-<td>1.209560</td>
-<td>-0.617649</td>
-<td>0.935705</td>
-<td>-1.560029</td>
-<td>-0.758883</td>
-<td>-0.306805</td>
-<td>-0.679521</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">178</td>
-<td>1.344168</td>
-<td>1.198888</td>
-<td>-1.433908</td>
-<td>True</td>
-<td>1.209560</td>
-<td>1.696522</td>
-<td>1.630402</td>
-<td>1.158482</td>
-<td>-1.341524</td>
-<td>-0.867364</td>
-<td>-1.198914</td>
+<td data-quarto-table-cell-role="th">6</td>
+<td>-0.133840</td>
+<td>-1.814835</td>
+<td>-1.820424</td>
+<td>False</td>
+<td>-0.113303</td>
+<td>1.079895</td>
+<td>1.790491</td>
+<td>-1.644760</td>
+<td>-1.769335</td>
+<td>-1.991147</td>
+<td>-1.878341</td>
 </tr>
 </tbody>
 </table>
@@ -1583,14 +1583,16 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-33" class="cell" data-execution_count="24">
+<div id="cell-33" class="cell" data-execution_count="62">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># fit kmeans for various number of clusters</span></span>
-<span id="cb30-2"><a href="#cb30-2"></a>kmeans_clusters <span class="op">=</span> [KMeans(n_clusters<span class="op">=</span>i, n_init<span class="op">=</span><span class="st">"auto"</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-2"><a href="#cb30-2"></a>kmeans_clusters <span class="op">=</span> [</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    KMeans(n_clusters<span class="op">=</span>i, n_init<span class="op">=</span><span class="st">"auto"</span>, max_iter<span class="op">=</span><span class="dv">900</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>)</span>
+<span id="cb30-4"><a href="#cb30-4"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-34" class="cell" data-execution_count="25">
+<div id="cell-34" class="cell" data-execution_count="63">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">16</span>), layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
@@ -1608,7 +1610,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb31-13"><a href="#cb31-13"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_54587/1231921934.py:12: UserWarning: The figure layout has changed to tight
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80979/1231921934.py:12: UserWarning: The figure layout has changed to tight
   plt.tight_layout()</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -1619,7 +1621,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-35" class="cell" data-execution_count="26">
+<div id="cell-35" class="cell" data-execution_count="64">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>decomp <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
@@ -1639,7 +1641,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb33-15"><a href="#cb33-15"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_54587/1685628906.py:6: UserWarning: The palette list has more values (10) than needed (6), which may not be intended.
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_80979/1685628906.py:6: UserWarning: The palette list has more values (10) than needed (6), which may not be intended.
   sns.scatterplot(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -1650,7 +1652,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-36" class="cell" data-execution_count="27">
+<div id="cell-36" class="cell" data-execution_count="65">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>decomp_umap <span class="op">=</span> umap.UMAP(</span>
@@ -1682,7 +1684,7 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <section id="analysis-and-evaluation" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="analysis-and-evaluation"><span class="header-section-number">6</span> Analysis and Evaluation</h2>
 <p>Analyze each customer group’s traits, like average age or buying habits. Use metrics like Silhouette Score or Dunn Index to assess clustering quality, evaluating cluster cohesion and separation. A successful clustering result scores well on these metrics and provides actionable business insights.</p>
-<div id="cell-38" class="cell" data-execution_count="28">
+<div id="cell-38" class="cell" data-execution_count="66">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>df_cluster <span class="op">=</span> df_feature.assign(cluster<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature))</span>
@@ -1691,19 +1693,29 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <span id="cb36-4"><a href="#cb36-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-39" class="cell" data-execution_count="29">
+<div id="cell-39" class="cell" data-execution_count="67">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co">#</span></span>
 <span id="cb37-2"><a href="#cb37-2"></a>df_all <span class="op">=</span> pd.concat([df_mall.drop(columns<span class="op">=</span>[<span class="st">"id"</span>]), df_cluster], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-40" class="cell" data-execution_count="30">
+<div id="cell-40" class="cell" data-execution_count="68">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>df_mall_cluster.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>).agg([<span class="st">"mean"</span>, <span class="st">"min"</span>, <span class="st">"max"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>grouper <span class="op">=</span> df_mall_cluster.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-2"><a href="#cb38-2"></a>df_cluster_agg <span class="op">=</span> grouper.mean().<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb38-3"><a href="#cb38-3"></a>df_cluster_agg <span class="op">=</span> df_cluster_agg.assign(</span>
+<span id="cb38-4"><a href="#cb38-4"></a>    count<span class="op">=</span>grouper.count()[<span class="st">"age"</span>], age<span class="op">=</span>(df_cluster_agg[<span class="st">"age"</span>].astype(<span class="st">"int"</span>))</span>
+<span id="cb38-5"><a href="#cb38-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="30">
+</div>
+<div id="cell-41" class="cell" data-execution_count="69">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>df_cluster_agg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="69">
 <div>
 
 
@@ -1712,124 +1724,67 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">cluster</th>
-<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">age</th>
-<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">income</th>
-<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">spending</th>
-<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">gender_male</th>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">max</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">max</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">max</th>
-<th data-quarto-table-cell-role="th">mean</th>
-<th data-quarto-table-cell-role="th">min</th>
-<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">spending</th>
+<th data-quarto-table-cell-role="th">gender_male</th>
+<th data-quarto-table-cell-role="th">count</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>0</td>
-<td>26.923077</td>
-<td>18</td>
-<td>40</td>
-<td>56.205128</td>
+<td>32</td>
+<td>86.54</td>
+<td>82.13</td>
+<td>0.46</td>
 <td>39</td>
-<td>76</td>
-<td>49.538462</td>
-<td>29</td>
-<td>65</td>
-<td>0.333333</td>
-<td>False</td>
-<td>True</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>1</td>
-<td>45.400000</td>
-<td>20</td>
-<td>67</td>
-<td>25.650000</td>
-<td>16</td>
-<td>39</td>
-<td>18.550000</td>
-<td>3</td>
-<td>40</td>
-<td>0.350000</td>
-<td>False</td>
-<td>True</td>
+<td>55</td>
+<td>54.77</td>
+<td>48.23</td>
+<td>0.46</td>
+<td>48</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>2</td>
-<td>32.692308</td>
-<td>27</td>
-<td>40</td>
-<td>86.538462</td>
-<td>69</td>
-<td>137</td>
-<td>82.128205</td>
-<td>63</td>
-<td>97</td>
-<td>0.461538</td>
-<td>False</td>
-<td>True</td>
+<td>24</td>
+<td>27.08</td>
+<td>76.12</td>
+<td>0.48</td>
+<td>25</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>3</td>
-<td>55.708333</td>
-<td>43</td>
-<td>70</td>
-<td>54.770833</td>
-<td>38</td>
-<td>79</td>
-<td>48.229167</td>
-<td>35</td>
-<td>60</td>
-<td>0.458333</td>
-<td>False</td>
-<td>True</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>32</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>4</td>
-<td>41.000000</td>
-<td>19</td>
-<td>59</td>
-<td>89.406250</td>
-<td>71</td>
-<td>137</td>
-<td>15.593750</td>
-<td>1</td>
-<td>39</td>
-<td>0.562500</td>
-<td>False</td>
-<td>True</td>
+<td>27</td>
+<td>56.05</td>
+<td>48.35</td>
+<td>0.30</td>
+<td>37</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>5</td>
-<td>25.045455</td>
-<td>18</td>
-<td>35</td>
-<td>24.636364</td>
-<td>15</td>
-<td>38</td>
-<td>78.181818</td>
-<td>39</td>
-<td>99</td>
-<td>0.454545</td>
-<td>False</td>
-<td>True</td>
+<td>46</td>
+<td>26.11</td>
+<td>17.42</td>
+<td>0.37</td>
+<td>19</td>
 </tr>
 </tbody>
 </table>
@@ -1837,62 +1792,161 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-41" class="cell" data-execution_count="31">
+<div id="cell-42" class="cell" data-execution_count="70">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>sns.boxplot(</span>
-<span id="cb39-2"><a href="#cb39-2"></a>    df_mall_cluster,</span>
-<span id="cb39-3"><a href="#cb39-3"></a>    y<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb39-4"><a href="#cb39-4"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb39-5"><a href="#cb39-5"></a>    orient<span class="op">=</span><span class="st">"h"</span>,</span>
-<span id="cb39-6"><a href="#cb39-6"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb39-7"><a href="#cb39-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
-<span id="cb39-8"><a href="#cb39-8"></a>)</span>
-<span id="cb39-9"><a href="#cb39-9"></a></span>
-<span id="cb39-10"><a href="#cb39-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cluster_files/figure-html/cell-32-output-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-42" class="cell" data-execution_count="43">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb40-2"><a href="#cb40-2"></a></span>
-<span id="cb40-3"><a href="#cb40-3"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
-<span id="cb40-4"><a href="#cb40-4"></a>sns.scatterplot(</span>
-<span id="cb40-5"><a href="#cb40-5"></a>    data<span class="op">=</span>df_mall_cluster,</span>
-<span id="cb40-6"><a href="#cb40-6"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb40-7"><a href="#cb40-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb40-8"><a href="#cb40-8"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb40-9"><a href="#cb40-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
-<span id="cb40-10"><a href="#cb40-10"></a>    <span class="co"># style="gender_male",</span></span>
-<span id="cb40-11"><a href="#cb40-11"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb40-12"><a href="#cb40-12"></a>)</span>
-<span id="cb40-13"><a href="#cb40-13"></a></span>
-<span id="cb40-14"><a href="#cb40-14"></a><span class="co"># </span><span class="al">TODO</span><span class="co">  plot the cluster centroids instead of the individual points</span></span>
-<span id="cb40-15"><a href="#cb40-15"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
-<span id="cb40-16"><a href="#cb40-16"></a><span class="co"># sns.scatterplot(</span></span>
-<span id="cb40-17"><a href="#cb40-17"></a><span class="co">#     data=df_mall_cluster,</span></span>
-<span id="cb40-18"><a href="#cb40-18"></a><span class="co">#     x="age",</span></span>
-<span id="cb40-19"><a href="#cb40-19"></a><span class="co">#     y="spending",</span></span>
-<span id="cb40-20"><a href="#cb40-20"></a><span class="co">#     hue="cluster",</span></span>
-<span id="cb40-21"><a href="#cb40-21"></a><span class="co">#     palette=sns.color_palette("tab10", 6),</span></span>
-<span id="cb40-22"><a href="#cb40-22"></a><span class="co">#     ax=curr_ax,</span></span>
-<span id="cb40-23"><a href="#cb40-23"></a><span class="co"># )</span></span>
-<span id="cb40-24"><a href="#cb40-24"></a></span>
-<span id="cb40-25"><a href="#cb40-25"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
-<span id="cb40-26"><a href="#cb40-26"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a>sns.boxplot(</span>
+<span id="cb40-2"><a href="#cb40-2"></a>    df_mall_cluster,</span>
+<span id="cb40-3"><a href="#cb40-3"></a>    y<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb40-4"><a href="#cb40-4"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb40-5"><a href="#cb40-5"></a>    orient<span class="op">=</span><span class="st">"h"</span>,</span>
+<span id="cb40-6"><a href="#cb40-6"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb40-7"><a href="#cb40-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb40-8"><a href="#cb40-8"></a>)</span>
+<span id="cb40-9"><a href="#cb40-9"></a></span>
+<span id="cb40-10"><a href="#cb40-10"></a>plt.title(<span class="st">"Age of each customer segment"</span>)</span>
+<span id="cb40-11"><a href="#cb40-11"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="cluster_files/figure-html/cell-33-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-43" class="cell" data-execution_count="71">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a>sns.countplot(</span>
+<span id="cb41-2"><a href="#cb41-2"></a>    df_cluster,</span>
+<span id="cb41-3"><a href="#cb41-3"></a>    x<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb41-4"><a href="#cb41-4"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb41-5"><a href="#cb41-5"></a>    stat<span class="op">=</span><span class="st">"percent"</span>,</span>
+<span id="cb41-6"><a href="#cb41-6"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">2</span>),</span>
+<span id="cb41-7"><a href="#cb41-7"></a>)</span>
+<span id="cb41-8"><a href="#cb41-8"></a></span>
+<span id="cb41-9"><a href="#cb41-9"></a>plt.title(<span class="st">"gender ration between the customer segments"</span>)</span>
+<span id="cb41-10"><a href="#cb41-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-34-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="101">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a>a <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>mean_gender <span class="op">=</span> df_mall[<span class="st">"gender_male"</span>].mean()</span>
+<span id="cb42-3"><a href="#cb42-3"></a>l_mean_gender, u_mean_gender <span class="op">=</span> mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> a), mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-45" class="cell" data-execution_count="102">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># define a mostly gender column</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="co"># determine which cluster falls outside of the bounds</span></span>
+<span id="cb43-3"><a href="#cb43-3"></a>df_gender <span class="op">=</span> df_cluster_agg[[<span class="st">"cluster"</span>, <span class="st">"gender_male"</span>]].assign(gender<span class="op">=</span><span class="st">"neutral"</span>)</span>
+<span id="cb43-4"><a href="#cb43-4"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].gt(u_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly men"</span></span>
+<span id="cb43-5"><a href="#cb43-5"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].lt(l_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly female"</span></span>
+<span id="cb43-6"><a href="#cb43-6"></a>df_gender</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="102">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cluster</th>
+<th data-quarto-table-cell-role="th">gender_male</th>
+<th data-quarto-table-cell-role="th">gender</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>0.46</td>
+<td>neutral</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>0.46</td>
+<td>neutral</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>0.48</td>
+<td>neutral</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3</td>
+<td>0.56</td>
+<td>mostly men</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4</td>
+<td>0.30</td>
+<td>mostly female</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>5</td>
+<td>0.37</td>
+<td>mostly female</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-46" class="cell" data-execution_count="73">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb44-2"><a href="#cb44-2"></a></span>
+<span id="cb44-3"><a href="#cb44-3"></a>curr_ax <span class="op">=</span> ax</span>
+<span id="cb44-4"><a href="#cb44-4"></a>_ <span class="op">=</span> sns.scatterplot(</span>
+<span id="cb44-5"><a href="#cb44-5"></a>    data<span class="op">=</span>df_cluster_agg,</span>
+<span id="cb44-6"><a href="#cb44-6"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb44-7"><a href="#cb44-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb44-8"><a href="#cb44-8"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb44-9"><a href="#cb44-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb44-10"><a href="#cb44-10"></a>    s<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb44-11"><a href="#cb44-11"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb44-12"><a href="#cb44-12"></a>)</span>
+<span id="cb44-13"><a href="#cb44-13"></a></span>
+<span id="cb44-14"><a href="#cb44-14"></a>xlim0, xlim1 <span class="op">=</span> ax.get_xlim()</span>
+<span id="cb44-15"><a href="#cb44-15"></a>ylim0, ylim1 <span class="op">=</span> ax.get_ylim()</span>
+<span id="cb44-16"><a href="#cb44-16"></a></span>
+<span id="cb44-17"><a href="#cb44-17"></a>plt.vlines(</span>
+<span id="cb44-18"><a href="#cb44-18"></a>    df_mall_cluster[<span class="st">"income"</span>].median(), ylim0, ylim1, color<span class="op">=</span><span class="st">"grey"</span>, linestyles<span class="op">=</span><span class="st">"--"</span></span>
+<span id="cb44-19"><a href="#cb44-19"></a>)</span>
+<span id="cb44-20"><a href="#cb44-20"></a>plt.hlines(</span>
+<span id="cb44-21"><a href="#cb44-21"></a>    df_mall_cluster[<span class="st">"spending"</span>].median(),</span>
+<span id="cb44-22"><a href="#cb44-22"></a>    xlim0,</span>
+<span id="cb44-23"><a href="#cb44-23"></a>    xlim1,</span>
+<span id="cb44-24"><a href="#cb44-24"></a>    color<span class="op">=</span><span class="st">"grey"</span>,</span>
+<span id="cb44-25"><a href="#cb44-25"></a>    linestyles<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb44-26"><a href="#cb44-26"></a>)</span>
+<span id="cb44-27"><a href="#cb44-27"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
+<span id="cb44-28"><a href="#cb44-28"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-37-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
