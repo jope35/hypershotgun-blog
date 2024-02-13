@@ -2,3 +2,4 @@
 /_site/
 .ipynb_checkpoints
 .ruff_cache/
+**/*prompt*
