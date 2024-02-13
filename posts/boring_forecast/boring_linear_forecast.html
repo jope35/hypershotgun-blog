@@ -631,11 +631,11 @@ mean absolute error = 0.615</code></pre>
 <span id="cb12-7"><a href="#cb12-7"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mea month dummies -&gt; </span><span class="sc">{</span>mae<span class="op">/</span>mae_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>mean squared error  = 0.32
-improvement factor mse month dummies -&gt; 1.93x
+<pre><code>mean squared error  = 0.325
+improvement factor mse month dummies -&gt; 1.9x
 -------------------------------------------------------------------------------
-mean absolute error = 0.394
-improvement factor mea month dummies -&gt; 1.56x</code></pre>
+mean absolute error = 0.4
+improvement factor mea month dummies -&gt; 1.54x</code></pre>
 </div>
 </div>
 </section>
@@ -755,20 +755,20 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">ds</th>
-<th data-quarto-table-cell-role="th">is_weekend_True</th>
-<th data-quarto-table-cell-role="th">quarter_2</th>
-<th data-quarto-table-cell-role="th">quarter_3</th>
-<th data-quarto-table-cell-role="th">quarter_4</th>
-<th data-quarto-table-cell-role="th">month_2</th>
-<th data-quarto-table-cell-role="th">month_3</th>
-<th data-quarto-table-cell-role="th">month_4</th>
-<th data-quarto-table-cell-role="th">month_5</th>
-<th data-quarto-table-cell-role="th">month_6</th>
+<th data-quarto-table-cell-role="th">week_2</th>
+<th data-quarto-table-cell-role="th">week_3</th>
+<th data-quarto-table-cell-role="th">week_4</th>
+<th data-quarto-table-cell-role="th">week_5</th>
+<th data-quarto-table-cell-role="th">week_6</th>
+<th data-quarto-table-cell-role="th">week_7</th>
+<th data-quarto-table-cell-role="th">week_8</th>
+<th data-quarto-table-cell-role="th">week_9</th>
+<th data-quarto-table-cell-role="th">week_10</th>
 <th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">week_50</th>
-<th data-quarto-table-cell-role="th">week_51</th>
-<th data-quarto-table-cell-role="th">week_52</th>
-<th data-quarto-table-cell-role="th">week_53</th>
+<th data-quarto-table-cell-role="th">month_9</th>
+<th data-quarto-table-cell-role="th">month_10</th>
+<th data-quarto-table-cell-role="th">month_11</th>
+<th data-quarto-table-cell-role="th">month_12</th>
 <th data-quarto-table-cell-role="th">dayofweek_1</th>
 <th data-quarto-table-cell-role="th">dayofweek_2</th>
 <th data-quarto-table-cell-role="th">dayofweek_3</th>
@@ -782,13 +782,13 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <td data-quarto-table-cell-role="th">0</td>
 <td>2014-05-06</td>
 <td>False</td>
-<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>True</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>...</td>
 <td>False</td>
@@ -807,7 +807,7 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <td>2012-07-05</td>
 <td>False</td>
 <td>False</td>
-<td>True</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -829,15 +829,15 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>2015-06-21</td>
-<td>True</td>
-<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>True</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 <td>...</td>
 <td>False</td>
 <td>False</td>
@@ -858,10 +858,10 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 <td>True</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
 <td>...</td>
 <td>False</td>
 <td>False</td>
@@ -879,7 +879,7 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <td>2012-08-10</td>
 <td>False</td>
 <td>False</td>
-<td>True</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -901,14 +901,14 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>2013-05-11</td>
-<td>True</td>
-<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>True</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>...</td>
 <td>False</td>
@@ -1002,11 +1002,11 @@ improvement factor mea month dummies -&gt; 1.56x</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>mean squared error = 0.262
-improvement factor mse month dummies -&gt; 1.93x
+improvement factor mse month dummies -&gt; 1.9x
 improvement factor mse all dummies   -&gt; 2.35x
 -------------------------------------------------------------------------------
 mean absolute error = 0.356
-improvement factor mea month dummies -&gt; 1.56x
+improvement factor mea month dummies -&gt; 1.54x
 improvement factor mea all dummies   -&gt; 1.73x</code></pre>
 </div>
 </div>
