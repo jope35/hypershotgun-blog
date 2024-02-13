@@ -35,7 +35,7 @@ website:
 
 format:
   html:
-    # highlight-style: ayu #ayu, atom-one, arrow
+    highlight-style: ayu #ayu, atom-one, arrow, github, breeze, a11y, gruvbox
     theme:
       light: flatly
       dark: darkly
