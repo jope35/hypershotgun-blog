@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.549">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -234,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-preprocessing" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="data-preprocessing"><span class="header-section-number">2</span> Data Preprocessing</h2>
 <p>In this initial stage, the goal is to prepare the data for analysis. This involves cleaning the data by removing or filling in missing values, which could be done through various strategies like dropping the missing rows, filling them with mean/median/mode, or using a prediction model. It’s also crucial to handle outliers and potentially normalize features if they’re on different scales. This stage might also involve dealing with categorical variables using encoding techniques. Effective preprocessing is crucial for reliable results in the subsequent stages.</p>
-<p>#TODO add intro to the dataset dataset can be found <a href="https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python">here</a></p>
+<p>dataset can be found <a href="https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python">here</a></p>
 <table class="table">
 <colgroup>
 <col style="width: 23%">
@@ -272,24 +272,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="cell-5" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> functools <span class="im">import</span> lru_cache</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> umap</span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> power_transform</span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> kelbow_visualizer, silhouette_visualizer</span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># imports</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> umap</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> power_transform</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="im">from</span> yellowbrick.cluster <span class="im">import</span> kelbow_visualizer, silhouette_visualizer</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co"># setting global plotting settings</span></span>
 <span id="cb1-14"><a href="#cb1-14"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
 <span id="cb1-15"><a href="#cb1-15"></a>sns.set_palette(<span class="st">"tab10"</span>)</span>
 <span id="cb1-16"><a href="#cb1-16"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co"># plt.style.use("seaborn-v0_8-darkgrid")</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a href="#cb1-17"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>/opt/homebrew/Caskroom/miniconda/base/envs/hypershotgun/lib/python3.10/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
@@ -319,7 +318,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-18"><a href="#cb3-18"></a><span class="co"># look at a random sample to validate the contents</span></span>
 <span id="cb3-19"><a href="#cb3-19"></a>df_mall.sample(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>
 <div>
 
 
@@ -336,52 +336,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">47</td>
-<td>48</td>
+<td data-quarto-table-cell-role="th">35</td>
+<td>36</td>
 <td>female</td>
-<td>27</td>
-<td>40</td>
-<td>47</td>
+<td>21</td>
+<td>33</td>
+<td>81</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">86</td>
-<td>87</td>
+<td data-quarto-table-cell-role="th">148</td>
+<td>149</td>
 <td>female</td>
-<td>55</td>
-<td>57</td>
-<td>58</td>
+<td>34</td>
+<td>78</td>
+<td>22</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">112</td>
-<td>113</td>
+<td data-quarto-table-cell-role="th">157</td>
+<td>158</td>
 <td>female</td>
-<td>38</td>
-<td>64</td>
-<td>42</td>
+<td>30</td>
+<td>78</td>
+<td>78</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">169</td>
-<td>170</td>
+<td data-quarto-table-cell-role="th">21</td>
+<td>22</td>
 <td>male</td>
-<td>32</td>
-<td>87</td>
-<td>63</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">182</td>
-<td>183</td>
-<td>male</td>
-<td>46</td>
-<td>98</td>
-<td>15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">23</td>
-<td>24</td>
-<td>male</td>
-<td>31</td>
 <td>25</td>
+<td>24</td>
 <td>73</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>11</td>
+<td>male</td>
+<td>67</td>
+<td>19</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8</td>
+<td>9</td>
+<td>male</td>
+<td>64</td>
+<td>19</td>
+<td>3</td>
 </tr>
 </tbody>
 </table>
@@ -389,28 +389,123 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</div>
 <p>Upon examination of the dataset, it appears that the ‘gender’ column is the only non-numeric feature. Specifically, it contains string values categorizing customers as either “Male” or “Female”. All other columns - ‘id’, ‘age’, ‘income’, and ‘spending’ - are numeric data types.</p>
 <p>The ‘id’ column seems to be a unique identifier for each customer. While numeric, this feature has very high cardinality (a distinct value for every customer). Features with high cardinality tend to dominate distance calculations in clustering algorithms and obscure more meaningful patterns in the data. Therefore, we should exclude the customer ID column from the feature set used for clustering.</p>
-<p>For the remaining features to function effectively in clustering algorithms, the input features generally need to be numeric rather than categorical strings. Distance-based algorithms like k-means rely on computing distances between data points across features. String categories do not have an inherent numeric ordering, so the distance computations would not be meaningful.</p>
-<p>Additionally, when performing exploratory analysis, a numeric encoding often allows easier visualization of the impact of gender relative to the other numeric features. Box plots, scatter plots with color-coded points, and other techniques can provide better insights into how gender correlates with shopper age, income or spending habits when mapped to a numeric form.</p>
-<p>Therefore, to enable the application of clustering algorithms and more impactful analysis, we need to process the ‘gender’ column by encoding the categories as numbers. Common encoding schemes include mapping “Male” and “Female” to 0 and 1 respectively, or using one-hot encoding to create an additional binary feature column for each category. After encoding, gender will be represented numerically like the other existing features.</p>
+<ul>
+<li><p>For the remaining features to function effectively in clustering algorithms, the input features generally need to be numeric rather than categorical strings. Distance-based algorithms like k-means rely on computing distances between data points across features. String categories do not have an inherent numeric ordering, so the distance computations would not be meaningful.</p></li>
+<li><p>Additionally, when performing exploratory analysis, a numeric encoding often allows easier visualization of the impact of gender relative to the other numeric features. Box plots, scatter plots with color-coded points, and other techniques can provide better insights into how gender correlates with shopper age, income or spending habits when mapped to a numeric form.</p></li>
+</ul>
+<p>Therefore, to enable the application of clustering algorithms and more impactful analysis, we need to process the ‘gender’ column by encoding the categories as numbers. Common encoding schemes include mapping “Male” and “Female” to 1 and 0 respectively, or using one-hot encoding to create an additional binary feature column for each category. After encoding, gender will be represented numerically like the other existing features.</p>
 <p>In summary, as gender is the only non-numeric column, and ID has high cardinality unsuitable for clustering, effectively preparing the data requires encoding the gender categorical data and excluding the customer ID column.</p>
 <div id="cell-8" class="cell" data-execution_count="3">
-<details open="" class="code-fold">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># clustering models usally need numerical values</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>df_mall <span class="op">=</span> pd.get_dummies(df_mall, columns<span class="op">=</span>[<span class="st">"gender"</span>], drop_first<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-4"><a href="#cb4-4"></a></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co"># list with features for easy reference</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>features <span class="op">=</span> [<span class="st">"age"</span>, <span class="st">"income"</span>, <span class="st">"spending"</span>, <span class="st">"gender_male"</span>]</span>
-<span id="cb4-7"><a href="#cb4-7"></a>df_feature <span class="op">=</span> df_mall[features]</span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>df_mall.describe().<span class="bu">round</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">spending</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>200.0</td>
+<td>200.0</td>
+<td>200.0</td>
+<td>200.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>100.5</td>
+<td>38.8</td>
+<td>60.6</td>
+<td>50.2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>57.9</td>
+<td>14.0</td>
+<td>26.3</td>
+<td>25.8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>1.0</td>
+<td>18.0</td>
+<td>15.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>50.8</td>
+<td>28.8</td>
+<td>41.5</td>
+<td>34.8</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>100.5</td>
+<td>36.0</td>
+<td>61.5</td>
+<td>50.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>150.2</td>
+<td>49.0</td>
+<td>78.0</td>
+<td>73.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>200.0</td>
+<td>70.0</td>
+<td>137.0</td>
+<td>99.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>The dataset contains 200 records, for each of the variables - id, age, income, and spending.</p>
+<p><strong>id</strong>: This is the unique identifier for each customer. It ranges from 1 to 200 with an average (mean) value of 100.5. The standard deviation is approximately 57.9, indicating that the id values are spread out over a large range.</p>
+<p><strong>age</strong>: The average age of the customers in the dataset is 38.8 years. The age ranges from a minimum of 18 years to a maximum of 70 years, with a standard deviation of 14. This suggests that the mall has a diverse age range of customers, and the majority of them are middle-aged.</p>
+<p><strong>income</strong>: The average annual income of the customers is approximately $60.6 thousand. It has a standard deviation of 26.3, indicating a considerable variation in the incomes of the customers. The minimum income is $15 thousand, while the maximum is $137 thousand. This suggests a wide spread of customers from different income levels.</p>
+<p><strong>spending</strong>: The average spending score assigned by the mall is about 50.2. The spending score ranges from a minimum of 1 to a maximum of 99, with a standard deviation of 25.8. This suggests a broad spectrum of customer spending behaviors, from low spenders to high spenders.</p>
+<p>The 25%, 50%, and 75% rows represent the corresponding percentiles for each variable:</p>
+<p>For age, 25% of the customers are 28.8 years or younger, 50% (which is also the median) are 36 years or younger, and 75% are 49 years or younger. For income, 25% of the customers earn $41.5 thousand or less, 50% earn $61.5 thousand or less, and 75% earn $78 thousand or less. For spending, 25% of the customers have a spending score of 34.8 or less, 50% have a score of 50 or less, and 75% have a score of 73 or less.</p>
+<div id="cell-10" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># clustering models usally need numerical values</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>df_mall <span class="op">=</span> pd.get_dummies(df_mall, columns<span class="op">=</span>[<span class="st">"gender"</span>], drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co"># list with features for easy reference</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>features <span class="op">=</span> [<span class="st">"age"</span>, <span class="st">"income"</span>, <span class="st">"spending"</span>, <span class="st">"gender_male"</span>]</span>
+<span id="cb5-7"><a href="#cb5-7"></a>df_feature <span class="op">=</span> df_mall[features]</span>
+<span id="cb5-8"><a href="#cb5-8"></a></span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
 <div>
 
 
@@ -426,25 +521,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">29</td>
-<td>23</td>
-<td>29</td>
-<td>87</td>
+<td data-quarto-table-cell-role="th">155</td>
+<td>27</td>
+<td>78</td>
+<td>89</td>
 <td>False</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">133</td>
-<td>31</td>
-<td>72</td>
-<td>71</td>
-<td>False</td>
+<td data-quarto-table-cell-role="th">166</td>
+<td>42</td>
+<td>86</td>
+<td>20</td>
+<td>True</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">43</td>
-<td>31</td>
-<td>39</td>
-<td>61</td>
-<td>False</td>
+<td data-quarto-table-cell-role="th">33</td>
+<td>18</td>
+<td>33</td>
+<td>92</td>
+<td>True</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">45</td>
@@ -454,11 +549,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>False</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">134</td>
-<td>20</td>
-<td>73</td>
-<td>5</td>
-<td>True</td>
+<td data-quarto-table-cell-role="th">36</td>
+<td>42</td>
+<td>34</td>
+<td>17</td>
+<td>False</td>
 </tr>
 </tbody>
 </table>
@@ -466,10 +561,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-9" class="cell" data-execution_count="4">
+</div>
+<div id="cell-11" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>df_feature.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>df_feature.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
@@ -489,10 +585,10 @@ memory usage: 5.0 KB</code></pre>
 <section id="exploratory-data-analysis" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="exploratory-data-analysis"><span class="header-section-number">3</span> Exploratory Data Analysis</h2>
 <p>Visualize the data and derive initial insights.</p>
-<div id="cell-11" class="cell" data-execution_count="5">
+<div id="cell-13" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="bu">print</span>(df_feature.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="bu">print</span>(df_feature.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>          count   mean        std   min    25%   50%   75%    max
@@ -505,90 +601,17 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <p>The average annual income is $60,560, ranging from $15,000 to $137,000. 50% of customers earn $61,500 or less.</p>
 <p>For the spending score (1-100), the average is 50.2. Half the customers have a spending score of 50 or below. The minimum is 1 and maximum 99, showing a wide range in spending habits.</p>
 <p>Overall, we see variation among customers in age, income levels, and purchasing patterns. Clustering algorithms can help segment customers into groups based on these attributes to develop targeted marketing approaches. let us first look at the distributions of the features.</p>
-<div id="cell-13" class="cell" data-execution_count="6">
+<div id="cell-15" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb9-2"><a href="#cb9-2"></a></span>
-<span id="cb9-3"><a href="#cb9-3"></a>sns.countplot(</span>
-<span id="cb9-4"><a href="#cb9-4"></a>    data<span class="op">=</span>df_feature, x<span class="op">=</span><span class="st">"gender_male"</span>, stat<span class="op">=</span><span class="st">"percent"</span>, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>]</span>
-<span id="cb9-5"><a href="#cb9-5"></a>)</span>
-<span id="cb9-6"><a href="#cb9-6"></a></span>
-<span id="cb9-7"><a href="#cb9-7"></a>sns.kdeplot(x<span class="op">=</span><span class="st">"age"</span>, data<span class="op">=</span>df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
-<span id="cb9-8"><a href="#cb9-8"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cluster_files/figure-html/cell-7-output-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-14" class="cell" data-execution_count="7">
-<details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
 <span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
-<span id="cb10-4"><a href="#cb10-4"></a>sns.regplot(</span>
-<span id="cb10-5"><a href="#cb10-5"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
-<span id="cb10-6"><a href="#cb10-6"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb10-8"><a href="#cb10-8"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
-<span id="cb10-9"><a href="#cb10-9"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb10-10"><a href="#cb10-10"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-11"><a href="#cb10-11"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-12"><a href="#cb10-12"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb10-13"><a href="#cb10-13"></a>)</span>
-<span id="cb10-14"><a href="#cb10-14"></a></span>
-<span id="cb10-15"><a href="#cb10-15"></a></span>
-<span id="cb10-16"><a href="#cb10-16"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
-<span id="cb10-17"><a href="#cb10-17"></a>sns.regplot(</span>
-<span id="cb10-18"><a href="#cb10-18"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
-<span id="cb10-19"><a href="#cb10-19"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb10-20"><a href="#cb10-20"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb10-21"><a href="#cb10-21"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
-<span id="cb10-22"><a href="#cb10-22"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb10-23"><a href="#cb10-23"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-24"><a href="#cb10-24"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-25"><a href="#cb10-25"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb10-26"><a href="#cb10-26"></a>)</span>
-<span id="cb10-27"><a href="#cb10-27"></a>curr_ax.legend(</span>
-<span id="cb10-28"><a href="#cb10-28"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
-<span id="cb10-29"><a href="#cb10-29"></a>)</span>
-<span id="cb10-30"><a href="#cb10-30"></a>curr_ax.set_title(<span class="st">"age vs. income"</span>)</span>
-<span id="cb10-31"><a href="#cb10-31"></a></span>
-<span id="cb10-32"><a href="#cb10-32"></a></span>
-<span id="cb10-33"><a href="#cb10-33"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
-<span id="cb10-34"><a href="#cb10-34"></a>sns.regplot(</span>
-<span id="cb10-35"><a href="#cb10-35"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
-<span id="cb10-36"><a href="#cb10-36"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb10-37"><a href="#cb10-37"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb10-38"><a href="#cb10-38"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
-<span id="cb10-39"><a href="#cb10-39"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb10-40"><a href="#cb10-40"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-41"><a href="#cb10-41"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-42"><a href="#cb10-42"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb10-43"><a href="#cb10-43"></a>)</span>
-<span id="cb10-44"><a href="#cb10-44"></a></span>
-<span id="cb10-45"><a href="#cb10-45"></a></span>
-<span id="cb10-46"><a href="#cb10-46"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
-<span id="cb10-47"><a href="#cb10-47"></a>sns.regplot(</span>
-<span id="cb10-48"><a href="#cb10-48"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
-<span id="cb10-49"><a href="#cb10-49"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb10-50"><a href="#cb10-50"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb10-51"><a href="#cb10-51"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
-<span id="cb10-52"><a href="#cb10-52"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb10-53"><a href="#cb10-53"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-54"><a href="#cb10-54"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb10-55"><a href="#cb10-55"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb10-56"><a href="#cb10-56"></a>)</span>
-<span id="cb10-57"><a href="#cb10-57"></a>curr_ax.legend(</span>
-<span id="cb10-58"><a href="#cb10-58"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
-<span id="cb10-59"><a href="#cb10-59"></a>)</span>
-<span id="cb10-60"><a href="#cb10-60"></a>curr_ax.set_title(<span class="st">"age vs. spending"</span>)</span>
-<span id="cb10-61"><a href="#cb10-61"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3"></a>sns.countplot(</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    data<span class="op">=</span>df_feature, x<span class="op">=</span><span class="st">"gender_male"</span>, stat<span class="op">=</span><span class="st">"percent"</span>, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>]</span>
+<span id="cb10-5"><a href="#cb10-5"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>sns.kdeplot(x<span class="op">=</span><span class="st">"age"</span>, data<span class="op">=</span>df_feature, hue<span class="op">=</span><span class="st">"gender_male"</span>, ax<span class="op">=</span>ax[<span class="dv">1</span>])</span>
+<span id="cb10-8"><a href="#cb10-8"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -598,36 +621,70 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-15" class="cell" data-execution_count="8">
+<div id="cell-16" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
 <span id="cb11-2"><a href="#cb11-2"></a></span>
 <span id="cb11-3"><a href="#cb11-3"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
-<span id="cb11-4"><a href="#cb11-4"></a>sns.scatterplot(</span>
-<span id="cb11-5"><a href="#cb11-5"></a>    data<span class="op">=</span>df_feature,</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb11-8"><a href="#cb11-8"></a>    hue<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb11-9"><a href="#cb11-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"viridis"</span>, as_cmap<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb11-10"><a href="#cb11-10"></a>    <span class="co"># style="gender_male",</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb11-12"><a href="#cb11-12"></a>)</span>
-<span id="cb11-13"><a href="#cb11-13"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a>sns.regplot(</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
+<span id="cb11-9"><a href="#cb11-9"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-10"><a href="#cb11-10"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-11"><a href="#cb11-11"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-12"><a href="#cb11-12"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb11-13"><a href="#cb11-13"></a>)</span>
 <span id="cb11-14"><a href="#cb11-14"></a></span>
-<span id="cb11-15"><a href="#cb11-15"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
-<span id="cb11-16"><a href="#cb11-16"></a>sns.scatterplot(</span>
-<span id="cb11-17"><a href="#cb11-17"></a>    data<span class="op">=</span>df_feature,</span>
-<span id="cb11-18"><a href="#cb11-18"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb11-19"><a href="#cb11-19"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb11-20"><a href="#cb11-20"></a>    <span class="co"># hue="age",</span></span>
-<span id="cb11-21"><a href="#cb11-21"></a>    <span class="co"># palette=sns.color_palette("viridis", 2),</span></span>
-<span id="cb11-22"><a href="#cb11-22"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb11-23"><a href="#cb11-23"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb11-24"><a href="#cb11-24"></a>)</span>
-<span id="cb11-25"><a href="#cb11-25"></a></span>
-<span id="cb11-26"><a href="#cb11-26"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
-<span id="cb11-27"><a href="#cb11-27"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-15"><a href="#cb11-15"></a></span>
+<span id="cb11-16"><a href="#cb11-16"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
+<span id="cb11-17"><a href="#cb11-17"></a>sns.regplot(</span>
+<span id="cb11-18"><a href="#cb11-18"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
+<span id="cb11-19"><a href="#cb11-19"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-20"><a href="#cb11-20"></a>    y<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb11-21"><a href="#cb11-21"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
+<span id="cb11-22"><a href="#cb11-22"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-23"><a href="#cb11-23"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-24"><a href="#cb11-24"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-25"><a href="#cb11-25"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb11-26"><a href="#cb11-26"></a>)</span>
+<span id="cb11-27"><a href="#cb11-27"></a>curr_ax.legend(</span>
+<span id="cb11-28"><a href="#cb11-28"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
+<span id="cb11-29"><a href="#cb11-29"></a>)</span>
+<span id="cb11-30"><a href="#cb11-30"></a>curr_ax.set_title(<span class="st">"age vs. income"</span>)</span>
+<span id="cb11-31"><a href="#cb11-31"></a></span>
+<span id="cb11-32"><a href="#cb11-32"></a></span>
+<span id="cb11-33"><a href="#cb11-33"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb11-34"><a href="#cb11-34"></a>sns.regplot(</span>
+<span id="cb11-35"><a href="#cb11-35"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">0</span>],</span>
+<span id="cb11-36"><a href="#cb11-36"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-37"><a href="#cb11-37"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb11-38"><a href="#cb11-38"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">0</span>],</span>
+<span id="cb11-39"><a href="#cb11-39"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-40"><a href="#cb11-40"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-41"><a href="#cb11-41"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-42"><a href="#cb11-42"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb11-43"><a href="#cb11-43"></a>)</span>
+<span id="cb11-44"><a href="#cb11-44"></a></span>
+<span id="cb11-45"><a href="#cb11-45"></a></span>
+<span id="cb11-46"><a href="#cb11-46"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb11-47"><a href="#cb11-47"></a>sns.regplot(</span>
+<span id="cb11-48"><a href="#cb11-48"></a>    data<span class="op">=</span>df_feature[df_feature[<span class="st">"gender_male"</span>] <span class="op">==</span> <span class="dv">1</span>],</span>
+<span id="cb11-49"><a href="#cb11-49"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb11-50"><a href="#cb11-50"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb11-51"><a href="#cb11-51"></a>    color<span class="op">=</span>sns.color_palette()[<span class="dv">1</span>],</span>
+<span id="cb11-52"><a href="#cb11-52"></a>    order<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb11-53"><a href="#cb11-53"></a>    lowess<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-54"><a href="#cb11-54"></a>    truncate<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb11-55"><a href="#cb11-55"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb11-56"><a href="#cb11-56"></a>)</span>
+<span id="cb11-57"><a href="#cb11-57"></a>curr_ax.legend(</span>
+<span id="cb11-58"><a href="#cb11-58"></a>    [<span class="st">"gender_male=0"</span>, <span class="st">"lowess regression"</span>, <span class="st">"gender_male=1"</span>, <span class="st">"lowess regression"</span>]</span>
+<span id="cb11-59"><a href="#cb11-59"></a>)</span>
+<span id="cb11-60"><a href="#cb11-60"></a>curr_ax.set_title(<span class="st">"age vs. spending"</span>)</span>
+<span id="cb11-61"><a href="#cb11-61"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -637,38 +694,36 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="9">
+<div id="cell-17" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># create a ratio between income and spending</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a>df_ratio <span class="op">=</span> df_feature.assign(si_ratio<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>])</span>
-<span id="cb12-3"><a href="#cb12-3"></a></span>
-<span id="cb12-4"><a href="#cb12-4"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb12-5"><a href="#cb12-5"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
-<span id="cb12-6"><a href="#cb12-6"></a></span>
-<span id="cb12-7"><a href="#cb12-7"></a>sns.scatterplot(</span>
-<span id="cb12-8"><a href="#cb12-8"></a>    data<span class="op">=</span>df_ratio,</span>
-<span id="cb12-9"><a href="#cb12-9"></a>    x<span class="op">=</span><span class="st">"si_ratio"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
+<span id="cb12-4"><a href="#cb12-4"></a>sns.scatterplot(</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>    hue<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"viridis"</span>, as_cmap<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb12-10"><a href="#cb12-10"></a>    <span class="co"># style="gender_male",</span></span>
 <span id="cb12-11"><a href="#cb12-11"></a>    ax<span class="op">=</span>curr_ax,</span>
 <span id="cb12-12"><a href="#cb12-12"></a>)</span>
 <span id="cb12-13"><a href="#cb12-13"></a></span>
 <span id="cb12-14"><a href="#cb12-14"></a></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="co"># clip to 95% quantile of the si ratio,</span></span>
-<span id="cb12-16"><a href="#cb12-16"></a><span class="co"># this will zoom into the interesting part of the plot</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a>df_ratio <span class="op">=</span> df_ratio.assign(</span>
-<span id="cb12-18"><a href="#cb12-18"></a>    si_ratio_clip<span class="op">=</span>df_ratio[<span class="st">"si_ratio"</span>].clip(</span>
-<span id="cb12-19"><a href="#cb12-19"></a>        upper<span class="op">=</span>np.quantile(df_ratio[<span class="st">"si_ratio"</span>], <span class="fl">0.95</span>)</span>
-<span id="cb12-20"><a href="#cb12-20"></a>    )</span>
-<span id="cb12-21"><a href="#cb12-21"></a>)</span>
-<span id="cb12-22"><a href="#cb12-22"></a></span>
-<span id="cb12-23"><a href="#cb12-23"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
-<span id="cb12-24"><a href="#cb12-24"></a>sns.scatterplot(</span>
-<span id="cb12-25"><a href="#cb12-25"></a>    data<span class="op">=</span>df_ratio,</span>
-<span id="cb12-26"><a href="#cb12-26"></a>    x<span class="op">=</span><span class="st">"si_ratio_clip"</span>,</span>
-<span id="cb12-27"><a href="#cb12-27"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb12-28"><a href="#cb12-28"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb12-29"><a href="#cb12-29"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-15"><a href="#cb12-15"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb12-16"><a href="#cb12-16"></a>sns.scatterplot(</span>
+<span id="cb12-17"><a href="#cb12-17"></a>    data<span class="op">=</span>df_feature,</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb12-19"><a href="#cb12-19"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20"></a>    <span class="co"># hue="age",</span></span>
+<span id="cb12-21"><a href="#cb12-21"></a>    <span class="co"># palette=sns.color_palette("viridis", 2),</span></span>
+<span id="cb12-22"><a href="#cb12-22"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb12-24"><a href="#cb12-24"></a>)</span>
+<span id="cb12-25"><a href="#cb12-25"></a></span>
+<span id="cb12-26"><a href="#cb12-26"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
+<span id="cb12-27"><a href="#cb12-27"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -678,105 +733,147 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-17" class="cell" data-execution_count="10">
-<details open="" class="code-fold">
+<div id="cell-18" class="cell" data-execution_count="10">
+<details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>df_ratio <span class="op">=</span> df_ratio.assign(</span>
-<span id="cb13-2"><a href="#cb13-2"></a>    si_ratio_transform<span class="op">=</span>power_transform(</span>
-<span id="cb13-3"><a href="#cb13-3"></a>        df_ratio[<span class="st">"si_ratio"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), method<span class="op">=</span><span class="st">"yeo-johnson"</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>    )</span>
-<span id="cb13-5"><a href="#cb13-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-18" class="cell" data-execution_count="11">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a>sns.histplot(data<span class="op">=</span>df_ratio[<span class="st">"si_ratio"</span>], stat<span class="op">=</span><span class="st">"percent"</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
-<span id="cb14-4"><a href="#cb14-4"></a></span>
-<span id="cb14-5"><a href="#cb14-5"></a>sns.histplot(</span>
-<span id="cb14-6"><a href="#cb14-6"></a>    data<span class="op">=</span>df_ratio[<span class="st">"si_ratio_transform"</span>],</span>
-<span id="cb14-7"><a href="#cb14-7"></a>    stat<span class="op">=</span><span class="st">"percent"</span>,</span>
-<span id="cb14-8"><a href="#cb14-8"></a>    ax<span class="op">=</span>ax[<span class="dv">1</span>],</span>
-<span id="cb14-9"><a href="#cb14-9"></a>)</span>
-<span id="cb14-10"><a href="#cb14-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># create a ratio between income and spending</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>df_ratio <span class="op">=</span> df_feature.assign(si_ratio<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>])</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb13-5"><a href="#cb13-5"></a>curr_ax <span class="op">=</span> ax[<span class="dv">0</span>]</span>
+<span id="cb13-6"><a href="#cb13-6"></a></span>
+<span id="cb13-7"><a href="#cb13-7"></a>sns.scatterplot(</span>
+<span id="cb13-8"><a href="#cb13-8"></a>    data<span class="op">=</span>df_ratio,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>    x<span class="op">=</span><span class="st">"si_ratio"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb13-11"><a href="#cb13-11"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb13-12"><a href="#cb13-12"></a>)</span>
+<span id="cb13-13"><a href="#cb13-13"></a></span>
+<span id="cb13-14"><a href="#cb13-14"></a></span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="co"># clip to 95% quantile of the si ratio,</span></span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="co"># this will zoom into the interesting part of the plot</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a>df_ratio <span class="op">=</span> df_ratio.assign(</span>
+<span id="cb13-18"><a href="#cb13-18"></a>    si_ratio_clip<span class="op">=</span>df_ratio[<span class="st">"si_ratio"</span>].clip(</span>
+<span id="cb13-19"><a href="#cb13-19"></a>        upper<span class="op">=</span>np.quantile(df_ratio[<span class="st">"si_ratio"</span>], <span class="fl">0.95</span>)</span>
+<span id="cb13-20"><a href="#cb13-20"></a>    )</span>
+<span id="cb13-21"><a href="#cb13-21"></a>)</span>
+<span id="cb13-22"><a href="#cb13-22"></a></span>
+<span id="cb13-23"><a href="#cb13-23"></a>curr_ax <span class="op">=</span> ax[<span class="dv">1</span>]</span>
+<span id="cb13-24"><a href="#cb13-24"></a>sns.scatterplot(</span>
+<span id="cb13-25"><a href="#cb13-25"></a>    data<span class="op">=</span>df_ratio,</span>
+<span id="cb13-26"><a href="#cb13-26"></a>    x<span class="op">=</span><span class="st">"si_ratio_clip"</span>,</span>
+<span id="cb13-27"><a href="#cb13-27"></a>    y<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb13-28"><a href="#cb13-28"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb13-29"><a href="#cb13-29"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-12-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-11-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-19" class="cell" data-execution_count="12">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="at">@lru_cache</span>(maxsize<span class="op">=</span><span class="va">None</span>)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">def</span> calc_umap(</span>
-<span id="cb15-3"><a href="#cb15-3"></a>    n_neighbors<span class="op">=</span><span class="dv">15</span>,</span>
-<span id="cb15-4"><a href="#cb15-4"></a>    min_dist<span class="op">=</span><span class="fl">0.15</span>,</span>
-<span id="cb15-5"><a href="#cb15-5"></a>    n_components<span class="op">=</span><span class="dv">2</span>,</span>
-<span id="cb15-6"><a href="#cb15-6"></a>):</span>
-<span id="cb15-7"><a href="#cb15-7"></a>    <span class="co"># data structure, with the goal of a 2D representation.</span></span>
-<span id="cb15-8"><a href="#cb15-8"></a>    reducer <span class="op">=</span> umap.UMAP(</span>
-<span id="cb15-9"><a href="#cb15-9"></a>        n_neighbors<span class="op">=</span>n_neighbors,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>        n_components<span class="op">=</span>n_components,</span>
-<span id="cb15-11"><a href="#cb15-11"></a>        min_dist<span class="op">=</span>min_dist,</span>
-<span id="cb15-12"><a href="#cb15-12"></a>        metric<span class="op">=</span><span class="st">"euclidean"</span>,</span>
-<span id="cb15-13"><a href="#cb15-13"></a>        random_state<span class="op">=</span><span class="dv">42</span>,</span>
-<span id="cb15-14"><a href="#cb15-14"></a>        n_jobs<span class="op">=</span><span class="dv">1</span>,  <span class="co"># setting to 1 to lock in the random state</span></span>
-<span id="cb15-15"><a href="#cb15-15"></a>    )</span>
-<span id="cb15-16"><a href="#cb15-16"></a></span>
-<span id="cb15-17"><a href="#cb15-17"></a>    <span class="co"># fit the data to the reducer</span></span>
-<span id="cb15-18"><a href="#cb15-18"></a>    <span class="cf">return</span> reducer.fit_transform(df_feature)</span>
-<span id="cb15-19"><a href="#cb15-19"></a></span>
-<span id="cb15-20"><a href="#cb15-20"></a></span>
-<span id="cb15-21"><a href="#cb15-21"></a><span class="kw">def</span> plot_umap(embeddings: np.array <span class="op">=</span> <span class="va">None</span>, ax: plt.axes <span class="op">=</span> <span class="va">None</span>):</span>
-<span id="cb15-22"><a href="#cb15-22"></a>    <span class="co"># create the scatter plot of the 2 component embedding</span></span>
-<span id="cb15-23"><a href="#cb15-23"></a>    <span class="co"># the order of x,y doesnt matter, the relative distance does</span></span>
-<span id="cb15-24"><a href="#cb15-24"></a>    ax.scatter(x<span class="op">=</span>embeddings[:, <span class="dv">0</span>], y<span class="op">=</span>embeddings[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">12</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb15-25"><a href="#cb15-25"></a></span>
-<span id="cb15-26"><a href="#cb15-26"></a>    <span class="co"># remove axis labels and ticks</span></span>
-<span id="cb15-27"><a href="#cb15-27"></a>    <span class="co"># as these are meaningless for umap</span></span>
-<span id="cb15-28"><a href="#cb15-28"></a>    ax.set_xticklabels([])</span>
-<span id="cb15-29"><a href="#cb15-29"></a>    ax.set_yticklabels([])</span>
-<span id="cb15-30"><a href="#cb15-30"></a></span>
-<span id="cb15-31"><a href="#cb15-31"></a>    <span class="co"># n_neighbors are formatted as floats  and min_dist are formatted as int</span></span>
-<span id="cb15-32"><a href="#cb15-32"></a>    ax.set_title(<span class="ss">f"</span><span class="sc">{</span>n_neighbors<span class="op">=</span><span class="sc">:.0f}</span><span class="ss"> </span><span class="sc">{</span>min_dist<span class="op">=</span><span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-20" class="cell" data-execution_count="13">
+<div id="cell-19" class="cell" data-execution_count="11">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># defining the parameter sweep</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>range_min_dist <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)  <span class="co"># min_dist</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a>range_n_neighbors <span class="op">=</span> np.arange(<span class="dv">10</span>, <span class="dv">14</span>)  <span class="co"># n_neighbors</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a></span>
-<span id="cb16-5"><a href="#cb16-5"></a></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="co"># creating the subplots and performing the embedding with the parameter sweep</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb16-8"><a href="#cb16-8"></a>    nrows<span class="op">=</span><span class="bu">len</span>(range_min_dist), ncols<span class="op">=</span><span class="bu">len</span>(range_n_neighbors), figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">10</span>)</span>
-<span id="cb16-9"><a href="#cb16-9"></a>)</span>
-<span id="cb16-10"><a href="#cb16-10"></a></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="cf">for</span> i_min_dist, min_dist <span class="kw">in</span> <span class="bu">enumerate</span>(range_min_dist):</span>
-<span id="cb16-12"><a href="#cb16-12"></a>    <span class="cf">for</span> i_n_neighbors, n_neighbors <span class="kw">in</span> <span class="bu">enumerate</span>(range_n_neighbors):</span>
-<span id="cb16-13"><a href="#cb16-13"></a>        embeddings <span class="op">=</span> calc_umap(</span>
-<span id="cb16-14"><a href="#cb16-14"></a>            n_neighbors<span class="op">=</span><span class="bu">int</span>(n_neighbors),</span>
-<span id="cb16-15"><a href="#cb16-15"></a>            min_dist<span class="op">=</span><span class="bu">float</span>(min_dist),</span>
-<span id="cb16-16"><a href="#cb16-16"></a>        )</span>
-<span id="cb16-17"><a href="#cb16-17"></a>        plot_umap(embeddings<span class="op">=</span>embeddings, ax<span class="op">=</span>ax[i_min_dist, i_n_neighbors])</span>
-<span id="cb16-18"><a href="#cb16-18"></a></span>
-<span id="cb16-19"><a href="#cb16-19"></a>fig.supxlabel(<span class="st">" -&gt; n_neighbors"</span>)</span>
-<span id="cb16-20"><a href="#cb16-20"></a>fig.supylabel(<span class="st">" -&gt; min_dist"</span>)</span>
-<span id="cb16-21"><a href="#cb16-21"></a>fig.tight_layout()</span>
-<span id="cb16-22"><a href="#cb16-22"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>df_ratio <span class="op">=</span> df_ratio.assign(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    si_ratio_transform<span class="op">=</span>power_transform(</span>
+<span id="cb14-3"><a href="#cb14-3"></a>        df_ratio[<span class="st">"si_ratio"</span>].to_numpy().reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), method<span class="op">=</span><span class="st">"yeo-johnson"</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a>    )</span>
+<span id="cb14-5"><a href="#cb14-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-20" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a>sns.histplot(data<span class="op">=</span>df_ratio[<span class="st">"si_ratio"</span>], stat<span class="op">=</span><span class="st">"percent"</span>, ax<span class="op">=</span>ax[<span class="dv">0</span>])</span>
+<span id="cb15-4"><a href="#cb15-4"></a></span>
+<span id="cb15-5"><a href="#cb15-5"></a>sns.histplot(</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    data<span class="op">=</span>df_ratio[<span class="st">"si_ratio_transform"</span>],</span>
+<span id="cb15-7"><a href="#cb15-7"></a>    stat<span class="op">=</span><span class="st">"percent"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>    ax<span class="op">=</span>ax[<span class="dv">1</span>],</span>
+<span id="cb15-9"><a href="#cb15-9"></a>)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-14-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-13-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-21" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">def</span> calc_umap(</span>
+<span id="cb16-2"><a href="#cb16-2"></a>    df_in: pd.DataFrame,</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    n_neighbors<span class="op">=</span><span class="dv">15</span>,</span>
+<span id="cb16-4"><a href="#cb16-4"></a>    min_dist<span class="op">=</span><span class="fl">0.15</span>,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    n_components<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>):</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    <span class="co"># data structure, with the goal of a 2D representation.</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>    reducer <span class="op">=</span> umap.UMAP(</span>
+<span id="cb16-9"><a href="#cb16-9"></a>        n_neighbors<span class="op">=</span>n_neighbors,</span>
+<span id="cb16-10"><a href="#cb16-10"></a>        n_components<span class="op">=</span>n_components,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>        min_dist<span class="op">=</span>min_dist,</span>
+<span id="cb16-12"><a href="#cb16-12"></a>        metric<span class="op">=</span><span class="st">"euclidean"</span>,</span>
+<span id="cb16-13"><a href="#cb16-13"></a>        random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb16-14"><a href="#cb16-14"></a>        n_jobs<span class="op">=</span><span class="dv">1</span>,  <span class="co"># setting to 1 to lock in the random state</span></span>
+<span id="cb16-15"><a href="#cb16-15"></a>    )</span>
+<span id="cb16-16"><a href="#cb16-16"></a></span>
+<span id="cb16-17"><a href="#cb16-17"></a>    <span class="co"># fit the data to the reducer</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a>    <span class="cf">return</span> reducer.fit_transform(df_in)</span>
+<span id="cb16-19"><a href="#cb16-19"></a></span>
+<span id="cb16-20"><a href="#cb16-20"></a></span>
+<span id="cb16-21"><a href="#cb16-21"></a><span class="kw">def</span> plot_umap(embeddings: np.array <span class="op">=</span> <span class="va">None</span>, ax: plt.axes <span class="op">=</span> <span class="va">None</span>):</span>
+<span id="cb16-22"><a href="#cb16-22"></a>    <span class="co"># create the scatter plot of the 2 component embedding</span></span>
+<span id="cb16-23"><a href="#cb16-23"></a>    <span class="co"># the order of x,y doesnt matter, the relative distance does</span></span>
+<span id="cb16-24"><a href="#cb16-24"></a>    ax.scatter(x<span class="op">=</span>embeddings[:, <span class="dv">0</span>], y<span class="op">=</span>embeddings[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">12</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb16-25"><a href="#cb16-25"></a></span>
+<span id="cb16-26"><a href="#cb16-26"></a>    <span class="co"># remove axis labels and ticks</span></span>
+<span id="cb16-27"><a href="#cb16-27"></a>    <span class="co"># as these are meaningless for umap</span></span>
+<span id="cb16-28"><a href="#cb16-28"></a>    ax.set_xticklabels([])</span>
+<span id="cb16-29"><a href="#cb16-29"></a>    ax.set_yticklabels([])</span>
+<span id="cb16-30"><a href="#cb16-30"></a></span>
+<span id="cb16-31"><a href="#cb16-31"></a>    <span class="co"># n_neighbors are formatted as floats  and min_dist are formatted as int</span></span>
+<span id="cb16-32"><a href="#cb16-32"></a>    ax.set_title(<span class="ss">f"</span><span class="sc">{</span>n_neighbors<span class="op">=</span><span class="sc">:.0f}</span><span class="ss"> </span><span class="sc">{</span>min_dist<span class="op">=</span><span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-22" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># defining the parameter sweep</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>range_min_dist <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">5</span>)  <span class="co"># min_dist</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>range_n_neighbors <span class="op">=</span> np.arange(<span class="dv">10</span>, <span class="dv">14</span>)  <span class="co"># n_neighbors</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a></span>
+<span id="cb17-5"><a href="#cb17-5"></a></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="co"># creating the subplots and performing the embedding with the parameter sweep</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>fig, ax <span class="op">=</span> plt.subplots(</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    nrows<span class="op">=</span><span class="bu">len</span>(range_min_dist), ncols<span class="op">=</span><span class="bu">len</span>(range_n_neighbors), figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">10</span>)</span>
+<span id="cb17-9"><a href="#cb17-9"></a>)</span>
+<span id="cb17-10"><a href="#cb17-10"></a></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="cf">for</span> i_min_dist, min_dist <span class="kw">in</span> <span class="bu">enumerate</span>(range_min_dist):</span>
+<span id="cb17-12"><a href="#cb17-12"></a>    <span class="cf">for</span> i_n_neighbors, n_neighbors <span class="kw">in</span> <span class="bu">enumerate</span>(range_n_neighbors):</span>
+<span id="cb17-13"><a href="#cb17-13"></a>        embeddings <span class="op">=</span> calc_umap(</span>
+<span id="cb17-14"><a href="#cb17-14"></a>            df_in<span class="op">=</span>df_feature,</span>
+<span id="cb17-15"><a href="#cb17-15"></a>            n_neighbors<span class="op">=</span><span class="bu">int</span>(n_neighbors),</span>
+<span id="cb17-16"><a href="#cb17-16"></a>            min_dist<span class="op">=</span><span class="bu">float</span>(min_dist),</span>
+<span id="cb17-17"><a href="#cb17-17"></a>        )</span>
+<span id="cb17-18"><a href="#cb17-18"></a>        plot_umap(embeddings<span class="op">=</span>embeddings, ax<span class="op">=</span>ax[i_min_dist, i_n_neighbors])</span>
+<span id="cb17-19"><a href="#cb17-19"></a></span>
+<span id="cb17-20"><a href="#cb17-20"></a>fig.supxlabel(<span class="st">" -&gt; n_neighbors"</span>)</span>
+<span id="cb17-21"><a href="#cb17-21"></a>fig.supylabel(<span class="st">" -&gt; min_dist"</span>)</span>
+<span id="cb17-22"><a href="#cb17-22"></a>fig.tight_layout()</span>
+<span id="cb17-23"><a href="#cb17-23"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-15-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -791,21 +888,22 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <li>ratio of income of spending</li>
 <li>normalization of variables -&gt; make comment on the distance calculations</li>
 </ul>
-<div id="cell-23" class="cell" data-execution_count="14">
+<div id="cell-25" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># bin the age variable into 7 bins</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="co"># fmt: off</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a>binned <span class="op">=</span> pd.cut(</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    df_feature[<span class="st">"age"</span>],</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    bins<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>],</span>
-<span id="cb17-6"><a href="#cb17-6"></a>    labels<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>],</span>
-<span id="cb17-7"><a href="#cb17-7"></a>    )</span>
-<span id="cb17-8"><a href="#cb17-8"></a><span class="co"># fmt: on</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a>df_feature <span class="op">=</span> df_feature.assign(age_bin<span class="op">=</span>binned)</span>
-<span id="cb17-10"><a href="#cb17-10"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># bin the age variable into 7 bins</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="co"># fmt: off</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>binned <span class="op">=</span> pd.cut(</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    df_feature[<span class="st">"age"</span>],</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    bins<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>],</span>
+<span id="cb18-6"><a href="#cb18-6"></a>    labels<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>],</span>
+<span id="cb18-7"><a href="#cb18-7"></a>    )</span>
+<span id="cb18-8"><a href="#cb18-8"></a><span class="co"># fmt: on</span></span>
+<span id="cb18-9"><a href="#cb18-9"></a>df_feature <span class="op">=</span> df_feature.assign(age_bin<span class="op">=</span>binned)</span>
+<span id="cb18-10"><a href="#cb18-10"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
 <div>
 
 
@@ -822,82 +920,82 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">68</td>
+<td data-quarto-table-cell-role="th">115</td>
 <td>19</td>
-<td>48</td>
-<td>59</td>
-<td>True</td>
+<td>65</td>
+<td>50</td>
+<td>False</td>
 <td>1</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">108</td>
-<td>68</td>
+<td data-quarto-table-cell-role="th">107</td>
+<td>54</td>
 <td>63</td>
-<td>43</td>
+<td>46</td>
 <td>True</td>
-<td>6</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">169</td>
-<td>32</td>
-<td>87</td>
-<td>63</td>
-<td>True</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">171</td>
-<td>28</td>
-<td>87</td>
-<td>75</td>
-<td>True</td>
-<td>2</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>19</td>
-<td>15</td>
-<td>39</td>
-<td>True</td>
-<td>1</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">133</td>
-<td>31</td>
-<td>72</td>
-<td>71</td>
-<td>False</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">174</td>
-<td>52</td>
-<td>88</td>
-<td>13</td>
-<td>False</td>
 <td>5</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">155</td>
-<td>27</td>
-<td>78</td>
-<td>89</td>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">52</td>
+<td>31</td>
+<td>43</td>
+<td>54</td>
 <td>False</td>
-<td>2</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">77</td>
+<td>40</td>
+<td>54</td>
+<td>48</td>
+<td>True</td>
+<td>3</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">96</td>
-<td>47</td>
-<td>60</td>
-<td>47</td>
+<td data-quarto-table-cell-role="th">125</td>
+<td>31</td>
+<td>70</td>
+<td>77</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">189</td>
+<td>36</td>
+<td>103</td>
+<td>85</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">138</td>
+<td>19</td>
+<td>74</td>
+<td>10</td>
+<td>True</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">143</td>
+<td>32</td>
+<td>76</td>
+<td>87</td>
+<td>False</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">136</td>
+<td>44</td>
+<td>73</td>
+<td>7</td>
 <td>False</td>
 <td>4</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">149</td>
-<td>34</td>
-<td>78</td>
-<td>90</td>
+<td data-quarto-table-cell-role="th">81</td>
+<td>38</td>
+<td>54</td>
+<td>55</td>
 <td>True</td>
 <td>3</td>
 </tr>
@@ -907,19 +1005,21 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-24" class="cell" data-execution_count="15">
+</div>
+<div id="cell-26" class="cell" data-execution_count="16">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># calculate the ratio between</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="co"># spending and income -&gt; how much of the income do you spend</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="co"># spending and age -&gt; if you are older do you spend more or less</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
-<span id="cb18-5"><a href="#cb18-5"></a>    si_ratio<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>],</span>
-<span id="cb18-6"><a href="#cb18-6"></a>    sa_ratio<span class="op">=</span>df_feature[<span class="st">"age"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>],</span>
-<span id="cb18-7"><a href="#cb18-7"></a>)</span>
-<span id="cb18-8"><a href="#cb18-8"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># calculate the ratio between</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># spending and income -&gt; how much of the income do you spend</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="co"># spending and age -&gt; if you are older do you spend more or less</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    si_ratio<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>],</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    sa_ratio<span class="op">=</span>df_feature[<span class="st">"age"</span>] <span class="op">/</span> df_feature[<span class="st">"spending"</span>],</span>
+<span id="cb19-7"><a href="#cb19-7"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
 <div>
 
 
@@ -938,24 +1038,181 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">177</td>
-<td>27</td>
-<td>88</td>
-<td>69</td>
+<td data-quarto-table-cell-role="th">8</td>
+<td>64</td>
+<td>19</td>
+<td>3</td>
 <td>True</td>
-<td>2</td>
-<td>1.275362</td>
-<td>0.391304</td>
+<td>6</td>
+<td>6.333333</td>
+<td>21.333333</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>30</td>
-<td>19</td>
-<td>72</td>
+<td data-quarto-table-cell-role="th">57</td>
+<td>69</td>
+<td>44</td>
+<td>46</td>
+<td>True</td>
+<td>6</td>
+<td>0.956522</td>
+<td>1.500000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">62</td>
+<td>67</td>
+<td>47</td>
+<td>52</td>
+<td>False</td>
+<td>6</td>
+<td>0.903846</td>
+<td>1.288462</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">100</td>
+<td>23</td>
+<td>62</td>
+<td>41</td>
 <td>False</td>
 <td>2</td>
-<td>0.263889</td>
-<td>0.416667</td>
+<td>1.512195</td>
+<td>0.560976</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">134</td>
+<td>20</td>
+<td>73</td>
+<td>5</td>
+<td>True</td>
+<td>1</td>
+<td>14.600000</td>
+<td>4.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">60</td>
+<td>70</td>
+<td>46</td>
+<td>56</td>
+<td>True</td>
+<td>6</td>
+<td>0.821429</td>
+<td>1.250000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">45</td>
+<td>24</td>
+<td>39</td>
+<td>65</td>
+<td>False</td>
+<td>2</td>
+<td>0.600000</td>
+<td>0.369231</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">16</td>
+<td>35</td>
+<td>21</td>
+<td>35</td>
+<td>False</td>
+<td>3</td>
+<td>0.600000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">155</td>
+<td>27</td>
+<td>78</td>
+<td>89</td>
+<td>False</td>
+<td>2</td>
+<td>0.876404</td>
+<td>0.303371</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>25</td>
+<td>24</td>
+<td>73</td>
+<td>True</td>
+<td>2</td>
+<td>0.328767</td>
+<td>0.342466</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-27" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># turn off the formatter, to increase readability</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="co"># fmt: off</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="co"># create a new column with the difference between income and the mean income of the gender group</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    <span class="co"># create a new column with the difference between income and the mean income of the gender group</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a>    income_vs_gender_mean<span class="op">=</span>df_feature[<span class="st">'income'</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"gender_male"</span>,)[[<span class="st">"income"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
+<span id="cb20-7"><a href="#cb20-7"></a>    spending_vs_gender_mean<span class="op">=</span>df_feature[<span class="st">"spending"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"gender_male"</span>)[[<span class="st">"spending"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
+<span id="cb20-8"><a href="#cb20-8"></a></span>
+<span id="cb20-9"><a href="#cb20-9"></a>    <span class="co"># create a new column with the difference between income and the mean income of the age group</span></span>
+<span id="cb20-10"><a href="#cb20-10"></a>    income_vs_age_mean<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"age_bin"</span>,observed<span class="op">=</span><span class="va">False</span>)[[<span class="st">"income"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    spending_vs_age_mean<span class="op">=</span>df_feature[<span class="st">"spending"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"age_bin"</span>,observed<span class="op">=</span><span class="va">False</span>)[[<span class="st">"spending"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
+<span id="cb20-12"><a href="#cb20-12"></a>)</span>
+<span id="cb20-13"><a href="#cb20-13"></a><span class="co"># fmt: on</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a></span>
+<span id="cb20-15"><a href="#cb20-15"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">spending</th>
+<th data-quarto-table-cell-role="th">gender_male</th>
+<th data-quarto-table-cell-role="th">age_bin</th>
+<th data-quarto-table-cell-role="th">si_ratio</th>
+<th data-quarto-table-cell-role="th">sa_ratio</th>
+<th data-quarto-table-cell-role="th">income_vs_gender_mean</th>
+<th data-quarto-table-cell-role="th">spending_vs_gender_mean</th>
+<th data-quarto-table-cell-role="th">income_vs_age_mean</th>
+<th data-quarto-table-cell-role="th">spending_vs_age_mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">125</td>
+<td>31</td>
+<td>70</td>
+<td>77</td>
+<td>False</td>
+<td>3</td>
+<td>0.909091</td>
+<td>0.402597</td>
+<td>10.750000</td>
+<td>25.473214</td>
+<td>1.366667</td>
+<td>19.500000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">107</td>
+<td>54</td>
+<td>63</td>
+<td>46</td>
+<td>True</td>
+<td>5</td>
+<td>1.369565</td>
+<td>1.173913</td>
+<td>0.772727</td>
+<td>-2.511364</td>
+<td>6.304348</td>
+<td>13.478261</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">184</td>
@@ -966,263 +1223,108 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>4</td>
 <td>2.538462</td>
 <td>1.051282</td>
+<td>39.750000</td>
+<td>-12.526786</td>
+<td>35.394737</td>
+<td>4.605263</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">132</td>
-<td>25</td>
-<td>72</td>
-<td>34</td>
-<td>False</td>
-<td>2</td>
-<td>2.117647</td>
-<td>0.735294</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
+<td data-quarto-table-cell-role="th">160</td>
+<td>56</td>
+<td>79</td>
 <td>35</td>
-<td>18</td>
-<td>6</td>
+<td>False</td>
+<td>5</td>
+<td>2.257143</td>
+<td>1.600000</td>
+<td>19.750000</td>
+<td>-16.526786</td>
+<td>22.304348</td>
+<td>2.478261</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">191</td>
+<td>32</td>
+<td>103</td>
+<td>69</td>
 <td>False</td>
 <td>3</td>
-<td>3.000000</td>
-<td>5.833333</td>
+<td>1.492754</td>
+<td>0.463768</td>
+<td>43.750000</td>
+<td>17.473214</td>
+<td>34.366667</td>
+<td>11.500000</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">135</td>
-<td>29</td>
-<td>73</td>
-<td>88</td>
-<td>False</td>
-<td>2</td>
-<td>0.829545</td>
-<td>0.329545</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">109</td>
-<td>66</td>
-<td>63</td>
-<td>48</td>
-<td>True</td>
-<td>6</td>
-<td>1.312500</td>
-<td>1.375000</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">66</td>
-<td>43</td>
-<td>48</td>
-<td>50</td>
-<td>False</td>
-<td>4</td>
-<td>0.960000</td>
-<td>0.860000</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">24</td>
+<td data-quarto-table-cell-role="th">75</td>
+<td>26</td>
 <td>54</td>
-<td>28</td>
-<td>14</td>
-<td>False</td>
-<td>5</td>
-<td>2.000000</td>
-<td>3.857143</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">43</td>
-<td>31</td>
-<td>39</td>
-<td>61</td>
-<td>False</td>
-<td>3</td>
-<td>0.639344</td>
-<td>0.508197</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<div id="cell-25" class="cell" data-execution_count="16">
-<details open="" class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># turn off the formatter, to increase readability</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># fmt: off</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a><span class="co"># create a new column with the difference between income and the mean income of the gender group</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
-<span id="cb19-5"><a href="#cb19-5"></a>    <span class="co"># create a new column with the difference between income and the mean income of the gender group</span></span>
-<span id="cb19-6"><a href="#cb19-6"></a>    income_vs_gender_mean<span class="op">=</span>df_feature[<span class="st">'income'</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"gender_male"</span>,)[[<span class="st">"income"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
-<span id="cb19-7"><a href="#cb19-7"></a>    spending_vs_gender_mean<span class="op">=</span>df_feature[<span class="st">"spending"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"gender_male"</span>)[[<span class="st">"spending"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
-<span id="cb19-8"><a href="#cb19-8"></a></span>
-<span id="cb19-9"><a href="#cb19-9"></a>    <span class="co"># create a new column with the difference between income and the mean income of the age group</span></span>
-<span id="cb19-10"><a href="#cb19-10"></a>    income_vs_age_mean<span class="op">=</span>df_feature[<span class="st">"income"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"age_bin"</span>,observed<span class="op">=</span><span class="va">False</span>)[[<span class="st">"income"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
-<span id="cb19-11"><a href="#cb19-11"></a>    spending_vs_age_mean<span class="op">=</span>df_feature[<span class="st">"spending"</span>] <span class="op">-</span> df_feature.groupby(<span class="st">"age_bin"</span>,observed<span class="op">=</span><span class="va">False</span>)[[<span class="st">"spending"</span>,]].transform(<span class="st">"mean"</span>).iloc[:, <span class="dv">0</span>],</span>
-<span id="cb19-12"><a href="#cb19-12"></a>)</span>
-<span id="cb19-13"><a href="#cb19-13"></a><span class="co"># fmt: on</span></span>
-<span id="cb19-14"><a href="#cb19-14"></a></span>
-<span id="cb19-15"><a href="#cb19-15"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="16">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">income</th>
-<th data-quarto-table-cell-role="th">spending</th>
-<th data-quarto-table-cell-role="th">gender_male</th>
-<th data-quarto-table-cell-role="th">age_bin</th>
-<th data-quarto-table-cell-role="th">si_ratio</th>
-<th data-quarto-table-cell-role="th">sa_ratio</th>
-<th data-quarto-table-cell-role="th">income_vs_gender_mean</th>
-<th data-quarto-table-cell-role="th">spending_vs_gender_mean</th>
-<th data-quarto-table-cell-role="th">income_vs_age_mean</th>
-<th data-quarto-table-cell-role="th">spending_vs_age_mean</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">185</td>
-<td>30</td>
-<td>99</td>
-<td>97</td>
-<td>True</td>
-<td>2</td>
-<td>1.020619</td>
-<td>0.309278</td>
-<td>36.772727</td>
-<td>48.488636</td>
-<td>42.244444</td>
-<td>29.777778</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">32</td>
-<td>53</td>
-<td>33</td>
-<td>4</td>
-<td>True</td>
-<td>5</td>
-<td>8.250000</td>
-<td>13.250000</td>
-<td>-29.227273</td>
-<td>-44.511364</td>
-<td>-23.695652</td>
-<td>-28.521739</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">42</td>
-<td>48</td>
-<td>39</td>
-<td>36</td>
-<td>True</td>
-<td>4</td>
-<td>1.083333</td>
-<td>1.333333</td>
-<td>-23.227273</td>
-<td>-12.511364</td>
-<td>-24.605263</td>
-<td>1.605263</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">153</td>
-<td>38</td>
-<td>78</td>
-<td>76</td>
-<td>False</td>
-<td>3</td>
-<td>1.026316</td>
-<td>0.500000</td>
-<td>18.750000</td>
-<td>24.473214</td>
-<td>9.366667</td>
-<td>18.500000</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">50</td>
-<td>49</td>
-<td>42</td>
-<td>52</td>
-<td>False</td>
-<td>4</td>
-<td>0.807692</td>
-<td>0.942308</td>
-<td>-17.250000</td>
-<td>0.473214</td>
-<td>-21.605263</td>
-<td>17.605263</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">81</td>
-<td>38</td>
 <td>54</td>
-<td>55</td>
 <td>True</td>
-<td>3</td>
-<td>0.981818</td>
-<td>0.690909</td>
-<td>-8.227273</td>
-<td>6.488636</td>
-<td>-14.633333</td>
-<td>-2.500000</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">178</td>
-<td>59</td>
-<td>93</td>
-<td>14</td>
-<td>True</td>
-<td>5</td>
-<td>6.642857</td>
-<td>4.214286</td>
-<td>30.772727</td>
-<td>-34.511364</td>
-<td>36.304348</td>
-<td>-18.521739</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">157</td>
-<td>30</td>
-<td>78</td>
-<td>78</td>
-<td>False</td>
 <td>2</td>
 <td>1.000000</td>
-<td>0.384615</td>
-<td>18.750000</td>
-<td>26.473214</td>
-<td>21.244444</td>
-<td>10.777778</td>
+<td>0.481481</td>
+<td>-8.227273</td>
+<td>5.488636</td>
+<td>-2.755556</td>
+<td>-13.222222</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">30</td>
-<td>60</td>
-<td>30</td>
-<td>4</td>
+<td data-quarto-table-cell-role="th">156</td>
+<td>37</td>
+<td>78</td>
+<td>1</td>
 <td>True</td>
-<td>5</td>
-<td>7.500000</td>
-<td>15.000000</td>
-<td>-32.227273</td>
-<td>-44.511364</td>
-<td>-26.695652</td>
-<td>-28.521739</td>
+<td>3</td>
+<td>78.000000</td>
+<td>37.000000</td>
+<td>15.772727</td>
+<td>-47.511364</td>
+<td>9.366667</td>
+<td>-56.500000</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">62</td>
-<td>67</td>
-<td>47</td>
+<td data-quarto-table-cell-role="th">27</td>
+<td>35</td>
+<td>28</td>
+<td>61</td>
+<td>True</td>
+<td>3</td>
+<td>0.459016</td>
+<td>0.573770</td>
+<td>-34.227273</td>
+<td>12.488636</td>
+<td>-40.633333</td>
+<td>3.500000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">37</td>
+<td>30</td>
+<td>34</td>
+<td>73</td>
+<td>False</td>
+<td>2</td>
+<td>0.465753</td>
+<td>0.410959</td>
+<td>-25.250000</td>
+<td>21.473214</td>
+<td>-22.755556</td>
+<td>5.777778</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">78</td>
+<td>23</td>
+<td>54</td>
 <td>52</td>
 <td>False</td>
-<td>6</td>
-<td>0.903846</td>
-<td>1.288462</td>
-<td>-12.250000</td>
+<td>2</td>
+<td>1.038462</td>
+<td>0.442308</td>
+<td>-5.250000</td>
 <td>0.473214</td>
-<td>-3.000000</td>
-<td>7.823529</td>
+<td>-2.755556</td>
+<td>-15.222222</td>
 </tr>
 </tbody>
 </table>
@@ -1230,39 +1332,41 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-26" class="cell" data-execution_count="17">
+</div>
+<div id="cell-28" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># apply power transform</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
-<span id="cb20-3"><a href="#cb20-3"></a>sns.histplot(df_feature[<span class="st">"income_vs_gender_mean"</span>])</span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
-<span id="cb20-5"><a href="#cb20-5"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
-<span id="cb20-6"><a href="#cb20-6"></a><span class="co"># sns.histplot(df_feature['age'])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># apply power transform</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a>sns.histplot(df_feature[<span class="st">"income_vs_gender_mean"</span>])</span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="co"># sns.histplot(df_feature['age'])</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="co"># sns.histplot(df_feature['age'])</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-19-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-27" class="cell" data-execution_count="18">
+<div id="cell-29" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># casting values to integer in order for scaling later on</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
-<span id="cb21-3"><a href="#cb21-3"></a>    age_bin<span class="op">=</span>df_feature[<span class="st">"age_bin"</span>].astype(<span class="bu">int</span>),</span>
-<span id="cb21-4"><a href="#cb21-4"></a>)</span>
-<span id="cb21-5"><a href="#cb21-5"></a></span>
-<span id="cb21-6"><a href="#cb21-6"></a>df_feature[df_feature.select_dtypes(include<span class="op">=</span><span class="st">"number"</span>).columns] <span class="op">=</span> power_transform(</span>
-<span id="cb21-7"><a href="#cb21-7"></a>    X<span class="op">=</span>df_feature[df_feature.select_dtypes(include<span class="op">=</span><span class="st">"number"</span>).columns],</span>
-<span id="cb21-8"><a href="#cb21-8"></a>    method<span class="op">=</span><span class="st">"yeo-johnson"</span>,</span>
-<span id="cb21-9"><a href="#cb21-9"></a>)</span>
-<span id="cb21-10"><a href="#cb21-10"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># casting values to integer in order for scaling later on</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>df_feature <span class="op">=</span> df_feature.assign(</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    age_bin<span class="op">=</span>df_feature[<span class="st">"age_bin"</span>].astype(<span class="bu">int</span>),</span>
+<span id="cb22-4"><a href="#cb22-4"></a>)</span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a>df_feature[df_feature.select_dtypes(include<span class="op">=</span><span class="st">"number"</span>).columns] <span class="op">=</span> power_transform(</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    X<span class="op">=</span>df_feature[df_feature.select_dtypes(include<span class="op">=</span><span class="st">"number"</span>).columns],</span>
+<span id="cb22-8"><a href="#cb22-8"></a>    method<span class="op">=</span><span class="st">"yeo-johnson"</span>,</span>
+<span id="cb22-9"><a href="#cb22-9"></a>)</span>
+<span id="cb22-10"><a href="#cb22-10"></a>df_feature.sample(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
 <div>
 
 
@@ -1285,132 +1389,62 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">84</td>
-<td>-1.470002</td>
-<td>-0.170436</td>
-<td>0.300278</td>
+<td data-quarto-table-cell-role="th">121</td>
+<td>0.091408</td>
+<td>0.315793</td>
+<td>-0.346103</td>
 <td>False</td>
-<td>-0.918216</td>
-<td>-0.367428</td>
-<td>-1.050138</td>
-<td>-0.159462</td>
-<td>0.212223</td>
-<td>-0.102369</td>
-<td>-0.564989</td>
+<td>-0.113303</td>
+<td>0.410752</td>
+<td>0.171627</td>
+<td>0.334914</td>
+<td>-0.448683</td>
+<td>-0.057930</td>
+<td>-0.830815</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">126</td>
-<td>0.435262</td>
-<td>0.458577</td>
-<td>-0.543717</td>
-<td>True</td>
-<td>0.585358</td>
-<td>0.649163</td>
-<td>0.499774</td>
-<td>0.372130</td>
-<td>-0.525789</td>
-<td>0.296935</td>
-<td>-0.130388</td>
+<td data-quarto-table-cell-role="th">13</td>
+<td>-1.131234</td>
+<td>-1.703543</td>
+<td>1.023549</td>
+<td>False</td>
+<td>-0.918216</td>
+<td>-1.981503</td>
+<td>-1.239494</td>
+<td>-1.560981</td>
+<td>0.990713</td>
+<td>-1.456576</td>
+<td>0.348714</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">132</td>
-<td>-1.026179</td>
-<td>0.493829</td>
-<td>-0.583742</td>
+<td data-quarto-table-cell-role="th">180</td>
+<td>0.018057</td>
+<td>1.326551</td>
+<td>-0.664338</td>
 <td>False</td>
-<td>-0.918216</td>
-<td>0.700355</td>
-<td>-0.167967</td>
-<td>0.516056</td>
-<td>-0.681787</td>
-<td>0.603999</td>
-<td>-1.379233</td>
+<td>-0.113303</td>
+<td>1.090172</td>
+<td>0.424146</td>
+<td>1.404470</td>
+<td>-0.759482</td>
+<td>1.116249</td>
+<td>-1.113231</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">123</td>
-<td>0.163137</td>
-<td>0.387546</td>
-<td>1.512178</td>
+<td data-quarto-table-cell-role="th">137</td>
+<td>-0.376090</td>
+<td>0.528911</td>
+<td>0.881491</td>
 <td>True</td>
 <td>-0.113303</td>
-<td>-0.680551</td>
-<td>-0.868589</td>
-<td>0.299256</td>
-<td>1.653217</td>
-<td>0.021076</td>
-<td>1.731527</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">47</td>
-<td>-0.826228</td>
-<td>-0.742592</td>
-<td>-0.075650</td>
-<td>False</td>
-<td>-0.918216</td>
-<td>-0.518533</td>
-<td>-0.495227</td>
-<td>-0.729683</td>
-<td>-0.176676</td>
-<td>-0.658877</td>
-<td>-0.927854</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">134</td>
-<td>-1.591912</td>
-<td>0.528911</td>
-<td>-1.872691</td>
-<td>True</td>
-<td>-1.892399</td>
-<td>2.022455</td>
-<td>1.599861</td>
+<td>-0.291252</td>
+<td>-0.840743</td>
 <td>0.444649</td>
-<td>-1.691064</td>
-<td>0.863247</td>
-<td>-1.596787</td>
+<td>0.952382</td>
+<td>0.178255</td>
+<td>0.669853</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">171</td>
-<td>-0.730884</td>
-<td>1.003720</td>
-<td>0.952667</td>
-<td>True</td>
-<td>-0.918216</td>
-<td>-0.083394</td>
-<td>-1.034608</td>
-<td>0.945926</td>
-<td>1.030246</td>
-<td>1.189478</td>
-<td>0.239416</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">40</td>
-<td>1.630809</td>
-<td>-0.829638</td>
-<td>-0.543717</td>
-<td>False</td>
-<td>1.777954</td>
-<td>-0.175763</td>
-<td>0.972538</td>
-<td>-0.812155</td>
-<td>-0.642938</td>
-<td>-0.469565</td>
-<td>-0.525794</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">54</td>
-<td>0.863403</td>
-<td>-0.614792</td>
-<td>-0.152248</td>
-<td>False</td>
-<td>0.585358</td>
-<td>-0.355297</td>
-<td>0.373833</td>
-<td>-0.606341</td>
-<td>-0.254400</td>
-<td>-0.812256</td>
-<td>0.394439</td>
-</tr>
-<tr class="even">
 <td data-quarto-table-cell-role="th">81</td>
 <td>0.091408</td>
 <td>-0.170436</td>
@@ -1424,18 +1458,90 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <td>-0.574370</td>
 <td>-0.265329</td>
 </tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">191</td>
+<td>-0.376090</td>
+<td>1.514638</td>
+<td>0.738221</td>
+<td>False</td>
+<td>-0.113303</td>
+<td>0.260205</td>
+<td>-0.770467</td>
+<td>1.615155</td>
+<td>0.679276</td>
+<td>1.350185</td>
+<td>0.444178</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">77</td>
+<td>0.233319</td>
+<td>-0.170436</td>
+<td>-0.037540</td>
+<td>True</td>
+<td>-0.113303</td>
+<td>-0.126075</td>
+<td>-0.001269</td>
+<td>-0.279316</td>
+<td>-0.020591</td>
+<td>-0.574370</td>
+<td>-0.537953</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">99</td>
+<td>-1.591912</td>
+<td>0.095898</td>
+<td>0.000449</td>
+<td>True</td>
+<td>-1.892399</td>
+<td>0.014376</td>
+<td>-0.928139</td>
+<td>0.000060</td>
+<td>0.018297</td>
+<td>0.394320</td>
+<td>0.057231</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">130</td>
+<td>0.686612</td>
+<td>0.458577</td>
+<td>-1.669978</td>
+<td>True</td>
+<td>0.585358</td>
+<td>1.787960</td>
+<td>1.741536</td>
+<td>0.372130</td>
+<td>-1.535716</td>
+<td>0.296935</td>
+<td>-1.109565</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>-0.461118</td>
+<td>-1.872032</td>
+<td>-0.346103</td>
+<td>False</td>
+<td>-0.113303</td>
+<td>-1.444914</td>
+<td>-0.097838</td>
+<td>-1.686685</td>
+<td>-0.448683</td>
+<td>-2.050982</td>
+<td>-0.830815</td>
+</tr>
 </tbody>
 </table>
 
 </div>
 </div>
 </div>
-<div id="cell-28" class="cell" data-execution_count="19">
+</div>
+<div id="cell-30" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>df_feature.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>df_feature.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
 <div>
 
 
@@ -1570,91 +1676,61 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="clustering" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="clustering"><span class="header-section-number">5</span> Clustering</h2>
 <p>Use a suitable clustering algorithm (like K-means or hierarchical clustering) to divide customers into distinct groups.</p>
-<div id="cell-30" class="cell" data-execution_count="20">
+<div id="cell-32" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb23-2"><a href="#cb23-2"></a></span>
-<span id="cb23-3"><a href="#cb23-3"></a>_ <span class="op">=</span> kelbow_visualizer(</span>
-<span id="cb23-4"><a href="#cb23-4"></a>    KMeans(n_init<span class="op">=</span><span class="dv">10</span>),</span>
-<span id="cb23-5"><a href="#cb23-5"></a>    X<span class="op">=</span>df_feature,</span>
-<span id="cb23-6"><a href="#cb23-6"></a>    timings<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb23-7"><a href="#cb23-7"></a>    metric<span class="op">=</span><span class="st">"distortion"</span>,</span>
-<span id="cb23-8"><a href="#cb23-8"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb23-9"><a href="#cb23-9"></a>)  <span class="co"># distortion: mean sum of squared distances to centers</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb24-2"><a href="#cb24-2"></a></span>
+<span id="cb24-3"><a href="#cb24-3"></a>_ <span class="op">=</span> kelbow_visualizer(</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    KMeans(n_init<span class="op">=</span><span class="dv">10</span>),</span>
+<span id="cb24-5"><a href="#cb24-5"></a>    X<span class="op">=</span>df_feature,</span>
+<span id="cb24-6"><a href="#cb24-6"></a>    timings<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb24-7"><a href="#cb24-7"></a>    metric<span class="op">=</span><span class="st">"distortion"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb24-9"><a href="#cb24-9"></a>)  <span class="co"># distortion: mean sum of squared distances to centers</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-22-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-31" class="cell" data-execution_count="21">
+<div id="cell-33" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># fit kmeans for various number of clusters</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>kmeans_clusters <span class="op">=</span> [</span>
-<span id="cb24-3"><a href="#cb24-3"></a>    KMeans(n_clusters<span class="op">=</span>i, n_init<span class="op">=</span><span class="st">"auto"</span>, max_iter<span class="op">=</span><span class="dv">900</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>)</span>
-<span id="cb24-4"><a href="#cb24-4"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># fit kmeans for various number of clusters</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>kmeans_clusters <span class="op">=</span> [</span>
+<span id="cb25-3"><a href="#cb25-3"></a>    KMeans(n_clusters<span class="op">=</span>i, n_init<span class="op">=</span><span class="st">"auto"</span>, max_iter<span class="op">=</span><span class="dv">900</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">11</span>)</span>
+<span id="cb25-4"><a href="#cb25-4"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-32" class="cell" data-execution_count="22">
+<div id="cell-34" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">16</span>), layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2"></a></span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axes.flatten()):</span>
-<span id="cb25-4"><a href="#cb25-4"></a>    silhouette_visualizer(</span>
-<span id="cb25-5"><a href="#cb25-5"></a>        kmeans_clusters[i],</span>
-<span id="cb25-6"><a href="#cb25-6"></a>        X<span class="op">=</span>df_feature,</span>
-<span id="cb25-7"><a href="#cb25-7"></a>        ax<span class="op">=</span>ax,</span>
-<span id="cb25-8"><a href="#cb25-8"></a>        is_fitted<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb25-9"><a href="#cb25-9"></a>        show<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb25-10"><a href="#cb25-10"></a>        colors<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>),</span>
-<span id="cb25-11"><a href="#cb25-11"></a>    )</span>
-<span id="cb25-12"><a href="#cb25-12"></a>plt.tight_layout()</span>
-<span id="cb25-13"><a href="#cb25-13"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">3</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">16</span>), layout<span class="op">=</span><span class="st">"constrained"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axes.flatten()):</span>
+<span id="cb26-4"><a href="#cb26-4"></a>    silhouette_visualizer(</span>
+<span id="cb26-5"><a href="#cb26-5"></a>        kmeans_clusters[i],</span>
+<span id="cb26-6"><a href="#cb26-6"></a>        X<span class="op">=</span>df_feature,</span>
+<span id="cb26-7"><a href="#cb26-7"></a>        ax<span class="op">=</span>ax,</span>
+<span id="cb26-8"><a href="#cb26-8"></a>        is_fitted<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb26-9"><a href="#cb26-9"></a>        show<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb26-10"><a href="#cb26-10"></a>        colors<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>),</span>
+<span id="cb26-11"><a href="#cb26-11"></a>    )</span>
+<span id="cb26-12"><a href="#cb26-12"></a>plt.tight_layout()</span>
+<span id="cb26-13"><a href="#cb26-13"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_23498/1231921934.py:12: UserWarning: The figure layout has changed to tight
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_28168/1231921934.py:12: UserWarning: The figure layout has changed to tight
   plt.tight_layout()</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cluster_files/figure-html/cell-23-output-2.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-33" class="cell" data-execution_count="23">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a>decomp <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb27-2"><a href="#cb27-2"></a>decomp_components <span class="op">=</span> decomp.fit_transform(df_feature)</span>
-<span id="cb27-3"><a href="#cb27-3"></a></span>
-<span id="cb27-4"><a href="#cb27-4"></a></span>
-<span id="cb27-5"><a href="#cb27-5"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb27-6"><a href="#cb27-6"></a>sns.scatterplot(</span>
-<span id="cb27-7"><a href="#cb27-7"></a>    x<span class="op">=</span>decomp_components[:, <span class="dv">0</span>],</span>
-<span id="cb27-8"><a href="#cb27-8"></a>    y<span class="op">=</span>decomp_components[:, <span class="dv">1</span>],</span>
-<span id="cb27-9"><a href="#cb27-9"></a>    hue<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature),</span>
-<span id="cb27-10"><a href="#cb27-10"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>),</span>
-<span id="cb27-11"><a href="#cb27-11"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb27-12"><a href="#cb27-12"></a>)</span>
-<span id="cb27-13"><a href="#cb27-13"></a></span>
-<span id="cb27-14"><a href="#cb27-14"></a>plt.suptitle(<span class="st">"data visualised with PCA"</span>)</span>
-<span id="cb27-15"><a href="#cb27-15"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_23498/1685628906.py:6: UserWarning: The palette list has more values (10) than needed (6), which may not be intended.
-  sns.scatterplot(</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1664,30 +1740,61 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-34" class="cell" data-execution_count="24">
+<div id="cell-35" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a>decomp_umap <span class="op">=</span> umap.UMAP(</span>
-<span id="cb29-2"><a href="#cb29-2"></a>    n_components<span class="op">=</span><span class="dv">2</span>, min_dist<span class="op">=</span><span class="fl">0.5</span>, n_neighbors<span class="op">=</span><span class="dv">12</span>, n_jobs<span class="op">=</span><span class="dv">1</span>, random_state<span class="op">=</span><span class="dv">92</span></span>
-<span id="cb29-3"><a href="#cb29-3"></a>)</span>
-<span id="cb29-4"><a href="#cb29-4"></a>decomp_components_umap <span class="op">=</span> decomp_umap.fit_transform(df_feature)</span>
-<span id="cb29-5"><a href="#cb29-5"></a></span>
-<span id="cb29-6"><a href="#cb29-6"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb29-7"><a href="#cb29-7"></a></span>
-<span id="cb29-8"><a href="#cb29-8"></a>sns.scatterplot(</span>
-<span id="cb29-9"><a href="#cb29-9"></a>    x<span class="op">=</span>decomp_components_umap[:, <span class="dv">0</span>],</span>
-<span id="cb29-10"><a href="#cb29-10"></a>    y<span class="op">=</span>decomp_components_umap[:, <span class="dv">1</span>],</span>
-<span id="cb29-11"><a href="#cb29-11"></a>    hue<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature),</span>
-<span id="cb29-12"><a href="#cb29-12"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
-<span id="cb29-13"><a href="#cb29-13"></a>    ax<span class="op">=</span>ax,</span>
-<span id="cb29-14"><a href="#cb29-14"></a>)</span>
-<span id="cb29-15"><a href="#cb29-15"></a></span>
-<span id="cb29-16"><a href="#cb29-16"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a>decomp <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a>decomp_components <span class="op">=</span> decomp.fit_transform(df_feature)</span>
+<span id="cb28-3"><a href="#cb28-3"></a></span>
+<span id="cb28-4"><a href="#cb28-4"></a></span>
+<span id="cb28-5"><a href="#cb28-5"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb28-6"><a href="#cb28-6"></a>sns.scatterplot(</span>
+<span id="cb28-7"><a href="#cb28-7"></a>    x<span class="op">=</span>decomp_components[:, <span class="dv">0</span>],</span>
+<span id="cb28-8"><a href="#cb28-8"></a>    y<span class="op">=</span>decomp_components[:, <span class="dv">1</span>],</span>
+<span id="cb28-9"><a href="#cb28-9"></a>    hue<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature),</span>
+<span id="cb28-10"><a href="#cb28-10"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>),</span>
+<span id="cb28-11"><a href="#cb28-11"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb28-12"><a href="#cb28-12"></a>)</span>
+<span id="cb28-13"><a href="#cb28-13"></a></span>
+<span id="cb28-14"><a href="#cb28-14"></a>plt.suptitle(<span class="st">"data visualised with PCA"</span>)</span>
+<span id="cb28-15"><a href="#cb28-15"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/q6/pntlsv6s1j19xm8fhz9g32fr0000gn/T/ipykernel_28168/1685628906.py:6: UserWarning: The palette list has more values (10) than needed (6), which may not be intended.
+  sns.scatterplot(</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-25-output-2.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-36" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>decomp_umap <span class="op">=</span> umap.UMAP(</span>
+<span id="cb30-2"><a href="#cb30-2"></a>    n_components<span class="op">=</span><span class="dv">2</span>, min_dist<span class="op">=</span><span class="fl">0.5</span>, n_neighbors<span class="op">=</span><span class="dv">12</span>, n_jobs<span class="op">=</span><span class="dv">1</span>, random_state<span class="op">=</span><span class="dv">92</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a>)</span>
+<span id="cb30-4"><a href="#cb30-4"></a>decomp_components_umap <span class="op">=</span> decomp_umap.fit_transform(df_feature)</span>
+<span id="cb30-5"><a href="#cb30-5"></a></span>
+<span id="cb30-6"><a href="#cb30-6"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb30-7"><a href="#cb30-7"></a></span>
+<span id="cb30-8"><a href="#cb30-8"></a>sns.scatterplot(</span>
+<span id="cb30-9"><a href="#cb30-9"></a>    x<span class="op">=</span>decomp_components_umap[:, <span class="dv">0</span>],</span>
+<span id="cb30-10"><a href="#cb30-10"></a>    y<span class="op">=</span>decomp_components_umap[:, <span class="dv">1</span>],</span>
+<span id="cb30-11"><a href="#cb30-11"></a>    hue<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature),</span>
+<span id="cb30-12"><a href="#cb30-12"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb30-13"><a href="#cb30-13"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb30-14"><a href="#cb30-14"></a>)</span>
+<span id="cb30-15"><a href="#cb30-15"></a></span>
+<span id="cb30-16"><a href="#cb30-16"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-25-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-26-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1696,38 +1803,39 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <section id="analysis-and-evaluation" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="analysis-and-evaluation"><span class="header-section-number">6</span> Analysis and Evaluation</h2>
 <p>Analyze each customer group’s traits, like average age or buying habits. Use metrics like Silhouette Score or Dunn Index to assess clustering quality, evaluating cluster cohesion and separation. A successful clustering result scores well on these metrics and provides actionable business insights.</p>
-<div id="cell-36" class="cell" data-execution_count="25">
+<div id="cell-38" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a>df_cluster <span class="op">=</span> df_feature.assign(cluster<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature))</span>
-<span id="cb30-2"><a href="#cb30-2"></a>df_mall_cluster <span class="op">=</span> df_mall.assign(cluster<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature)).drop(</span>
-<span id="cb30-3"><a href="#cb30-3"></a>    columns<span class="op">=</span>[<span class="st">"id"</span>]</span>
-<span id="cb30-4"><a href="#cb30-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a>df_cluster <span class="op">=</span> df_feature.assign(cluster<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature))</span>
+<span id="cb31-2"><a href="#cb31-2"></a>df_mall_cluster <span class="op">=</span> df_mall.assign(cluster<span class="op">=</span>kmeans_clusters[<span class="dv">4</span>].predict(df_feature)).drop(</span>
+<span id="cb31-3"><a href="#cb31-3"></a>    columns<span class="op">=</span>[<span class="st">"id"</span>]</span>
+<span id="cb31-4"><a href="#cb31-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-37" class="cell" data-execution_count="26">
+<div id="cell-39" class="cell" data-execution_count="27">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>df_all <span class="op">=</span> pd.concat([df_mall.drop(columns<span class="op">=</span>[<span class="st">"id"</span>]), df_cluster], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a><span class="co">#</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>df_all <span class="op">=</span> pd.concat([df_mall.drop(columns<span class="op">=</span>[<span class="st">"id"</span>]), df_cluster], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-38" class="cell" data-execution_count="27">
+<div id="cell-40" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1"></a>grouper <span class="op">=</span> df_mall_cluster.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb32-2"><a href="#cb32-2"></a>df_cluster_agg <span class="op">=</span> grouper.mean().<span class="bu">round</span>(<span class="dv">2</span>)</span>
-<span id="cb32-3"><a href="#cb32-3"></a>df_cluster_agg <span class="op">=</span> df_cluster_agg.assign(</span>
-<span id="cb32-4"><a href="#cb32-4"></a>    count<span class="op">=</span>grouper.count()[<span class="st">"age"</span>], age<span class="op">=</span>(df_cluster_agg[<span class="st">"age"</span>].astype(<span class="st">"int"</span>))</span>
-<span id="cb32-5"><a href="#cb32-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>grouper <span class="op">=</span> df_mall_cluster.groupby(<span class="st">"cluster"</span>, as_index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb33-2"><a href="#cb33-2"></a>df_cluster_agg <span class="op">=</span> grouper.mean().<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb33-3"><a href="#cb33-3"></a>df_cluster_agg <span class="op">=</span> df_cluster_agg.assign(</span>
+<span id="cb33-4"><a href="#cb33-4"></a>    count<span class="op">=</span>grouper.count()[<span class="st">"age"</span>], age<span class="op">=</span>(df_cluster_agg[<span class="st">"age"</span>].astype(<span class="st">"int"</span>))</span>
+<span id="cb33-5"><a href="#cb33-5"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-39" class="cell" data-execution_count="28">
+<div id="cell-41" class="cell" data-execution_count="29">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1"></a>df_cluster_agg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>df_cluster_agg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
 <div>
 
 
@@ -1747,29 +1855,29 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>0</td>
-<td>45</td>
-<td>25.65</td>
-<td>18.55</td>
-<td>0.35</td>
-<td>20</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>1</td>
-<td>26</td>
-<td>56.66</td>
-<td>49.24</td>
-<td>0.34</td>
-<td>38</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2</td>
 <td>41</td>
 <td>89.41</td>
 <td>15.59</td>
 <td>0.56</td>
 <td>32</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>26</td>
+<td>56.21</td>
+<td>49.54</td>
+<td>0.33</td>
+<td>39</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>23</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
@@ -1792,11 +1900,11 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>5</td>
-<td>25</td>
-<td>25.26</td>
-<td>77.43</td>
-<td>0.43</td>
-<td>23</td>
+<td>46</td>
+<td>26.11</td>
+<td>17.42</td>
+<td>0.37</td>
+<td>19</td>
 </tr>
 </tbody>
 </table>
@@ -1804,42 +1912,21 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-40" class="cell" data-execution_count="29">
+</div>
+<div id="cell-42" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1"></a>sns.boxplot(</span>
-<span id="cb34-2"><a href="#cb34-2"></a>    df_mall_cluster,</span>
-<span id="cb34-3"><a href="#cb34-3"></a>    y<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb34-4"><a href="#cb34-4"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
-<span id="cb34-5"><a href="#cb34-5"></a>    orient<span class="op">=</span><span class="st">"h"</span>,</span>
-<span id="cb34-6"><a href="#cb34-6"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb34-7"><a href="#cb34-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
-<span id="cb34-8"><a href="#cb34-8"></a>)</span>
-<span id="cb34-9"><a href="#cb34-9"></a></span>
-<span id="cb34-10"><a href="#cb34-10"></a>plt.title(<span class="st">"Age of each customer segment"</span>)</span>
-<span id="cb34-11"><a href="#cb34-11"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="cluster_files/figure-html/cell-30-output-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-41" class="cell" data-execution_count="30">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>sns.countplot(</span>
-<span id="cb35-2"><a href="#cb35-2"></a>    df_cluster,</span>
-<span id="cb35-3"><a href="#cb35-3"></a>    x<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb35-4"><a href="#cb35-4"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
-<span id="cb35-5"><a href="#cb35-5"></a>    stat<span class="op">=</span><span class="st">"percent"</span>,</span>
-<span id="cb35-6"><a href="#cb35-6"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">2</span>),</span>
-<span id="cb35-7"><a href="#cb35-7"></a>)</span>
-<span id="cb35-8"><a href="#cb35-8"></a></span>
-<span id="cb35-9"><a href="#cb35-9"></a>plt.title(<span class="st">"gender ration between the customer segments"</span>)</span>
-<span id="cb35-10"><a href="#cb35-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1"></a>sns.boxplot(</span>
+<span id="cb35-2"><a href="#cb35-2"></a>    df_mall_cluster,</span>
+<span id="cb35-3"><a href="#cb35-3"></a>    y<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4"></a>    x<span class="op">=</span><span class="st">"age"</span>,</span>
+<span id="cb35-5"><a href="#cb35-5"></a>    orient<span class="op">=</span><span class="st">"h"</span>,</span>
+<span id="cb35-6"><a href="#cb35-6"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb35-8"><a href="#cb35-8"></a>)</span>
+<span id="cb35-9"><a href="#cb35-9"></a></span>
+<span id="cb35-10"><a href="#cb35-10"></a>plt.title(<span class="st">"Age of each customer segment"</span>)</span>
+<span id="cb35-11"><a href="#cb35-11"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1849,25 +1936,48 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-42" class="cell" data-execution_count="31">
+<div id="cell-43" class="cell" data-execution_count="31">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>a <span class="op">=</span> <span class="fl">0.1</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a>mean_gender <span class="op">=</span> df_mall[<span class="st">"gender_male"</span>].mean()</span>
-<span id="cb36-3"><a href="#cb36-3"></a>l_mean_gender, u_mean_gender <span class="op">=</span> mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> a), mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1"></a>sns.countplot(</span>
+<span id="cb36-2"><a href="#cb36-2"></a>    df_cluster,</span>
+<span id="cb36-3"><a href="#cb36-3"></a>    x<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb36-4"><a href="#cb36-4"></a>    hue<span class="op">=</span><span class="st">"gender_male"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5"></a>    stat<span class="op">=</span><span class="st">"percent"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">2</span>),</span>
+<span id="cb36-7"><a href="#cb36-7"></a>)</span>
+<span id="cb36-8"><a href="#cb36-8"></a></span>
+<span id="cb36-9"><a href="#cb36-9"></a>plt.title(<span class="st">"gender ration between the customer segments"</span>)</span>
+<span id="cb36-10"><a href="#cb36-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-32-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="32">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a>a <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb37-2"><a href="#cb37-2"></a>mean_gender <span class="op">=</span> df_mall[<span class="st">"gender_male"</span>].mean()</span>
+<span id="cb37-3"><a href="#cb37-3"></a>l_mean_gender, u_mean_gender <span class="op">=</span> mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> a), mean_gender <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-43" class="cell" data-execution_count="32">
+<div id="cell-45" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1"></a><span class="co"># define a mostly gender column</span></span>
-<span id="cb37-2"><a href="#cb37-2"></a><span class="co"># determine which cluster falls outside of the bounds</span></span>
-<span id="cb37-3"><a href="#cb37-3"></a>df_gender <span class="op">=</span> df_cluster_agg[[<span class="st">"cluster"</span>, <span class="st">"gender_male"</span>]].assign(gender<span class="op">=</span><span class="st">"neutral"</span>)</span>
-<span id="cb37-4"><a href="#cb37-4"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].gt(u_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly men"</span></span>
-<span id="cb37-5"><a href="#cb37-5"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].lt(l_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly female"</span></span>
-<span id="cb37-6"><a href="#cb37-6"></a>df_gender</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># define a mostly gender column</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="co"># determine which cluster falls outside of the bounds</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>df_gender <span class="op">=</span> df_cluster_agg[[<span class="st">"cluster"</span>, <span class="st">"gender_male"</span>]].assign(gender<span class="op">=</span><span class="st">"neutral"</span>)</span>
+<span id="cb38-4"><a href="#cb38-4"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].gt(u_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly men"</span></span>
+<span id="cb38-5"><a href="#cb38-5"></a>df_gender.loc[df_gender[<span class="st">"gender_male"</span>].lt(l_mean_gender), <span class="st">"gender"</span>] <span class="op">=</span> <span class="st">"mostly female"</span></span>
+<span id="cb38-6"><a href="#cb38-6"></a>df_gender</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="32">
+<div class="cell-output cell-output-display" data-execution_count="33">
+<div>
 <div>
 
 
@@ -1884,20 +1994,20 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>0</td>
-<td>0.35</td>
-<td>mostly female</td>
+<td>0.56</td>
+<td>mostly men</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
 <td>1</td>
-<td>0.34</td>
+<td>0.33</td>
 <td>mostly female</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>2</td>
-<td>0.56</td>
-<td>mostly men</td>
+<td>0.43</td>
+<td>neutral</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
@@ -1914,8 +2024,8 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>5</td>
-<td>0.43</td>
-<td>neutral</td>
+<td>0.37</td>
+<td>mostly female</td>
 </tr>
 </tbody>
 </table>
@@ -1923,42 +2033,43 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-44" class="cell" data-execution_count="33">
+</div>
+<div id="cell-46" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb38-2"><a href="#cb38-2"></a></span>
-<span id="cb38-3"><a href="#cb38-3"></a>curr_ax <span class="op">=</span> ax</span>
-<span id="cb38-4"><a href="#cb38-4"></a>_ <span class="op">=</span> sns.scatterplot(</span>
-<span id="cb38-5"><a href="#cb38-5"></a>    data<span class="op">=</span>df_cluster_agg,</span>
-<span id="cb38-6"><a href="#cb38-6"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
-<span id="cb38-7"><a href="#cb38-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
-<span id="cb38-8"><a href="#cb38-8"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
-<span id="cb38-9"><a href="#cb38-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
-<span id="cb38-10"><a href="#cb38-10"></a>    s<span class="op">=</span><span class="dv">200</span>,</span>
-<span id="cb38-11"><a href="#cb38-11"></a>    ax<span class="op">=</span>curr_ax,</span>
-<span id="cb38-12"><a href="#cb38-12"></a>)</span>
-<span id="cb38-13"><a href="#cb38-13"></a></span>
-<span id="cb38-14"><a href="#cb38-14"></a>xlim0, xlim1 <span class="op">=</span> ax.get_xlim()</span>
-<span id="cb38-15"><a href="#cb38-15"></a>ylim0, ylim1 <span class="op">=</span> ax.get_ylim()</span>
-<span id="cb38-16"><a href="#cb38-16"></a></span>
-<span id="cb38-17"><a href="#cb38-17"></a>plt.vlines(</span>
-<span id="cb38-18"><a href="#cb38-18"></a>    df_mall_cluster[<span class="st">"income"</span>].median(), ylim0, ylim1, color<span class="op">=</span><span class="st">"grey"</span>, linestyles<span class="op">=</span><span class="st">"--"</span></span>
-<span id="cb38-19"><a href="#cb38-19"></a>)</span>
-<span id="cb38-20"><a href="#cb38-20"></a>plt.hlines(</span>
-<span id="cb38-21"><a href="#cb38-21"></a>    df_mall_cluster[<span class="st">"spending"</span>].median(),</span>
-<span id="cb38-22"><a href="#cb38-22"></a>    xlim0,</span>
-<span id="cb38-23"><a href="#cb38-23"></a>    xlim1,</span>
-<span id="cb38-24"><a href="#cb38-24"></a>    color<span class="op">=</span><span class="st">"grey"</span>,</span>
-<span id="cb38-25"><a href="#cb38-25"></a>    linestyles<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb38-26"><a href="#cb38-26"></a>)</span>
-<span id="cb38-27"><a href="#cb38-27"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
-<span id="cb38-28"><a href="#cb38-28"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb39-2"><a href="#cb39-2"></a></span>
+<span id="cb39-3"><a href="#cb39-3"></a>curr_ax <span class="op">=</span> ax</span>
+<span id="cb39-4"><a href="#cb39-4"></a>_ <span class="op">=</span> sns.scatterplot(</span>
+<span id="cb39-5"><a href="#cb39-5"></a>    data<span class="op">=</span>df_cluster_agg,</span>
+<span id="cb39-6"><a href="#cb39-6"></a>    x<span class="op">=</span><span class="st">"income"</span>,</span>
+<span id="cb39-7"><a href="#cb39-7"></a>    y<span class="op">=</span><span class="st">"spending"</span>,</span>
+<span id="cb39-8"><a href="#cb39-8"></a>    hue<span class="op">=</span><span class="st">"cluster"</span>,</span>
+<span id="cb39-9"><a href="#cb39-9"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb39-10"><a href="#cb39-10"></a>    s<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb39-11"><a href="#cb39-11"></a>    ax<span class="op">=</span>curr_ax,</span>
+<span id="cb39-12"><a href="#cb39-12"></a>)</span>
+<span id="cb39-13"><a href="#cb39-13"></a></span>
+<span id="cb39-14"><a href="#cb39-14"></a>xlim0, xlim1 <span class="op">=</span> ax.get_xlim()</span>
+<span id="cb39-15"><a href="#cb39-15"></a>ylim0, ylim1 <span class="op">=</span> ax.get_ylim()</span>
+<span id="cb39-16"><a href="#cb39-16"></a></span>
+<span id="cb39-17"><a href="#cb39-17"></a>plt.vlines(</span>
+<span id="cb39-18"><a href="#cb39-18"></a>    df_mall_cluster[<span class="st">"income"</span>].median(), ylim0, ylim1, color<span class="op">=</span><span class="st">"grey"</span>, linestyles<span class="op">=</span><span class="st">"--"</span></span>
+<span id="cb39-19"><a href="#cb39-19"></a>)</span>
+<span id="cb39-20"><a href="#cb39-20"></a>plt.hlines(</span>
+<span id="cb39-21"><a href="#cb39-21"></a>    df_mall_cluster[<span class="st">"spending"</span>].median(),</span>
+<span id="cb39-22"><a href="#cb39-22"></a>    xlim0,</span>
+<span id="cb39-23"><a href="#cb39-23"></a>    xlim1,</span>
+<span id="cb39-24"><a href="#cb39-24"></a>    color<span class="op">=</span><span class="st">"grey"</span>,</span>
+<span id="cb39-25"><a href="#cb39-25"></a>    linestyles<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb39-26"><a href="#cb39-26"></a>)</span>
+<span id="cb39-27"><a href="#cb39-27"></a>plt.suptitle(<span class="st">"Age vs. Spending"</span>)</span>
+<span id="cb39-28"><a href="#cb39-28"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="cluster_files/figure-html/cell-34-output-1.svg" class="img-fluid figure-img"></p>
+<p><img src="cluster_files/figure-html/cell-35-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1967,6 +2078,325 @@ spending  200.0  50.20  25.823522   1.0  34.75  50.0  73.0   99.0</code></pre>
 <section id="insights-and-business-applications" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="insights-and-business-applications"><span class="header-section-number">7</span> Insights and Business Applications</h2>
 <p>Explain how the results could be used to tailor marketing strategies towards each segment for improved customer engagement and retention.</p>
+<div id="cell-55" class="cell" data-execution_count="37">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># add the cluster labels to the dataframe</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a>df_mall_cluster_centroid <span class="op">=</span> df_mall_cluster.merge(</span>
+<span id="cb40-3"><a href="#cb40-3"></a>    df_cluster_agg.drop(columns<span class="op">=</span>[<span class="st">"count"</span>]), on<span class="op">=</span><span class="st">"cluster"</span>, suffixes<span class="op">=</span>(<span class="st">""</span>, <span class="st">"_cluster"</span>)</span>
+<span id="cb40-4"><a href="#cb40-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-56" class="cell" data-execution_count="38">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">def</span> create_blend(df_in: pd.DataFrame, col1: <span class="bu">str</span>, steps: <span class="bu">int</span>):</span>
+<span id="cb41-2"><a href="#cb41-2"></a>    <span class="co">"""</span></span>
+<span id="cb41-3"><a href="#cb41-3"></a><span class="co">    Applies a function that generates a linear sequence between the value of</span></span>
+<span id="cb41-4"><a href="#cb41-4"></a><span class="co">    a specified column and the corresponding cluster value in each row of the dataframe.</span></span>
+<span id="cb41-5"><a href="#cb41-5"></a></span>
+<span id="cb41-6"><a href="#cb41-6"></a><span class="co">    Parameters</span></span>
+<span id="cb41-7"><a href="#cb41-7"></a><span class="co">    ----------</span></span>
+<span id="cb41-8"><a href="#cb41-8"></a><span class="co">    df_in : pd.DataFrame</span></span>
+<span id="cb41-9"><a href="#cb41-9"></a><span class="co">        Input dataframe with at least two columns: one specified by `col1` and another with `col1` suffix '_cluster'.</span></span>
+<span id="cb41-10"><a href="#cb41-10"></a><span class="co">    col1 : str</span></span>
+<span id="cb41-11"><a href="#cb41-11"></a><span class="co">        The name of the column in the dataframe from which to start the linear sequence.</span></span>
+<span id="cb41-12"><a href="#cb41-12"></a><span class="co">    steps : int</span></span>
+<span id="cb41-13"><a href="#cb41-13"></a><span class="co">        The number of steps in the linear sequence.</span></span>
+<span id="cb41-14"><a href="#cb41-14"></a></span>
+<span id="cb41-15"><a href="#cb41-15"></a><span class="co">    Returns</span></span>
+<span id="cb41-16"><a href="#cb41-16"></a><span class="co">    -------</span></span>
+<span id="cb41-17"><a href="#cb41-17"></a><span class="co">    pd.DataFrame</span></span>
+<span id="cb41-18"><a href="#cb41-18"></a><span class="co">        A dataframe with each cell containing a linear sequence between the corresponding cell in `col1` and `col1_cluster`.</span></span>
+<span id="cb41-19"><a href="#cb41-19"></a></span>
+<span id="cb41-20"><a href="#cb41-20"></a><span class="co">    """</span></span>
+<span id="cb41-21"><a href="#cb41-21"></a>    <span class="cf">return</span> df_in.<span class="bu">apply</span>(</span>
+<span id="cb41-22"><a href="#cb41-22"></a>        <span class="kw">lambda</span> row: np.linspace(row[col1], row[<span class="ss">f"</span><span class="sc">{</span>col1<span class="sc">}</span><span class="ss">_cluster"</span>], steps), axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb41-23"><a href="#cb41-23"></a>    )</span>
+<span id="cb41-24"><a href="#cb41-24"></a></span>
+<span id="cb41-25"><a href="#cb41-25"></a></span>
+<span id="cb41-26"><a href="#cb41-26"></a><span class="co"># add the blend columns to the three variables of interest</span></span>
+<span id="cb41-27"><a href="#cb41-27"></a>df_mall_cluster_centroid <span class="op">=</span> df_mall_cluster_centroid.assign(</span>
+<span id="cb41-28"><a href="#cb41-28"></a>    spending_blend<span class="op">=</span>create_blend(df_mall_cluster_centroid, <span class="st">"spending"</span>, <span class="dv">50</span>),</span>
+<span id="cb41-29"><a href="#cb41-29"></a>    age_blend<span class="op">=</span>create_blend(df_mall_cluster_centroid, <span class="st">"age"</span>, <span class="dv">50</span>),</span>
+<span id="cb41-30"><a href="#cb41-30"></a>    income_blend<span class="op">=</span>create_blend(df_mall_cluster_centroid, <span class="st">"income"</span>, <span class="dv">50</span>),</span>
+<span id="cb41-31"><a href="#cb41-31"></a>)</span>
+<span id="cb41-32"><a href="#cb41-32"></a>df_mall_cluster_centroid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">age</th>
+<th data-quarto-table-cell-role="th">income</th>
+<th data-quarto-table-cell-role="th">spending</th>
+<th data-quarto-table-cell-role="th">gender_male</th>
+<th data-quarto-table-cell-role="th">cluster</th>
+<th data-quarto-table-cell-role="th">age_cluster</th>
+<th data-quarto-table-cell-role="th">income_cluster</th>
+<th data-quarto-table-cell-role="th">spending_cluster</th>
+<th data-quarto-table-cell-role="th">gender_male_cluster</th>
+<th data-quarto-table-cell-role="th">spending_blend</th>
+<th data-quarto-table-cell-role="th">age_blend</th>
+<th data-quarto-table-cell-role="th">income_blend</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>19</td>
+<td>15</td>
+<td>39</td>
+<td>True</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>[39.0, 39.76571428571429, 40.53142857142857, 4...</td>
+<td>[19.0, 19.122448979591837, 19.244897959183675,...</td>
+<td>[15.0, 15.189795918367347, 15.379591836734694,...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>21</td>
+<td>15</td>
+<td>81</td>
+<td>True</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>[81.0, 80.90857142857143, 80.81714285714285, 8...</td>
+<td>[21.0, 21.081632653061224, 21.163265306122447,...</td>
+<td>[15.0, 15.189795918367347, 15.379591836734694,...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>23</td>
+<td>16</td>
+<td>77</td>
+<td>False</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>[77.0, 76.99020408163265, 76.98040816326531, 7...</td>
+<td>[23.0, 23.040816326530614, 23.081632653061224,...</td>
+<td>[16.0, 16.16938775510204, 16.33877551020408, 1...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>31</td>
+<td>17</td>
+<td>40</td>
+<td>False</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>[40.0, 40.74530612244898, 41.49061224489796, 4...</td>
+<td>[31.0, 30.877551020408163, 30.755102040816325,...</td>
+<td>[17.0, 17.148979591836735, 17.29795918367347, ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>22</td>
+<td>17</td>
+<td>76</td>
+<td>False</td>
+<td>2</td>
+<td>25</td>
+<td>24.30</td>
+<td>76.52</td>
+<td>0.43</td>
+<td>[76.0, 76.01061224489796, 76.02122448979591, 7...</td>
+<td>[22.0, 22.06122448979592, 22.122448979591837, ...</td>
+<td>[17.0, 17.148979591836735, 17.29795918367347, ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">195</td>
+<td>34</td>
+<td>103</td>
+<td>23</td>
+<td>False</td>
+<td>0</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>[23.0, 22.84877551020408, 22.697551020408163, ...</td>
+<td>[34.0, 34.142857142857146, 34.285714285714285,...</td>
+<td>[103.0, 102.72265306122449, 102.44530612244898...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">196</td>
+<td>33</td>
+<td>113</td>
+<td>8</td>
+<td>True</td>
+<td>0</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>[8.0, 8.154897959183673, 8.309795918367348, 8....</td>
+<td>[33.0, 33.16326530612245, 33.326530612244895, ...</td>
+<td>[113.0, 112.51857142857143, 112.03714285714285...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">197</td>
+<td>47</td>
+<td>120</td>
+<td>16</td>
+<td>False</td>
+<td>0</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>[16.0, 15.991632653061224, 15.98326530612245, ...</td>
+<td>[47.0, 46.87755102040816, 46.755102040816325, ...</td>
+<td>[120.0, 119.37571428571428, 118.75142857142858...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">198</td>
+<td>45</td>
+<td>126</td>
+<td>28</td>
+<td>False</td>
+<td>0</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>[28.0, 27.746734693877553, 27.493469387755102,...</td>
+<td>[45.0, 44.91836734693877, 44.83673469387755, 4...</td>
+<td>[126.0, 125.25326530612244, 124.5065306122449,...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">199</td>
+<td>32</td>
+<td>137</td>
+<td>18</td>
+<td>True</td>
+<td>0</td>
+<td>41</td>
+<td>89.41</td>
+<td>15.59</td>
+<td>0.56</td>
+<td>[18.0, 17.950816326530614, 17.901632653061224,...</td>
+<td>[32.0, 32.183673469387756, 32.36734693877551, ...</td>
+<td>[137.0, 136.02877551020407, 135.05755102040817...</td>
+</tr>
+</tbody>
+</table>
+
+<p>200 rows × 12 columns</p>
+</div>
+</div>
+</div>
+</div>
+<div id="cell-57" class="cell" data-execution_count="39">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb42-2"><a href="#cb42-2"></a></span>
+<span id="cb42-3"><a href="#cb42-3"></a>sns.scatterplot(</span>
+<span id="cb42-4"><a href="#cb42-4"></a>    x<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"spending_blend"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[<span class="dv">0</span>]),</span>
+<span id="cb42-5"><a href="#cb42-5"></a>    y<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"age_blend"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[<span class="dv">0</span>]),</span>
+<span id="cb42-6"><a href="#cb42-6"></a>    hue<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"cluster"</span>],</span>
+<span id="cb42-7"><a href="#cb42-7"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb42-8"><a href="#cb42-8"></a>    s<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb42-9"><a href="#cb42-9"></a>    alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb42-10"><a href="#cb42-10"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb42-11"><a href="#cb42-11"></a>)</span>
+<span id="cb42-12"><a href="#cb42-12"></a></span>
+<span id="cb42-13"><a href="#cb42-13"></a>xlim_begin, ylim_begin <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
+<span id="cb42-14"><a href="#cb42-14"></a></span>
+<span id="cb42-15"><a href="#cb42-15"></a><span class="co">###</span></span>
+<span id="cb42-16"><a href="#cb42-16"></a></span>
+<span id="cb42-17"><a href="#cb42-17"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb42-18"><a href="#cb42-18"></a></span>
+<span id="cb42-19"><a href="#cb42-19"></a></span>
+<span id="cb42-20"><a href="#cb42-20"></a>sns.scatterplot(</span>
+<span id="cb42-21"><a href="#cb42-21"></a>    x<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"spending_blend"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[<span class="op">-</span><span class="dv">1</span>]),</span>
+<span id="cb42-22"><a href="#cb42-22"></a>    y<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"age_blend"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> row: row[<span class="op">-</span><span class="dv">1</span>]),</span>
+<span id="cb42-23"><a href="#cb42-23"></a>    hue<span class="op">=</span>df_mall_cluster_centroid[<span class="st">"cluster"</span>],</span>
+<span id="cb42-24"><a href="#cb42-24"></a>    palette<span class="op">=</span>sns.color_palette(<span class="st">"tab10"</span>, <span class="dv">6</span>),</span>
+<span id="cb42-25"><a href="#cb42-25"></a>    s<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb42-26"><a href="#cb42-26"></a>    alpha<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span id="cb42-27"><a href="#cb42-27"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb42-28"><a href="#cb42-28"></a>)</span>
+<span id="cb42-29"><a href="#cb42-29"></a></span>
+<span id="cb42-30"><a href="#cb42-30"></a>xlim_end, ylim_end <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
+<span id="cb42-31"><a href="#cb42-31"></a></span>
+<span id="cb42-32"><a href="#cb42-32"></a>zoom_factor <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb42-33"><a href="#cb42-33"></a><span class="co"># get the global axes limits</span></span>
+<span id="cb42-34"><a href="#cb42-34"></a>overal_xlim <span class="op">=</span> (</span>
+<span id="cb42-35"><a href="#cb42-35"></a>    <span class="bu">min</span>(xlim_begin[<span class="dv">0</span>], xlim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
+<span id="cb42-36"><a href="#cb42-36"></a>    <span class="bu">max</span>(xlim_begin[<span class="dv">1</span>], xlim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
+<span id="cb42-37"><a href="#cb42-37"></a>)</span>
+<span id="cb42-38"><a href="#cb42-38"></a>overal_ylim <span class="op">=</span> (</span>
+<span id="cb42-39"><a href="#cb42-39"></a>    <span class="bu">min</span>(ylim_begin[<span class="dv">0</span>], ylim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
+<span id="cb42-40"><a href="#cb42-40"></a>    <span class="bu">max</span>(ylim_begin[<span class="dv">1</span>], ylim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
+<span id="cb42-41"><a href="#cb42-41"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-45-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cluster_files/figure-html/cell-45-output-2.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-59" class="cell" data-execution_count="41">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1"></a>freeze_frames <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="co"># create the animation</span></span>
+<span id="cb43-3"><a href="#cb43-3"></a>frames <span class="op">=</span> [plot_step(i, overal_xlim, overal_ylim) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">50</span>)]</span>
+<span id="cb43-4"><a href="#cb43-4"></a></span>
+<span id="cb43-5"><a href="#cb43-5"></a><span class="co"># freeze on the bounce point</span></span>
+<span id="cb43-6"><a href="#cb43-6"></a>frames.extend([frames[<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(freeze_frames <span class="op">//</span> <span class="dv">6</span>)])</span>
+<span id="cb43-7"><a href="#cb43-7"></a></span>
+<span id="cb43-8"><a href="#cb43-8"></a><span class="co"># add the the original series in reverse</span></span>
+<span id="cb43-9"><a href="#cb43-9"></a>frames.extend(frames[::<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb43-10"><a href="#cb43-10"></a></span>
+<span id="cb43-11"><a href="#cb43-11"></a></span>
+<span id="cb43-12"><a href="#cb43-12"></a>gif.save(frames, <span class="st">"artifacts/clumper.gif"</span>, duration<span class="op">=</span><span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>
