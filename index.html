@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.550">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -211,7 +211,38 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1705449600000" data-listing-file-modified-sort="1708099753652" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1665">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1710374400000" data-listing-file-modified-sort="1710626173132" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="810">
+<div class="thumbnail">
+<p><a href="./posts/DPD/dependency.html" class="no-external"></a></p><a href="./posts/DPD/dependency.html" class="no-external">
+<p><img src="./posts/DPD/artifacts/ice_lines.gif" class="thumbnail-image"></p>
+</a><p><a href="./posts/DPD/dependency.html" class="no-external"></a></p>
+</div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/DPD/dependency.html" class="no-external">pooking and looking 👀</a>
+</h3>
+<div class="listing-subtitle">
+<a href="./posts/DPD/dependency.html" class="no-external">together</a>
+</div>
+<div class="listing-description">
+<a href="./posts/DPD/dependency.html" class="no-external"> </a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/DPD/dependency.html" class="no-external">
+<div class="listing-date">
+2024-03-14
+</div>
+<div class="listing-author">
+Joost de Theije + LLM
+</div>
+<div class="listing-reading-time">
+5 min
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1705449600000" data-listing-file-modified-sort="1710626173156" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2803">
 <div class="thumbnail">
 <p><a href="./posts/cluster/cluster.html" class="no-external"></a></p><a href="./posts/cluster/cluster.html" class="no-external">
 <p><img src="./posts/cluster/artifacts/clumper.gif" class="thumbnail-image"></p>
@@ -237,12 +268,12 @@ window.Quarto = {
 Joost de Theije + LLM
 </div>
 <div class="listing-reading-time">
-9 min
+15 min
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1677974400000" data-listing-file-modified-sort="1708099753624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1463">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1677974400000" data-listing-file-modified-sort="1710626173136" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1463">
 <div class="thumbnail">
 <p><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external"></a></p><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">
 <p><img src="./posts/boring_forecast/artifacts/ratio.gif" class="thumbnail-image"></p>
@@ -512,6 +543,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
           // default icon
           link.classList.add("external");
       }
@@ -550,7 +586,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
