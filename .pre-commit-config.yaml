@@ -18,20 +18,14 @@ repos:
       - id: nbdev_clean
 
   - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.7.1
+    rev: 1.8.4
     hooks:
       - id: nbqa-black
       - id: nbqa-isort
-      # - id: nbqa-ruff
-      #   # args: [".", "--config", ".ruff.toml", "--fix"]
-      #   name: "runn ruff linter on notebook"
-      # - id: nbqa-ruff
-      #   args: [".", "--config", ".ruff.toml"]
-      #   name: "runn ruff formatter on notebook"
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.1.15
+    rev: v0.3.3
     hooks:
       # run the linter with the .ruff.toml file for config
       # fix all fixable errors
