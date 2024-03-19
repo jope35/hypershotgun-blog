@@ -188,7 +188,7 @@ window.Quarto = {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">pooking and looking 👀</h1>
-            <p class="subtitle lead">together</p>
+            <p class="subtitle lead">diving into partial dependence plots</p>
                       </div>
   </div>
     
@@ -230,12 +230,12 @@ window.Quarto = {
   <li><a href="#predict-with-the-model" id="toc-predict-with-the-model" class="nav-link" data-scroll-target="#predict-with-the-model"><span class="header-section-number">2.4</span> predict with the model</a></li>
   <li><a href="#average-out-the-individual-predictions" id="toc-average-out-the-individual-predictions" class="nav-link" data-scroll-target="#average-out-the-individual-predictions"><span class="header-section-number">2.5</span> average out the individual predictions</a></li>
   </ul></li>
-  <li><a href="#scikitlearn-implementation" id="toc-scikitlearn-implementation" class="nav-link" data-scroll-target="#scikitlearn-implementation"><span class="header-section-number">3</span> scikitlearn implementation</a>
+  <li><a href="#scikit-learn-implementation" id="toc-scikit-learn-implementation" class="nav-link" data-scroll-target="#scikit-learn-implementation"><span class="header-section-number">3</span> Scikit-learn implementation</a>
   <ul class="collapse">
   <li><a href="#one-way-partial-dependence" id="toc-one-way-partial-dependence" class="nav-link" data-scroll-target="#one-way-partial-dependence"><span class="header-section-number">3.1</span> one-way partial dependence</a></li>
   <li><a href="#two-way-partial-dependence" id="toc-two-way-partial-dependence" class="nav-link" data-scroll-target="#two-way-partial-dependence"><span class="header-section-number">3.2</span> two-way partial dependence</a></li>
   </ul></li>
-  <li><a href="#bonus-individual-condition-expectation" id="toc-bonus-individual-condition-expectation" class="nav-link" data-scroll-target="#bonus-individual-condition-expectation"><span class="header-section-number">4</span> Bonus: individual condition expectation</a></li>
+  <li><a href="#bonus-individual-conditional-expectation" id="toc-bonus-individual-conditional-expectation" class="nav-link" data-scroll-target="#bonus-individual-conditional-expectation"><span class="header-section-number">4</span> Bonus: Individual Conditional Expectation</a></li>
   </ul>
 </nav>
     </div>
@@ -276,14 +276,15 @@ window.Quarto = {
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># setting global plotting settings</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>pd.options.display.float_format <span class="op">=</span> <span class="st">"</span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># set_matplotlib_formats("svg")</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>sns.set_context(context<span class="op">=</span><span class="st">"notebook"</span>, font_scale<span class="op">=</span><span class="fl">1.5</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a>sns.set_palette(<span class="st">"tab10"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span>
-<span id="cb3-9"><a href="#cb3-9"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">35</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># roudning all floats to two digits</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>pd.options.display.float_format <span class="op">=</span> <span class="st">"</span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>sns.set_context(context<span class="op">=</span><span class="st">"notebook"</span>, font_scale<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>sns.set_palette(<span class="st">"tab10"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">35</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="intro" class="level2" data-number="1">
@@ -312,9 +313,9 @@ window.Quarto = {
 <span id="cb4-14"><a href="#cb4-14"></a>)</span>
 <span id="cb4-15"><a href="#cb4-15"></a></span>
 <span id="cb4-16"><a href="#cb4-16"></a><span class="co"># display descriptive stats</span></span>
-<span id="cb4-17"><a href="#cb4-17"></a>display(df_reg.describe().T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-17"><a href="#cb4-17"></a>df_reg.describe().T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 <div>
 
@@ -430,7 +431,7 @@ window.Quarto = {
 </div>
 </div>
 <p>all input features are uniform distributed <span class="math inline">\(U(0,1)\)</span> -&gt; the mean is ~0.5 the target feature has a higher mean of ~14</p>
-<p>The data is fed into a random-forest model, <a href="https://www.linkedin.com/feed/update/urn:li:activity:7169278449243607041?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7169278449243607041%29">it is my favorite go to model</a></p>
+<p>The data is fed into a random-forest model, <a href="https://www.linkedin.com/feed/update/urn:li:activity:7169278449243607041?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7169278449243607041%29">it is my favorite go to model</a>, no feature scaling required can handle missing values, can capture non-linearity, has ability to model non-linearity, and fitting can be quite fast.</p>
 <div id="cell-8" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -538,15 +539,15 @@ max   1.00
 Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
-<p>the range of <code>x_0</code> is between zero and one</p>
+<p>the range of <code>x_0</code> is between zero and one, in this case we are taking the entire region but you could also restrict it to the 90% percentile.</p>
 </section>
 <section id="set-a-grid-size-i.e-the-sampling-ratio-over-the-range" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="set-a-grid-size-i.e-the-sampling-ratio-over-the-range"><span class="header-section-number">2.2</span> set a grid size, i.e the sampling ratio over the range</h3>
-<p>in this case a rather small grid size of 7 is chosen</p>
+<p>In this case a rather small grid size of 7 is chosen. that means over the range of 0 to 1 we select 7 equaly spaced datapoints</p>
 </section>
 <section id="apply-the-grid-over-the-data" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="apply-the-grid-over-the-data"><span class="header-section-number">2.3</span> apply the grid over the data</h3>
-<p>by utilizing the <code>np.linspace()</code> function we can easily create the grid, and create the required dataset with a cross join. i told you that this could get out of hand pretty fast.</p>
+<p>by utilizing the <code>np.linspace()</code> function we can easily create the grid, and create the required dataset with a cross join. for the people that know cross joins blow up your data pretty fast as it scales quadraticly. so our initial 3 datapoints together with the grid size increase the data count to $ 3 * 7 = 21 $ the newly created column is the feature for which we want to calculate the pd, in this case <code>x_0_sample</code></p>
 <div id="cell-16" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -816,6 +817,7 @@ Name: x_0, dtype: float64</code></pre>
 </section>
 <section id="predict-with-the-model" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="predict-with-the-model"><span class="header-section-number">2.4</span> predict with the model</h3>
+<p>for our new dataset we ask the model to make a prediction for each observations, so the original model is asked to create a predictions for each of the newly created 21 data points.</p>
 <div id="cell-18" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1111,7 +1113,7 @@ Name: x_0, dtype: float64</code></pre>
 </section>
 <section id="average-out-the-individual-predictions" class="level3" data-number="2.5">
 <h3 data-number="2.5" class="anchored" data-anchor-id="average-out-the-individual-predictions"><span class="header-section-number">2.5</span> average out the individual predictions</h3>
-<p>this can be done by taking the columns <code>x_0_sample</code> , <code>y_pred</code> and grouping by <code>x_0_sample</code> and taking the average value</p>
+<p>the next step is the aggregate the results by taking the average. this is achieved by taking the columns <code>x_0_sample</code> , <code>y_pred</code> and grouping by <code>x_0_sample</code> and applying mean aggregation.</p>
 <div id="cell-20" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1176,7 +1178,7 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>this is the dataframe that shows the average dependence of the target variable with respect to the feature <code>x_0</code> in this case. increasing the value of <code>x_0</code> also yields an increase of the target variable. as can be seen in the plot below. however keep in mind that this is done with a subset of the data and with a coarse grid. if the amount of include samples and the size of the grid is increased you can seen more detail in the dependence.</p>
+<p>this is the dataframe that shows the average dependence of the target variable with respect to the feature <code>x_0</code> in this case. increasing the value of <code>x_0</code> also yields an increase of the target variable. as can be seen in the plot below. however keep in mind that this is done with a subset of the data on a very coarse grid. if more samples are included and the size of the grid is increased a more detailed dependence will emerge.</p>
 <div id="cell-22" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1190,18 +1192,19 @@ Name: x_0, dtype: float64</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dependency_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="dependency_files/figure-html/cell-12-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>the plot above shows that the response of the model is postive with respect to an increase in the value of feature <code>x_0</code> however this is done with just three datapoints,If we use the full dataset of 2000 samples and a sampling grid of 127 that would result in a final dataset of <span class="math inline">\(2000 * 127 = 254.000\)</span> samples. yikes that explodes fast and this is just for one feature. however we do have the ability to get a more accurate picture of the partial dependece of the <code>x_0</code> variable.</p>
+<p>the plot above shows that the response of the model is postive with respect to an increase in the value of feature <code>x_0</code> however this is done with just three datapoints,If we use the full dataset of 2000 samples and a sampling grid of 127 that would result in a final dataset of <span class="math inline">\(2000 * 128 = 256.000\)</span> samples. yikes that explodes fast and this is just for one feature. however we do have the ability to get a more accurate picture of the partial dependece of the <code>x_0</code> variable.</p>
+<p>below you can see the code, i placed two comments to indicate where the changes have been made.</p>
 <div id="cell-24" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>df_pdp <span class="op">=</span> df_reg.drop(columns<span class="op">=</span><span class="st">"x_0"</span>)  <span class="co"># &lt;- the full dataset</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a>df_sample_grid <span class="op">=</span> pd.Series(</span>
-<span id="cb13-3"><a href="#cb13-3"></a>    np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">127</span>),  <span class="co"># &lt;- sampling is 127</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>    np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">128</span>),  <span class="co"># &lt;- sampling is 128</span></span>
 <span id="cb13-4"><a href="#cb13-4"></a>    name<span class="op">=</span><span class="st">"x_0_sample"</span>,</span>
 <span id="cb13-5"><a href="#cb13-5"></a>)</span>
 <span id="cb13-6"><a href="#cb13-6"></a>df_pdp <span class="op">=</span> df_pdp.join(other<span class="op">=</span>df_sample_grid, how<span class="op">=</span><span class="st">"cross"</span>)</span>
@@ -1228,232 +1231,251 @@ Name: x_0, dtype: float64</code></pre>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dependency_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="dependency_files/figure-html/cell-13-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>the same picture as before emerges, an increaase in <code>x_0</code> also yields an increase in the target variable to an almost monotonic level.</p>
+<p>the same picture as before emerges however this time it includes a little more detail, an increaase in <code>x_0</code> also yields an increase in the target variable to an almost monotonic level.</p>
 </section>
 </section>
-<section id="scikitlearn-implementation" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="scikitlearn-implementation"><span class="header-section-number">3</span> scikitlearn implementation</h2>
-<p>in practise we would not code our own PDP routinge but first look if there already is a lib that does the job and off course it is scikit-learn that has an implementation of a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html#sklearn.inspection.partial_dependence">partial dependence</a></p>
+<section id="scikit-learn-implementation" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="scikit-learn-implementation"><span class="header-section-number">3</span> Scikit-learn implementation</h2>
+<p>in practise we would not code our own PDP routinge but first look if there already is a lib that does the job and scikit-learn has an implementation of a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html#sklearn.inspection.partial_dependence">partial dependence</a> and also the <a href="https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html">SHAP</a> packages has a PDP option, super handy if you are already using it to get shapley values.</p>
 <section id="one-way-partial-dependence" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="one-way-partial-dependence"><span class="header-section-number">3.1</span> one-way partial dependence</h3>
-<div id="cell-28" class="cell" data-execution_count="13">
-<details class="code-fold">
+<p>by using the scikit-learn function we can easily create plots for our entire dataset. it is just with a one-liner 😊.</p>
+<div id="cell-29" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">16</span>))</span>
 <span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a>PartialDependenceDisplay.from_estimator(reg, X, features<span class="op">=</span><span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">7</span>), ax<span class="op">=</span>ax)</span>
-<span id="cb14-4"><a href="#cb14-4"></a>plt.tight_layout()</span>
-<span id="cb14-5"><a href="#cb14-5"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3"></a>PartialDependenceDisplay.from_estimator(</span>
+<span id="cb14-4"><a href="#cb14-4"></a>    estimator<span class="op">=</span>reg, X<span class="op">=</span>X, features<span class="op">=</span><span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">7</span>), grid_resolution<span class="op">=</span><span class="dv">128</span>, kind<span class="op">=</span><span class="st">"average"</span>, ax<span class="op">=</span>ax</span>
+<span id="cb14-5"><a href="#cb14-5"></a>)</span>
+<span id="cb14-6"><a href="#cb14-6"></a>plt.tight_layout()</span>
+<span id="cb14-7"><a href="#cb14-7"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dependency_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="dependency_files/figure-html/cell-14-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>for the plot above we can clearly see that <code>x_6</code> and <code>x_5</code> do not meaningfully contribute to the output of the model. so changes one of those two will not change the predicted target value. this is also logical because these two features are random noise. <code>x_2</code> has the shape of a bathtub and the mean of 0.5 yields the lowest target outcome. <code>x_0</code> and <code>x_1</code> show a steady monotonic increase and plateau for the higher input values, after which the impact on the target is diminished. for the remaining two features <code>x_3</code> and <code>x_4</code> show that an increase in the feature yields a higher outcome of the target, also a big jump in output can be seen at around 0.4 for <code>x_3</code> adn 0.6 for <code>x_4</code></p>
 </section>
 <section id="two-way-partial-dependence" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="two-way-partial-dependence"><span class="header-section-number">3.2</span> two-way partial dependence</h3>
-<div id="cell-30" class="cell" data-execution_count="14">
-<details class="code-fold">
+<p>It is possible to adapt this approach and get the PDP of two features with respect to the target variable. the trick is to create a sample grid that is the product of the two features. but again this will increase the number of datapoints that need to be inferenced. however now you can obtain insights into the feature interactions and the results it has on the target variable.</p>
+<div id="cell-32" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
 <span id="cb15-2"><a href="#cb15-2"></a></span>
-<span id="cb15-3"><a href="#cb15-3"></a>PartialDependenceDisplay.from_estimator(reg, X, features<span class="op">=</span>[(<span class="dv">1</span>, <span class="dv">2</span>)], ax<span class="op">=</span>ax)</span>
-<span id="cb15-4"><a href="#cb15-4"></a>plt.tight_layout()</span>
-<span id="cb15-5"><a href="#cb15-5"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-3"><a href="#cb15-3"></a>PartialDependenceDisplay.from_estimator(</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    reg, X, features<span class="op">=</span>[(<span class="dv">1</span>, <span class="dv">2</span>)], grid_resolution<span class="op">=</span><span class="dv">128</span>, ax<span class="op">=</span>ax</span>
+<span id="cb15-5"><a href="#cb15-5"></a>)</span>
+<span id="cb15-6"><a href="#cb15-6"></a>plt.tight_layout()</span>
+<span id="cb15-7"><a href="#cb15-7"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dependency_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="dependency_files/figure-html/cell-15-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="bonus-individual-condition-expectation" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="bonus-individual-condition-expectation"><span class="header-section-number">4</span> Bonus: individual condition expectation</h2>
-<p>instead of performing a aggregation and plotting the result, also the Individual observations can be used. in the plot each blue line is an original observation were the value of <code>x_0</code> has taken over by the sampling grid. this allows you to inspect the individual dependecy. in this case we have a well beheaved dataset were all points are in agreement however this plot might give one some insights if performance is lacking for a couple of datapoints.</p>
-<div id="cell-32" class="cell" data-execution_count="15">
-<details class="code-fold">
+<section id="bonus-individual-conditional-expectation" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="bonus-individual-conditional-expectation"><span class="header-section-number">4</span> Bonus: Individual Conditional Expectation</h2>
+<p>instead of performing a aggregation and plotting the result, theinndividual observations can alos be used. in the plot each blue line is an original observation were the value of <code>x_3</code> has taken over by the sampling grid. this allows you to inspect the individual datapoints. in this case we have a well beheaved dataset were all points are in agreement however this plot might give you some insights if performance is lacking for a couple of datapoints. it well may be that if the feature values is increased the target value goes up for one group and goes down for another group.</p>
+<div id="cell-34" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">9</span>))</span>
 <span id="cb16-2"><a href="#cb16-2"></a></span>
-<span id="cb16-3"><a href="#cb16-3"></a>PartialDependenceDisplay.from_estimator(reg, X, features<span class="op">=</span>[<span class="dv">0</span>], kind<span class="op">=</span><span class="st">"both"</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb16-4"><a href="#cb16-4"></a>ax.set_title(<span class="st">"Individual Condition Expectation"</span>)</span>
-<span id="cb16-5"><a href="#cb16-5"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-3"><a href="#cb16-3"></a>idx <span class="op">=</span> np.random.randint(<span class="bu">len</span>(X), size<span class="op">=</span><span class="bu">int</span>(<span class="bu">len</span>(X) <span class="op">*</span> <span class="fl">0.1</span>), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a></span>
+<span id="cb16-6"><a href="#cb16-6"></a>PartialDependenceDisplay.from_estimator(</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    reg, X.loc[idx, :], features<span class="op">=</span>[<span class="dv">3</span>], kind<span class="op">=</span><span class="st">"both"</span>, grid_resolution<span class="op">=</span><span class="dv">128</span>, ax<span class="op">=</span>ax</span>
+<span id="cb16-8"><a href="#cb16-8"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9"></a>ax.set_title(<span class="st">"Individual Condition Expectation"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dependency_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="dependency_files/figure-html/cell-16-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-33" class="cell" data-execution_count="16">
+<div id="cell-36" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a>pdp_results <span class="op">=</span> partial_dependence(</span>
-<span id="cb17-2"><a href="#cb17-2"></a>    estimator<span class="op">=</span>reg,</span>
-<span id="cb17-3"><a href="#cb17-3"></a>    X<span class="op">=</span>X,</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    features<span class="op">=</span>[<span class="st">"x_3"</span>],</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    grid_resolution<span class="op">=</span><span class="dv">33</span>,</span>
-<span id="cb17-6"><a href="#cb17-6"></a>    kind<span class="op">=</span><span class="st">"both"</span>,</span>
-<span id="cb17-7"><a href="#cb17-7"></a>)</span>
-<span id="cb17-8"><a href="#cb17-8"></a></span>
-<span id="cb17-9"><a href="#cb17-9"></a>plt.plot(</span>
-<span id="cb17-10"><a href="#cb17-10"></a>    pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T,</span>
-<span id="cb17-11"><a href="#cb17-11"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb17-12"><a href="#cb17-12"></a>    linewidth<span class="op">=</span><span class="fl">0.25</span>,</span>
-<span id="cb17-13"><a href="#cb17-13"></a>    alpha<span class="op">=</span><span class="fl">0.33</span>,</span>
-<span id="cb17-14"><a href="#cb17-14"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
-<span id="cb17-15"><a href="#cb17-15"></a>)</span>
-<span id="cb17-16"><a href="#cb17-16"></a>plt.plot(</span>
-<span id="cb17-17"><a href="#cb17-17"></a>    np.mean(pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T, axis<span class="op">=</span><span class="dv">1</span>), linestyle<span class="op">=</span><span class="st">"--"</span>, color<span class="op">=</span><span class="st">"tab:orange"</span></span>
-<span id="cb17-18"><a href="#cb17-18"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">### gif</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dependency_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 <div id="cell-37" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">### gif</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="im">import</span> gif  <span class="co"># noqa E402</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-38" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="im">import</span> gif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a>idx <span class="op">=</span> np.random.randint(<span class="bu">len</span>(X), size<span class="op">=</span><span class="bu">int</span>(<span class="bu">len</span>(X) <span class="op">*</span> <span class="fl">0.025</span>), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a></span>
+<span id="cb19-3"><a href="#cb19-3"></a></span>
+<span id="cb19-4"><a href="#cb19-4"></a>pdp_results <span class="op">=</span> partial_dependence(</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    estimator<span class="op">=</span>reg,</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    X<span class="op">=</span>X.loc[idx, :],</span>
+<span id="cb19-7"><a href="#cb19-7"></a>    features<span class="op">=</span>[<span class="st">"x_3"</span>],</span>
+<span id="cb19-8"><a href="#cb19-8"></a>    grid_resolution<span class="op">=</span><span class="dv">33</span>,</span>
+<span id="cb19-9"><a href="#cb19-9"></a>    kind<span class="op">=</span><span class="st">"both"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10"></a>)</span>
+<span id="cb19-11"><a href="#cb19-11"></a></span>
+<span id="cb19-12"><a href="#cb19-12"></a>plt.plot(</span>
+<span id="cb19-13"><a href="#cb19-13"></a>    pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T,</span>
+<span id="cb19-14"><a href="#cb19-14"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb19-15"><a href="#cb19-15"></a>    linewidth<span class="op">=</span><span class="fl">0.25</span>,</span>
+<span id="cb19-16"><a href="#cb19-16"></a>    alpha<span class="op">=</span><span class="fl">0.33</span>,</span>
+<span id="cb19-17"><a href="#cb19-17"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
+<span id="cb19-18"><a href="#cb19-18"></a>)</span>
+<span id="cb19-19"><a href="#cb19-19"></a>plt.plot(</span>
+<span id="cb19-20"><a href="#cb19-20"></a>    np.mean(pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T, axis<span class="op">=</span><span class="dv">1</span>), linestyle<span class="op">=</span><span class="st">"--"</span>, color<span class="op">=</span><span class="st">"tab:orange"</span></span>
+<span id="cb19-21"><a href="#cb19-21"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-error">
-<pre><code>ModuleNotFoundError: No module named 'gif'</code></pre>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dependency_files/figure-html/cell-20-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div id="cell-39" class="cell">
+</div>
+<div id="cell-39" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>individual_lines <span class="op">=</span> pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T</span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a>individual_lines <span class="op">=</span> pdp_results[<span class="st">"individual"</span>][<span class="dv">0</span>].T</span>
+<span id="cb20-2"><a href="#cb20-2"></a></span>
+<span id="cb20-3"><a href="#cb20-3"></a></span>
+<span id="cb20-4"><a href="#cb20-4"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb20-5"><a href="#cb20-5"></a></span>
+<span id="cb20-6"><a href="#cb20-6"></a></span>
+<span id="cb20-7"><a href="#cb20-7"></a>ax.plot(</span>
+<span id="cb20-8"><a href="#cb20-8"></a>    pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
+<span id="cb20-9"><a href="#cb20-9"></a>    individual_lines[:, <span class="dv">0</span>],</span>
+<span id="cb20-10"><a href="#cb20-10"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb20-12"><a href="#cb20-12"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb20-13"><a href="#cb20-13"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
+<span id="cb20-14"><a href="#cb20-14"></a>)</span>
+<span id="cb20-15"><a href="#cb20-15"></a></span>
+<span id="cb20-16"><a href="#cb20-16"></a></span>
+<span id="cb20-17"><a href="#cb20-17"></a>xlim_begin, ylim_begin <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
+<span id="cb20-18"><a href="#cb20-18"></a></span>
+<span id="cb20-19"><a href="#cb20-19"></a></span>
+<span id="cb20-20"><a href="#cb20-20"></a>ax.plot(</span>
+<span id="cb20-21"><a href="#cb20-21"></a>    pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
+<span id="cb20-22"><a href="#cb20-22"></a>    individual_lines[:, :],</span>
+<span id="cb20-23"><a href="#cb20-23"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb20-24"><a href="#cb20-24"></a>    linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb20-25"><a href="#cb20-25"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb20-26"><a href="#cb20-26"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
+<span id="cb20-27"><a href="#cb20-27"></a>)</span>
+<span id="cb20-28"><a href="#cb20-28"></a></span>
+<span id="cb20-29"><a href="#cb20-29"></a>xlim_end, ylim_end <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
+<span id="cb20-30"><a href="#cb20-30"></a></span>
+<span id="cb20-31"><a href="#cb20-31"></a>zoom_factor <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb20-32"><a href="#cb20-32"></a><span class="co"># get the global axes limits</span></span>
+<span id="cb20-33"><a href="#cb20-33"></a>overal_xlim <span class="op">=</span> (</span>
+<span id="cb20-34"><a href="#cb20-34"></a>    <span class="bu">min</span>(xlim_begin[<span class="dv">0</span>], xlim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
+<span id="cb20-35"><a href="#cb20-35"></a>    <span class="bu">max</span>(xlim_begin[<span class="dv">1</span>], xlim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
+<span id="cb20-36"><a href="#cb20-36"></a>)</span>
+<span id="cb20-37"><a href="#cb20-37"></a>overal_ylim <span class="op">=</span> (</span>
+<span id="cb20-38"><a href="#cb20-38"></a>    <span class="bu">min</span>(ylim_begin[<span class="dv">0</span>], ylim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
+<span id="cb20-39"><a href="#cb20-39"></a>    <span class="bu">max</span>(ylim_begin[<span class="dv">1</span>], ylim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
+<span id="cb20-40"><a href="#cb20-40"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dependency_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-40" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># for i in range(individual_lines.shape[1])</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a></span>
 <span id="cb21-3"><a href="#cb21-3"></a></span>
-<span id="cb21-4"><a href="#cb21-4"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb21-5"><a href="#cb21-5"></a></span>
-<span id="cb21-6"><a href="#cb21-6"></a></span>
-<span id="cb21-7"><a href="#cb21-7"></a>ax.plot(</span>
-<span id="cb21-8"><a href="#cb21-8"></a>    pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
-<span id="cb21-9"><a href="#cb21-9"></a>    individual_lines[:, <span class="dv">0</span>],</span>
-<span id="cb21-10"><a href="#cb21-10"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb21-11"><a href="#cb21-11"></a>    linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb21-12"><a href="#cb21-12"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb21-13"><a href="#cb21-13"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
-<span id="cb21-14"><a href="#cb21-14"></a>)</span>
-<span id="cb21-15"><a href="#cb21-15"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="at">@gif.frame</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="kw">def</span> one_frame(i: <span class="bu">int</span>, overal_xlim<span class="op">=</span><span class="va">None</span>, overal_ylim<span class="op">=</span><span class="va">None</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb21-6"><a href="#cb21-6"></a>    _, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
+<span id="cb21-7"><a href="#cb21-7"></a></span>
+<span id="cb21-8"><a href="#cb21-8"></a>    ax.plot(</span>
+<span id="cb21-9"><a href="#cb21-9"></a>        pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
+<span id="cb21-10"><a href="#cb21-10"></a>        individual_lines[:, :i],</span>
+<span id="cb21-11"><a href="#cb21-11"></a>        linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
+<span id="cb21-12"><a href="#cb21-12"></a>        linewidth<span class="op">=</span><span class="fl">0.75</span>,</span>
+<span id="cb21-13"><a href="#cb21-13"></a>        alpha<span class="op">=</span><span class="fl">0.35</span>,</span>
+<span id="cb21-14"><a href="#cb21-14"></a>        color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
+<span id="cb21-15"><a href="#cb21-15"></a>    )</span>
 <span id="cb21-16"><a href="#cb21-16"></a></span>
-<span id="cb21-17"><a href="#cb21-17"></a>xlim_begin, ylim_begin <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
-<span id="cb21-18"><a href="#cb21-18"></a></span>
-<span id="cb21-19"><a href="#cb21-19"></a></span>
-<span id="cb21-20"><a href="#cb21-20"></a>ax.plot(</span>
-<span id="cb21-21"><a href="#cb21-21"></a>    pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
-<span id="cb21-22"><a href="#cb21-22"></a>    individual_lines[:, :],</span>
-<span id="cb21-23"><a href="#cb21-23"></a>    linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb21-24"><a href="#cb21-24"></a>    linewidth<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb21-25"><a href="#cb21-25"></a>    alpha<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb21-26"><a href="#cb21-26"></a>    color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
-<span id="cb21-27"><a href="#cb21-27"></a>)</span>
+<span id="cb21-17"><a href="#cb21-17"></a>    <span class="cf">if</span> i <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb21-18"><a href="#cb21-18"></a>        ax.plot(</span>
+<span id="cb21-19"><a href="#cb21-19"></a>            pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
+<span id="cb21-20"><a href="#cb21-20"></a>            np.mean(individual_lines[:, :i], axis<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb21-21"><a href="#cb21-21"></a>            linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
+<span id="cb21-22"><a href="#cb21-22"></a>            linewidth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb21-23"><a href="#cb21-23"></a>            color<span class="op">=</span><span class="st">"tab:orange"</span>,</span>
+<span id="cb21-24"><a href="#cb21-24"></a>        )</span>
+<span id="cb21-25"><a href="#cb21-25"></a></span>
+<span id="cb21-26"><a href="#cb21-26"></a>    <span class="co"># set the overal axes</span></span>
+<span id="cb21-27"><a href="#cb21-27"></a>    ax.set_xlim(overal_xlim), ax.set_ylim(overal_ylim)</span>
 <span id="cb21-28"><a href="#cb21-28"></a></span>
-<span id="cb21-29"><a href="#cb21-29"></a>xlim_end, ylim_end <span class="op">=</span> ax.get_xlim(), ax.get_ylim()</span>
-<span id="cb21-30"><a href="#cb21-30"></a></span>
-<span id="cb21-31"><a href="#cb21-31"></a>zoom_factor <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb21-32"><a href="#cb21-32"></a><span class="co"># get the global axes limits</span></span>
-<span id="cb21-33"><a href="#cb21-33"></a>overal_xlim <span class="op">=</span> (</span>
-<span id="cb21-34"><a href="#cb21-34"></a>    <span class="bu">min</span>(xlim_begin[<span class="dv">0</span>], xlim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
-<span id="cb21-35"><a href="#cb21-35"></a>    <span class="bu">max</span>(xlim_begin[<span class="dv">1</span>], xlim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
-<span id="cb21-36"><a href="#cb21-36"></a>)</span>
-<span id="cb21-37"><a href="#cb21-37"></a>overal_ylim <span class="op">=</span> (</span>
-<span id="cb21-38"><a href="#cb21-38"></a>    <span class="bu">min</span>(ylim_begin[<span class="dv">0</span>], ylim_end[<span class="dv">0</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> zoom_factor),</span>
-<span id="cb21-39"><a href="#cb21-39"></a>    <span class="bu">max</span>(ylim_begin[<span class="dv">1</span>], ylim_end[<span class="dv">1</span>]) <span class="op">*</span> (<span class="dv">1</span> <span class="op">+</span> zoom_factor),</span>
-<span id="cb21-40"><a href="#cb21-40"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-29"><a href="#cb21-29"></a>    <span class="co"># remove the ticks and lables from the axes</span></span>
+<span id="cb21-30"><a href="#cb21-30"></a>    xticks <span class="op">=</span> ax.get_xticks()</span>
+<span id="cb21-31"><a href="#cb21-31"></a>    ax.set_xticks(xticks, labels<span class="op">=</span>[])</span>
+<span id="cb21-32"><a href="#cb21-32"></a>    ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb21-33"><a href="#cb21-33"></a></span>
+<span id="cb21-34"><a href="#cb21-34"></a>    yticks <span class="op">=</span> ax.get_yticks()</span>
+<span id="cb21-35"><a href="#cb21-35"></a>    ax.set_yticks(yticks, labels<span class="op">=</span>[])</span>
+<span id="cb21-36"><a href="#cb21-36"></a>    ax.set_ylabel(<span class="st">""</span>)</span>
+<span id="cb21-37"><a href="#cb21-37"></a></span>
+<span id="cb21-38"><a href="#cb21-38"></a>    plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-40" class="cell">
+<div id="cell-41" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># for i in range(individual_lines.shape[1])</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a></span>
-<span id="cb22-3"><a href="#cb22-3"></a></span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="at">@gif.frame</span></span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="kw">def</span> one_frame(i: <span class="bu">int</span>, overal_xlim<span class="op">=</span><span class="va">None</span>, overal_ylim<span class="op">=</span><span class="va">None</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
-<span id="cb22-6"><a href="#cb22-6"></a>    _, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
-<span id="cb22-7"><a href="#cb22-7"></a></span>
-<span id="cb22-8"><a href="#cb22-8"></a>    ax.plot(</span>
-<span id="cb22-9"><a href="#cb22-9"></a>        pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
-<span id="cb22-10"><a href="#cb22-10"></a>        individual_lines[:, :i],</span>
-<span id="cb22-11"><a href="#cb22-11"></a>        linestyle<span class="op">=</span><span class="st">"-"</span>,</span>
-<span id="cb22-12"><a href="#cb22-12"></a>        linewidth<span class="op">=</span><span class="fl">0.75</span>,</span>
-<span id="cb22-13"><a href="#cb22-13"></a>        alpha<span class="op">=</span><span class="fl">0.35</span>,</span>
-<span id="cb22-14"><a href="#cb22-14"></a>        color<span class="op">=</span><span class="st">"tab:blue"</span>,</span>
-<span id="cb22-15"><a href="#cb22-15"></a>    )</span>
-<span id="cb22-16"><a href="#cb22-16"></a></span>
-<span id="cb22-17"><a href="#cb22-17"></a>    <span class="cf">if</span> i <span class="op">&gt;</span> <span class="dv">1</span>:</span>
-<span id="cb22-18"><a href="#cb22-18"></a>        ax.plot(</span>
-<span id="cb22-19"><a href="#cb22-19"></a>            pdp_results[<span class="st">"grid_values"</span>][<span class="dv">0</span>],</span>
-<span id="cb22-20"><a href="#cb22-20"></a>            np.mean(individual_lines[:, :i], axis<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb22-21"><a href="#cb22-21"></a>            linestyle<span class="op">=</span><span class="st">"--"</span>,</span>
-<span id="cb22-22"><a href="#cb22-22"></a>            linewidth<span class="op">=</span><span class="dv">3</span>,</span>
-<span id="cb22-23"><a href="#cb22-23"></a>            color<span class="op">=</span><span class="st">"tab:orange"</span>,</span>
-<span id="cb22-24"><a href="#cb22-24"></a>        )</span>
-<span id="cb22-25"><a href="#cb22-25"></a></span>
-<span id="cb22-26"><a href="#cb22-26"></a>    <span class="co"># set the overal axes</span></span>
-<span id="cb22-27"><a href="#cb22-27"></a>    ax.set_xlim(overal_xlim), ax.set_ylim(overal_ylim)</span>
-<span id="cb22-28"><a href="#cb22-28"></a></span>
-<span id="cb22-29"><a href="#cb22-29"></a>    <span class="co"># remove the ticks and lables from the axes</span></span>
-<span id="cb22-30"><a href="#cb22-30"></a>    xticks <span class="op">=</span> ax.get_xticks()</span>
-<span id="cb22-31"><a href="#cb22-31"></a>    ax.set_xticks(xticks, labels<span class="op">=</span>[])</span>
-<span id="cb22-32"><a href="#cb22-32"></a>    ax.set_xlabel(<span class="st">""</span>)</span>
-<span id="cb22-33"><a href="#cb22-33"></a></span>
-<span id="cb22-34"><a href="#cb22-34"></a>    yticks <span class="op">=</span> ax.get_yticks()</span>
-<span id="cb22-35"><a href="#cb22-35"></a>    ax.set_yticks(yticks, labels<span class="op">=</span>[])</span>
-<span id="cb22-36"><a href="#cb22-36"></a>    ax.set_ylabel(<span class="st">""</span>)</span>
-<span id="cb22-37"><a href="#cb22-37"></a></span>
-<span id="cb22-38"><a href="#cb22-38"></a>    plt.tight_layout()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># genearate all base frames</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>gif_frames <span class="op">=</span> [</span>
+<span id="cb22-3"><a href="#cb22-3"></a>    one_frame(i, overal_xlim, overal_ylim) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(individual_lines.shape[<span class="dv">1</span>])</span>
+<span id="cb22-4"><a href="#cb22-4"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-41" class="cell">
+<div id="cell-42" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># genearate all base frames</span></span>
-<span id="cb23-2"><a href="#cb23-2"></a>gif_frames <span class="op">=</span> [</span>
-<span id="cb23-3"><a href="#cb23-3"></a>    one_frame(i, overal_xlim, overal_ylim) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(individual_lines.shape[<span class="dv">1</span>])</span>
-<span id="cb23-4"><a href="#cb23-4"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># add bounce and freeze point</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>gif_frames.extend([gif_frames[<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>)])</span>
+<span id="cb23-3"><a href="#cb23-3"></a>gif_frames.extend(gif_frames[::<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-42" class="cell">
+<div id="cell-43" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># add bounce and freeze point</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>gif_frames.extend([gif_frames[<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">60</span>)])</span>
-<span id="cb24-3"><a href="#cb24-3"></a>gif_frames.extend(gif_frames[::<span class="op">-</span><span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-43" class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a>gif.save(gif_frames, <span class="st">"artifacts/ice_lines.gif"</span>, duration<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a>gif.save(gif_frames, <span class="st">"artifacts/ice_lines.gif"</span>, duration<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
