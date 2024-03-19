@@ -25,17 +25,13 @@ website:
       - icon: github
         text: Github
         href: https://github.com/jope35
-  # page-footer:
-  #   center:
-  #     - text: "About"
-  #       href: about.qmd
   search:
     location: navbar
     type: overlay
 
 format:
   html:
-    highlight-style: nord #ayu #ayu, atom-one, arrow, github, breeze, a11y, gruvbox
+    highlight-style: nord #ayu, atom-one, arrow, github, breeze, a11y, gruvbox
     theme:
       light: flatly
       dark: darkly
