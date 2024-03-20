@@ -31,7 +31,7 @@ website:
 
 format:
   html:
-    highlight-style: nord #ayu, atom-one, arrow, github, breeze, a11y, gruvbox
+    highlight-style: ayu #nord #ayu, atom-one, arrow, github, breeze, a11y, gruvbox
     theme:
       light: flatly
       dark: darkly
