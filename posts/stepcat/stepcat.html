@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>hello world 👋</p>
-<div id="cell-2" class="cell" data-execution_count="3">
+<div id="cell-2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> optuna</span>
@@ -204,7 +204,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-3" class="cell" data-execution_count="41">
+<div id="cell-3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>ID <span class="op">=</span> <span class="dv">1240</span></span>
@@ -216,11 +216,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-4" class="cell" data-execution_count="72">
+<div id="cell-4" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>classifier <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    iterations<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    iterations<span class="op">=</span><span class="dv">32</span>,</span>
 <span id="cb3-3"><a href="#cb3-3"></a>    loss_function<span class="op">=</span><span class="st">"Logloss"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4"></a>    eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5"></a>    metric_period<span class="op">=</span><span class="dv">16</span>,</span>
@@ -228,13 +228,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-5" class="cell" data-execution_count="88">
+<div id="cell-5" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>classifier.fit(X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>classifier.fit(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="88">
-<pre><code>&lt;catboost.core.CatBoostClassifier at 0x36b73a240&gt;</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>&lt;catboost.core.CatBoostClassifier at 0x10b87b2b0&gt;</code></pre>
+</div>
+</div>
+<div id="cell-6" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>classifier.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>0.8007828136814482</code></pre>
 </div>
 </div>
 <ol type="1">
@@ -271,6 +282,101 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>optuna in steps</li>
 <li>compare time should be less, for same or better performance</li>
 </ul>
+<div id="cell-9" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">def</span> objective(trial):</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    param <span class="op">=</span> {</span>
+<span id="cb8-3"><a href="#cb8-3"></a>        <span class="st">"depth"</span>: trial.suggest_int(<span class="st">"depth"</span>, <span class="dv">1</span>, <span class="dv">15</span>),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>        <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    }</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb8-8"><a href="#cb8-8"></a>        <span class="op">**</span>param,</span>
+<span id="cb8-9"><a href="#cb8-9"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb8-11"><a href="#cb8-11"></a>    )</span>
+<span id="cb8-12"><a href="#cb8-12"></a>    cbc.fit(</span>
+<span id="cb8-13"><a href="#cb8-13"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>    )</span>
+<span id="cb8-15"><a href="#cb8-15"></a></span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-10" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>study.optimize(objective, n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>[I 2024-03-21 22:54:51,897] A new study created in memory with name: no-name-314011ed-0df5-4293-9531-d61007dad81e
+[I 2024-03-21 22:55:04,378] Trial 0 finished with value: 0.8108783857879154 and parameters: {'depth': 12, 'iterations': 99}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:06,886] Trial 1 finished with value: 0.768937097172629 and parameters: {'depth': 1, 'iterations': 113}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:10,298] Trial 2 finished with value: 0.796464479063087 and parameters: {'depth': 2, 'iterations': 124}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:11,856] Trial 3 finished with value: 0.7971442639094042 and parameters: {'depth': 11, 'iterations': 16}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:21,657] Trial 4 finished with value: 0.8099571266077522 and parameters: {'depth': 12, 'iterations': 83}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:25,516] Trial 5 finished with value: 0.7995272500222995 and parameters: {'depth': 3, 'iterations': 126}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:27,284] Trial 6 finished with value: 0.8023090586145648 and parameters: {'depth': 6, 'iterations': 38}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:55:29,007] Trial 7 finished with value: 0.7947800182299193 and parameters: {'depth': 3, 'iterations': 54}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:56:05,942] Trial 8 finished with value: 0.8076261779876813 and parameters: {'depth': 15, 'iterations': 70}. Best is trial 0 with value: 0.8108783857879154.
+[I 2024-03-21 22:56:09,629] Trial 9 finished with value: 0.7996608581182089 and parameters: {'depth': 3, 'iterations': 115}. Best is trial 0 with value: 0.8108783857879154.</code></pre>
+</div>
+</div>
+<div id="cell-11" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-12" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> obj(trial, step):</span>
+<span id="cb12-2"><a href="#cb12-2"></a>    all_step_param <span class="op">=</span> {</span>
+<span id="cb12-3"><a href="#cb12-3"></a>        <span class="dv">1</span>: {</span>
+<span id="cb12-4"><a href="#cb12-4"></a>            <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
+<span id="cb12-5"><a href="#cb12-5"></a>            <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
+<span id="cb12-6"><a href="#cb12-6"></a>        },</span>
+<span id="cb12-7"><a href="#cb12-7"></a>        <span class="dv">2</span>: {</span>
+<span id="cb12-8"><a href="#cb12-8"></a>            <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb12-9"><a href="#cb12-9"></a>            <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb12-10"><a href="#cb12-10"></a>        },</span>
+<span id="cb12-11"><a href="#cb12-11"></a>        <span class="dv">3</span>: {</span>
+<span id="cb12-12"><a href="#cb12-12"></a>            <span class="st">"min_data_in_leaf"</span>: trial.suggest_int(<span class="st">"min_data_in_leaf"</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb12-13"><a href="#cb12-13"></a>            <span class="st">"bagging_temperature"</span>: trial.suggest_float(<span class="st">"bagging_temperature"</span>, <span class="fl">0.01</span>, <span class="dv">1</span>),</span>
+<span id="cb12-14"><a href="#cb12-14"></a>        },</span>
+<span id="cb12-15"><a href="#cb12-15"></a>        <span class="dv">4</span>: {</span>
+<span id="cb12-16"><a href="#cb12-16"></a>            <span class="st">"learning_rate"</span>: trial.suggest_float(<span class="st">"learning_rate"</span>, <span class="fl">1e-3</span>, <span class="fl">0.1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb12-17"><a href="#cb12-17"></a>        },</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    }</span>
+<span id="cb12-19"><a href="#cb12-19"></a></span>
+<span id="cb12-20"><a href="#cb12-20"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb12-21"><a href="#cb12-21"></a>        <span class="op">**</span>all_step_param[step],</span>
+<span id="cb12-22"><a href="#cb12-22"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb12-23"><a href="#cb12-23"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb12-24"><a href="#cb12-24"></a>    )</span>
+<span id="cb12-25"><a href="#cb12-25"></a>    cbc.fit(</span>
+<span id="cb12-26"><a href="#cb12-26"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb12-27"><a href="#cb12-27"></a>    )</span>
+<span id="cb12-28"><a href="#cb12-28"></a></span>
+<span id="cb12-29"><a href="#cb12-29"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb12-30"><a href="#cb12-30"></a></span>
+<span id="cb12-31"><a href="#cb12-31"></a></span>
+<span id="cb12-32"><a href="#cb12-32"></a><span class="kw">def</span> get_obj_step(step: <span class="bu">int</span>):</span>
+<span id="cb12-33"><a href="#cb12-33"></a>    <span class="cf">return</span> partial(obj, step<span class="op">=</span>step)</span>
+<span id="cb12-34"><a href="#cb12-34"></a></span>
+<span id="cb12-35"><a href="#cb12-35"></a></span>
+<span id="cb12-36"><a href="#cb12-36"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> feed to previous best params forward</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-13" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2"></a>study.optimize(get_obj_step(step), n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 

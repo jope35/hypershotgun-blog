@@ -9,7 +9,7 @@
 <meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2024-03-14">
 
-<title>hyper-shotgun - intro to partial dependence plots</title>
+<title>hyper-shotgun - Introduction to Partial Dependence Plots</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -187,8 +187,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">intro to partial dependence plots</h1>
-            <p class="subtitle lead">visualizing model relationships</p>
+      <h1 class="title">Introduction to Partial Dependence Plots</h1>
+            <p class="subtitle lead">Visualizing Model Relationships</p>
                       </div>
   </div>
     
@@ -212,6 +212,12 @@ window.Quarto = {
       
     </div>
     
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      This article provides an overview of Partial Dependence Plots (PDPs) and Individual Conditional Expectation (ICE) plots, powerful tools for visualizing the relationships between features and predictions in machine learning models. We’ll explore how these plots can help to interpret model behavior, revealing both average effects and individual data point responses.
+    </div>
+  </div>
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -221,21 +227,30 @@ window.Quarto = {
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro"><span class="header-section-number">1</span> Intro</a></li>
-  <li><a href="#how-to-calculate-the-pdp" id="toc-how-to-calculate-the-pdp" class="nav-link" data-scroll-target="#how-to-calculate-the-pdp"><span class="header-section-number">2</span> how to calculate the PDP</a>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#why-explore-partial-dependence-plots" id="toc-why-explore-partial-dependence-plots" class="nav-link" data-scroll-target="#why-explore-partial-dependence-plots"><span class="header-section-number">2</span> Why Explore Partial Dependence Plots?</a></li>
+  <li><a href="#step-by-step-guide-to-calculating-a-partial-dependence-plot-pdp" id="toc-step-by-step-guide-to-calculating-a-partial-dependence-plot-pdp" class="nav-link" data-scroll-target="#step-by-step-guide-to-calculating-a-partial-dependence-plot-pdp"><span class="header-section-number">3</span> Step-by-Step Guide to Calculating a Partial Dependence Plot (PDP)</a>
   <ul class="collapse">
-  <li><a href="#determine-the-range-of-x_0" id="toc-determine-the-range-of-x_0" class="nav-link" data-scroll-target="#determine-the-range-of-x_0"><span class="header-section-number">2.1</span> determine the range of <code>x_0</code></a></li>
-  <li><a href="#set-a-grid-size-i.e-the-sampling-ratio-over-the-range" id="toc-set-a-grid-size-i.e-the-sampling-ratio-over-the-range" class="nav-link" data-scroll-target="#set-a-grid-size-i.e-the-sampling-ratio-over-the-range"><span class="header-section-number">2.2</span> set a grid size, i.e the sampling ratio over the range</a></li>
-  <li><a href="#apply-the-grid-over-the-data" id="toc-apply-the-grid-over-the-data" class="nav-link" data-scroll-target="#apply-the-grid-over-the-data"><span class="header-section-number">2.3</span> apply the grid over the data</a></li>
-  <li><a href="#predict-with-the-model" id="toc-predict-with-the-model" class="nav-link" data-scroll-target="#predict-with-the-model"><span class="header-section-number">2.4</span> predict with the model</a></li>
-  <li><a href="#average-out-the-individual-predictions" id="toc-average-out-the-individual-predictions" class="nav-link" data-scroll-target="#average-out-the-individual-predictions"><span class="header-section-number">2.5</span> average out the individual predictions</a></li>
+  <li><a href="#identify-the-range-of-the-feature" id="toc-identify-the-range-of-the-feature" class="nav-link" data-scroll-target="#identify-the-range-of-the-feature"><span class="header-section-number">3.1</span> Identify the Range of the Feature</a></li>
+  <li><a href="#determine-the-grid-size" id="toc-determine-the-grid-size" class="nav-link" data-scroll-target="#determine-the-grid-size"><span class="header-section-number">3.2</span> Determine the Grid Size</a></li>
+  <li><a href="#expand-the-dataset-using-the-grid" id="toc-expand-the-dataset-using-the-grid" class="nav-link" data-scroll-target="#expand-the-dataset-using-the-grid"><span class="header-section-number">3.3</span> Expand the Dataset Using the Grid</a></li>
+  <li><a href="#generate-predictions" id="toc-generate-predictions" class="nav-link" data-scroll-target="#generate-predictions"><span class="header-section-number">3.4</span> Generate Predictions</a></li>
+  <li><a href="#compute-the-average" id="toc-compute-the-average" class="nav-link" data-scroll-target="#compute-the-average"><span class="header-section-number">3.5</span> Compute the Average</a></li>
   </ul></li>
-  <li><a href="#scikit-learn-implementation" id="toc-scikit-learn-implementation" class="nav-link" data-scroll-target="#scikit-learn-implementation"><span class="header-section-number">3</span> Scikit-learn implementation</a>
+  <li><a href="#interpreting-the-partial-dependence-plot" id="toc-interpreting-the-partial-dependence-plot" class="nav-link" data-scroll-target="#interpreting-the-partial-dependence-plot"><span class="header-section-number">4</span> Interpreting the Partial Dependence Plot</a></li>
+  <li><a href="#implementation-in-code" id="toc-implementation-in-code" class="nav-link" data-scroll-target="#implementation-in-code"><span class="header-section-number">5</span> Implementation in Code</a>
   <ul class="collapse">
-  <li><a href="#one-way-partial-dependence" id="toc-one-way-partial-dependence" class="nav-link" data-scroll-target="#one-way-partial-dependence"><span class="header-section-number">3.1</span> one-way partial dependence</a></li>
-  <li><a href="#two-way-partial-dependence" id="toc-two-way-partial-dependence" class="nav-link" data-scroll-target="#two-way-partial-dependence"><span class="header-section-number">3.2</span> two-way partial dependence</a></li>
+  <li><a href="#utilizing-existing-libraries-for-partial-dependence-plots" id="toc-utilizing-existing-libraries-for-partial-dependence-plots" class="nav-link" data-scroll-target="#utilizing-existing-libraries-for-partial-dependence-plots"><span class="header-section-number">5.1</span> Utilizing Existing Libraries for Partial Dependence Plots</a></li>
+  <li><a href="#one-way-partial-dependence" id="toc-one-way-partial-dependence" class="nav-link" data-scroll-target="#one-way-partial-dependence"><span class="header-section-number">5.2</span> one-way partial dependence</a></li>
+  <li><a href="#insights-from-the-partial-dependence-plot-analysis" id="toc-insights-from-the-partial-dependence-plot-analysis" class="nav-link" data-scroll-target="#insights-from-the-partial-dependence-plot-analysis"><span class="header-section-number">5.3</span> Insights from the Partial Dependence Plot Analysis</a></li>
+  <li><a href="#exploring-feature-interactions-with-two-way-partial-dependence-plots" id="toc-exploring-feature-interactions-with-two-way-partial-dependence-plots" class="nav-link" data-scroll-target="#exploring-feature-interactions-with-two-way-partial-dependence-plots"><span class="header-section-number">5.4</span> Exploring Feature Interactions with Two-Way Partial Dependence Plots</a></li>
   </ul></li>
-  <li><a href="#bonus-individual-conditional-expectation" id="toc-bonus-individual-conditional-expectation" class="nav-link" data-scroll-target="#bonus-individual-conditional-expectation"><span class="header-section-number">4</span> Bonus: Individual Conditional Expectation</a></li>
+  <li><a href="#bonus-individual-conditional-expectation" id="toc-bonus-individual-conditional-expectation" class="nav-link" data-scroll-target="#bonus-individual-conditional-expectation"><span class="header-section-number">6</span> Bonus: Individual Conditional Expectation 🧊</a>
+  <ul class="collapse">
+  <li><a href="#focused-on-the-individual" id="toc-focused-on-the-individual" class="nav-link" data-scroll-target="#focused-on-the-individual"><span class="header-section-number">6.1</span> Focused on the Individual</a></li>
+  <li><a href="#visual-diagnosis-of-variability" id="toc-visual-diagnosis-of-variability" class="nav-link" data-scroll-target="#visual-diagnosis-of-variability"><span class="header-section-number">6.2</span> Visual Diagnosis of Variability</a></li>
+  <li><a href="#enhanced-model-understanding" id="toc-enhanced-model-understanding" class="nav-link" data-scroll-target="#enhanced-model-understanding"><span class="header-section-number">6.3</span> Enhanced Model Understanding</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -282,13 +297,16 @@ window.Quarto = {
 <span id="cb3-10"><a href="#cb3-10"></a>RANDOM_STATE <span class="op">=</span> <span class="dv">35</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="intro" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="intro"><span class="header-section-number">1</span> Intro</h2>
-<p>Today, we’re examining partial dependence plots, a tool for visualizing the average influence of a feature on a model’s predictions.</p>
-<p>#TODO why would we want to see a partial dependece plot</p>
-<p>To demonstrate this, we’ll utilize a dataset from Scikit-learn, which can be found <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_friedman1.html#sklearn.datasets.make_friedman1">here</a>.</p>
-<p>The formula generating the synthetic dataset is as follows: <span class="math inline">\(y(X) = 10\sin(\pi \cdot X_0 \cdot X_1) + 20 \cdot (X_2 - 0.5)^2 + 10 \cdot X_3 + 5 \cdot X_4 + \text{noise} \cdot N(0, 1)\)</span>.</p>
-<p>I will generate a dataset comprising 7 features, but only 5 will actually influence the output—meaning the remaining two have no predictive value. the generate dataset contains 2000 samples and has a noise factor of 2.</p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>Let’s dive into the world of partial dependence plots (PDPs), powerful visual tools that reveal the average impact a specific feature has on the predictions made by a model.</p>
+</section>
+<section id="why-explore-partial-dependence-plots" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="why-explore-partial-dependence-plots"><span class="header-section-number">2</span> Why Explore Partial Dependence Plots?</h2>
+<p>Visualizing how different features influence model predictions can be crucial for understanding, interpreting, and trusting the decisions made by machine learning models. PDPs help us gain insights into the relationship between the features and the predicted outcomes.</p>
+<p>To illustrate the concept of PDPs, we will use a synthetic dataset from Scikit-learn, available <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_friedman1.html#sklearn.datasets.make_friedman1">here</a>.</p>
+<p>The synthetic dataset is created based on the following formula: <span class="math inline">\(y(X) = 10\sin(\pi \cdot X_0 \cdot X_1) + 20 \cdot (X_2 - 0.5)^2 + 10 \cdot X_3 + 5 \cdot X_4 + \text{noise} \cdot N(0, 1)\)</span>.</p>
+<p>For our demonstration, I will generate a dataset with 7 features. However, it’s important to note that only 5 of these features actually affect the output—this means the other two features do not have any predictive power. The dataset will contain 2000 samples and include a noise level set to 2.</p>
 <div id="cell-5" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -425,8 +443,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>all input features are uniform distributed <span class="math inline">\(U(0,1)\)</span> -&gt; the mean is ~0.5 the target feature has a higher mean of ~14</p>
-<p>The data is fed into a random-forest model, <a href="https://www.linkedin.com/feed/update/urn:li:activity:7169278449243607041?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7169278449243607041%29">it is my favorite go to model</a>, no feature scaling required can handle missing values, can capture non-linearity, has ability to model non-linearity, and fitting can be quite fast.</p>
+<p>The dataset’s input features are uniformly distributed, <span class="math inline">\(U(0,1)\)</span>, which typically means their average value hovers around 0.5. In contrast, our target feature stands out with a much higher average value of approximately 14.</p>
+<p>For our analysis, we’ll be using a random forest model. It’s <a href="https://www.linkedin.com/feed/update/urn:li:activity:7169278449243607041?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7169278449243607041%29">my go-to favorite</a> for several reasons: no need for feature scaling, robustness to missing values, and its proficiency in capturing non-linear relationships. Plus, it has the added advantage of relatively quick fitting times.</p>
 <div id="cell-7" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -442,7 +460,7 @@ window.Quarto = {
 <span id="cb5-10"><a href="#cb5-10"></a>_ <span class="op">=</span> reg.fit(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>to determine the partial dependence (PD) of each feature on the target we need to do some dataset wrangling. lets start with a (very very small) subset of our data taken at random.</p>
+<p>Before examining the partial dependence of each feature on the target, let’s first handle some data preparation. A practical approach is to begin with a small random sample of our data. After working through an end-to-end example using this subset, we can consider applying the same method to the larger dataset.</p>
 <div id="cell-9" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -510,19 +528,19 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="how-to-calculate-the-pdp" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="how-to-calculate-the-pdp"><span class="header-section-number">2</span> how to calculate the PDP</h2>
-<p>In order to calculate the PD of lets say <code>x_0</code> we would need to follow these steps: 1. determine the range of <code>x_0</code> 2. set a grid size, i.e the sampling ratio over the range 3. apply the grid over the data, this will increase the data size by a lot 4. predict with the model using the newly created dataset 5. average out the individual predictions to get a singular result</p>
+<section id="step-by-step-guide-to-calculating-a-partial-dependence-plot-pdp" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="step-by-step-guide-to-calculating-a-partial-dependence-plot-pdp"><span class="header-section-number">3</span> Step-by-Step Guide to Calculating a Partial Dependence Plot (PDP)</h2>
+<p>To determine the partial dependence (PD) of a feature, such as <code>x_0</code>, on the predicted outcome, we follow a structured process:</p>
 <ol type="1">
-<li>range of <code>x_0</code> is between 0 and 1</li>
-<li>lets use a grid size of 7, that means that we create a list of 7 equaly space values between 0 and 1</li>
-<li>for each sample in our dataset we apply the grid of 7 values which means that if we have 3 datapoints to begin we end up with 3*7=21 datapoints. that is an increase in data and for bigger data sets and finer grids this increases very fast</li>
-<li>now we ask the model to make predictions, this is inference and not training so the computational cost is reasonable</li>
-<li>perform a group by on the sampled grid and apply a average aggregation function</li>
-<li>the result is the partial dependence of <code>x_0</code> and the target variable</li>
+<li><p><strong>Identify the Range of the Feature</strong>: Ascertain the range within which the feature <code>x_0</code> varies. For most datasets, this would be the minimum and maximum values that <code>x_0</code> can take.</p></li>
+<li><p><strong>Determine the Grid Size</strong>: Decide on a grid size, which essentially is the number of points or the sampling resolution across the feature’s range.</p></li>
+<li><p><strong>Expand the Dataset Using the Grid</strong>: Implement the grid across the dataset. This step significantly increases the size of the dataset because for each original data point, we now have multiple points covering the entire grid.</p></li>
+<li><p><strong>Generate Predictions</strong>: Use the model to predict outcomes on this augmented dataset. These predictions are solely for inference, which generally has a lower computational cost.</p></li>
+<li><p><strong>Compute the Average</strong>: Take the mean of the predictions corresponding to each value on the grid. This average is what gives us the partial dependence value at each point.</p></li>
 </ol>
-<section id="determine-the-range-of-x_0" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="determine-the-range-of-x_0"><span class="header-section-number">2.1</span> determine the range of <code>x_0</code></h3>
+<p>Through this method, we can illustrate how changes in <code>x_0</code> influence the model’s predictions, regardless of the values of other features. This visual representation helps in understanding the behavior and decision-making process of complex models.</p>
+<section id="identify-the-range-of-the-feature" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="identify-the-range-of-the-feature"><span class="header-section-number">3.1</span> Identify the Range of the Feature</h3>
 <div id="cell-12" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -534,15 +552,15 @@ max   1.00
 Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
-<p>the range of <code>x_0</code> is between zero and one, in this case we are taking the entire region but you could also restrict it to the 90% percentile.</p>
+<p>When calculating the partial dependence of <code>x_0</code>, which ranges from zero to one, you have the option to consider the entire range of values <code>x_0</code> can take or focus on a specific region, such as the 90th percentile. The latter approach eliminates potential outliers that may skew the PD calculation.</p>
 </section>
-<section id="set-a-grid-size-i.e-the-sampling-ratio-over-the-range" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="set-a-grid-size-i.e-the-sampling-ratio-over-the-range"><span class="header-section-number">2.2</span> set a grid size, i.e the sampling ratio over the range</h3>
-<p>In this case a rather small grid size of 7 is chosen. that means over the range of 0 to 1 we select 7 equaly spaced datapoints</p>
+<section id="determine-the-grid-size" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="determine-the-grid-size"><span class="header-section-number">3.2</span> Determine the Grid Size</h3>
+<p>For this particular analysis, we’re opting for a modest grid size of 7. This means we’ll create a sequence of 7 points that are evenly spaced across the feature <code>x_0</code> range of 0 to 1.</p>
 </section>
-<section id="apply-the-grid-over-the-data" class="level3" data-number="2.3">
-<h3 data-number="2.3" class="anchored" data-anchor-id="apply-the-grid-over-the-data"><span class="header-section-number">2.3</span> apply the grid over the data</h3>
-<p>by utilizing the <code>np.linspace()</code> function we can easily create the grid, and create the required dataset with a cross join. for the people that know cross joins blow up your data pretty fast as it scales quadraticly. so our initial 3 datapoints together with the grid size increase the data count to $ 3 * 7 = 21 $ the newly created column is the feature for which we want to calculate the pd, in this case <code>x_0_sample</code></p>
+<section id="expand-the-dataset-using-the-grid" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="expand-the-dataset-using-the-grid"><span class="header-section-number">3.3</span> Expand the Dataset Using the Grid</h3>
+<p>Using the <code>np.linspace()</code> function in Python, we can easily generate our grid. This function creates an array of evenly spaced values over a specified interval. Once we have our grid, we can augment our dataset through a cross join operation. For those familiar with SQL, it’s common knowledge that cross joins can rapidly increase the size of your data. With 3 original data points and a grid size of 7, we increase our data count to ($ 3 = 21$ ). In this expanded dataset, the new column <code>x_0_sample</code> represents the values for <code>x_0</code> across which we want to compute the partial dependence.</p>
 <div id="cell-15" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -810,9 +828,9 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </section>
-<section id="predict-with-the-model" class="level3" data-number="2.4">
-<h3 data-number="2.4" class="anchored" data-anchor-id="predict-with-the-model"><span class="header-section-number">2.4</span> predict with the model</h3>
-<p>for our new dataset we ask the model to make a prediction for each observations, so the original model is asked to create a predictions for each of the newly created 21 data points.</p>
+<section id="generate-predictions" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="generate-predictions"><span class="header-section-number">3.4</span> Generate Predictions</h3>
+<p>With our expanded dataset, now consisting of 21 observations, we move forward by utilizing our model to generate predictions for each observation. In essence, we ask the original model to provide predictions for every new data point that we’ve added.</p>
 <div id="cell-17" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1106,9 +1124,9 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </section>
-<section id="average-out-the-individual-predictions" class="level3" data-number="2.5">
-<h3 data-number="2.5" class="anchored" data-anchor-id="average-out-the-individual-predictions"><span class="header-section-number">2.5</span> average out the individual predictions</h3>
-<p>the next step is the aggregate the results by taking the average. this is achieved by taking the columns <code>x_0_sample</code> , <code>y_pred</code> and grouping by <code>x_0_sample</code> and applying mean aggregation.</p>
+<section id="compute-the-average" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="compute-the-average"><span class="header-section-number">3.5</span> Compute the Average</h3>
+<p>After obtaining predictions, we aggregate results by selecting <code>x_0_sample</code> and <code>y_pred</code>, grouping by <code>x_0_sample</code>, and applying a mean aggregation function to reveal the average impact of changes in <code>x_0</code> on model predictions.</p>
 <div id="cell-19" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1173,7 +1191,8 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>this is the dataframe that shows the average dependence of the target variable with respect to the feature <code>x_0</code> in this case. increasing the value of <code>x_0</code> also yields an increase of the target variable. as can be seen in the plot below. however keep in mind that this is done with a subset of the data on a very coarse grid. if more samples are included and the size of the grid is increased a more detailed dependence will emerge.</p>
+<p>The dataframe shows the average impact of feature <code>x_0</code> on the target variable, with an observable increase in the target variable as <code>x_0</code> values rise, as depicted below.</p>
+<!-- Keep in mind that this analysis is based on a limited dataset and coarse grid. To gain a more detailed understanding of the relationship, consider incorporating additional samples from the original dataset and refining the grid for a more nuanced visualization of the dependency between `x_0` and the target variable. Such enhancements can offer deeper insights into how the model's changes for inputs of `x_0`. -->
 <div id="cell-21" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1192,8 +1211,16 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>the plot above shows that the response of the model is postive with respect to an increase in the value of feature <code>x_0</code> however this is done with just three datapoints,If we use the full dataset of 2000 samples and a sampling grid of 127 that would result in a final dataset of <span class="math inline">\(2000 * 128 = 256.000\)</span> samples. yikes that explodes fast and this is just for one feature. however we do have the ability to get a more accurate picture of the partial dependece of the <code>x_0</code> variable.</p>
-<p>below you can see the code, i placed two comments to indicate where the changes have been made.</p>
+</section>
+</section>
+<section id="interpreting-the-partial-dependence-plot" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="interpreting-the-partial-dependence-plot"><span class="header-section-number">4</span> Interpreting the Partial Dependence Plot</h2>
+<p>The plot shows that the model responds positively to increases in <code>x_0</code>. However, this analysis is based on only three observations. To gain a more precise understanding of the relationship between <code>x_0</code> and the target variable, consider utilizing the full dataset of 2000 samples along with a finer grid of 128 points. This expansion results in <span class="math inline">\(2000 * 128 = 256,000\)</span> data points, illustrating the significant data growth when examining partial dependence for just one feature.</p>
+<p>By using more data and a refined grid, we can generate a more accurate representation of the <code>x_0</code> variable’s relationship with the target variable.</p>
+</section>
+<section id="implementation-in-code" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="implementation-in-code"><span class="header-section-number">5</span> Implementation in Code</h2>
+<p>Below is the code snippet that will generate this comprehensive dataset. Note the comments indicating where alterations are made to accommodate the full dataset and the finer grid size.</p>
 <div id="cell-23" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1231,15 +1258,19 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>the same picture as before emerges however this time it includes a little more detail, an increaase in <code>x_0</code> also yields an increase in the target variable to an almost monotonic level.</p>
+<p>After utilizing the full dataset of 256,000 samples and applying a more refined grid of 127 points, the resulting plot confirms our earlier findings that as the value of <code>x_0</code> increases, so does the target variable, and this relationship appears to be almost monotonic.</p>
+<p>With the increased data resolution, we now have a more granular view confirming and clarifying the positive correlation between <code>x_0</code> and the target variable. This level of detail is invaluable for model interpretation and can guide decisions on feature importance and model adjustments. It underscores the capability of partial dependence plots to provide deeper insights into the model’s behavior and help pinpoint how specific features drive the predictions.</p>
+<section id="utilizing-existing-libraries-for-partial-dependence-plots" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="utilizing-existing-libraries-for-partial-dependence-plots"><span class="header-section-number">5.1</span> Utilizing Existing Libraries for Partial Dependence Plots</h3>
+<p>When it comes to practical applications in data science, it’s often more efficient to leverage existing tools and libraries rather than creating custom code from scratch. This is particularly true for partial dependence plots (PDPs), where coding our own routine can be complex and time-consuming.</p>
+<p>Scikit-learn, a widely-used library in the machine learning community, offers a convenient and robust implementation of partial dependence with its <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html#sklearn.inspection.partial_dependence">partial_dependence</a> function. This can save a substantial amount of effort and helps ensure that our calculations are accurate and aligned with best practices.</p>
+<p>Additionally, for those who are already utilizing the SHAP library to compute Shapley values—which provide insight into the contribution of each feature to the prediction—there’s good news. SHAP also includes functionality for generating partial dependence plots with its <a href="https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html">shap.plots.partial_dependence</a> feature. This is extremely beneficial as it integrates seamlessly with other SHAP-based interpretability techniques, offering a consistent and comprehensive suite of tools for model explanation.</p>
+<p>These existing implementations not only streamline the process but also ensure that you’re taking advantage of the latest methodologies and optimizations in the field. Whether you’re conducting exploratory data analysis or presenting findings to stakeholders, these tools can greatly enhance the efficiency and clarity of your model interpretation efforts.</p>
 </section>
-</section>
-<section id="scikit-learn-implementation" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="scikit-learn-implementation"><span class="header-section-number">3</span> Scikit-learn implementation</h2>
-<p>in practise we would not code our own PDP routinge but first look if there already is a lib that does the job and scikit-learn has an implementation of a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html#sklearn.inspection.partial_dependence">partial dependence</a> and also the <a href="https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html">SHAP</a> packages has a PDP option, super handy if you are already using it to get shapley values.</p>
-<section id="one-way-partial-dependence" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="one-way-partial-dependence"><span class="header-section-number">3.1</span> one-way partial dependence</h3>
-<p>by using the scikit-learn function we can easily create plots for our entire dataset. it is just with a one-liner 😊.</p>
+<section id="one-way-partial-dependence" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="one-way-partial-dependence"><span class="header-section-number">5.2</span> one-way partial dependence</h3>
+<p>The beauty of using scikit-learn’s built-in functions lies in their simplicity and power. Generating partial dependence plots for your entire dataset can indeed be as straightforward as a single line of code. Scikit-learn takes care of the heavy lifting involved in computing the partial dependence and plotting it. This function will automatically handle the grid creation, predictions, and averaging needed to generate the PDP. The resulting plot is a powerful visual tool that can instantly convey how changes in the specified feature(s) affect the model’s output, facilitating a better understanding of the model’s behavior.</p>
+<p>This ease of use, combined with the robustness of scikit-learn, makes it a go-to choice for practitioners looking to interpret their machine learning models without getting bogged down in the details of implementation. 😊</p>
 <div id="cell-28" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1259,11 +1290,30 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>for the plot above we can clearly see that <code>x_6</code> and <code>x_5</code> do not meaningfully contribute to the output of the model. so changes one of those two will not change the predicted target value. this is also logical because these two features are random noise. <code>x_2</code> has the shape of a bathtub and the mean of 0.5 yields the lowest target outcome. <code>x_0</code> and <code>x_1</code> show a steady monotonic increase and plateau for the higher input values, after which the impact on the target is diminished. for the remaining two features <code>x_3</code> and <code>x_4</code> show that an increase in the feature yields a higher outcome of the target, also a big jump in output can be seen at around 0.4 for <code>x_3</code> adn 0.6 for <code>x_4</code></p>
 </section>
-<section id="two-way-partial-dependence" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="two-way-partial-dependence"><span class="header-section-number">3.2</span> two-way partial dependence</h3>
-<p>It is possible to adapt this approach and get the PDP of two features with respect to the target variable. the trick is to create a sample grid that is the product of the two features. but again this will increase the number of datapoints that need to be inferenced. however now you can obtain insights into the feature interactions and the results it has on the target variable.</p>
+<section id="insights-from-the-partial-dependence-plot-analysis" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="insights-from-the-partial-dependence-plot-analysis"><span class="header-section-number">5.3</span> Insights from the Partial Dependence Plot Analysis</h3>
+<p>The partial dependence plots provide a wealth of insights into how different features impact the model’s predictions. Based on the plot, we can make several observations:</p>
+<ul>
+<li><p><strong>Features <code>x_6</code> and <code>x_5</code></strong>: These features appear to have no meaningful impact on the model’s output. Variations in <code>x_6</code> or <code>x_5</code> do not significantly alter the predicted target value. This aligns with our earlier understanding that these features represent random noise, thus confirming their lack of predictive power.</p></li>
+<li><p><strong>Feature <code>x_2</code></strong>: The partial dependence plot for <code>x_2</code> resembles the shape of a bathtub, indicating that the extremes of its value range lead to higher predictions for the target variable, while a mean value of 0.5 correlates with the lowest target outcome. This suggests a non-linear relationship where both low and high values of <code>x_2</code> increase the target value, with a trough in the middle.</p></li>
+<li><p><strong>Features <code>x_0</code> and <code>x_1</code></strong>: These features exhibit a steady monotonic increase in their impact on the target variable, which begins to plateau at higher input values. This plateau suggests that beyond a certain point, further increases in <code>x_0</code> or <code>x_1</code> have a diminished effect on the prediction.</p></li>
+<li><p><strong>Remaining Features <code>x_3</code> and <code>x_4</code></strong>: The plots for <code>x_3</code> and <code>x_4</code> indicate that higher values of these features generally lead to higher predicted outcomes for the target variable. Notably, there’s a significant jump in the target prediction at around 0.4 for <code>x_3</code> and 0.6 for <code>x_4</code>, highlighting specific values where there might be a threshold effect or a strong non-linear influence.</p></li>
+</ul>
+<p>These insights from the partial dependence plots can guide further data analysis and model refinement. By understanding how each feature affects the target, we can prioritize features for engineering, adjust the model to better capture non-linear relationships, and potentially simplify the model by removing non-contributory noise features.</p>
+</section>
+<section id="exploring-feature-interactions-with-two-way-partial-dependence-plots" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="exploring-feature-interactions-with-two-way-partial-dependence-plots"><span class="header-section-number">5.4</span> Exploring Feature Interactions with Two-Way Partial Dependence Plots</h3>
+<p>Partial dependence plots aren’t limited to individual features; they can also be extended to explore the interactions between two features and their joint effect on the target variable. This two-dimensional analysis, known as a two-way partial dependence plot, provides a deeper understanding of how feature pairs contribute to the model’s predictions. Here’s how you would approach creating a two-way PDP:</p>
+<ol type="1">
+<li><p><strong>Select Two Features</strong>: Choose the two features you want to analyze for interaction.</p></li>
+<li><p><strong>Create a Sample Grid</strong>: Construct a grid that is the Cartesian product of the individual grids for the two selected features. This means if you have 7 points for <code>x_0</code> and 7 for <code>x_1</code>, your sample grid will have 49 points representing all combinations of <code>x_0</code> and <code>x_1</code>.</p></li>
+<li><p><strong>Expand the Dataset</strong>: Just as with the one-way PDP, you now apply this grid to the dataset. Each original datapoint is replaced by the set of new points from the grid, dramatically increasing the dataset size.</p></li>
+<li><p><strong>Generate Predictions</strong>: Use the model to predict the target variable for this comprehensive grid, taking into account every combination of the two features.</p></li>
+<li><p><strong>Compute the Average</strong>: By averaging the predictions across the grid for each combination, you can visualize the effect of varying both features simultaneously.</p></li>
+</ol>
+<p>The result is a contour plot or a three-dimensional surface plot that shows how changes in the two features together impact the predicted outcome. This gives insight into whether the features act independently on the target or if there are interaction effects—situations where the influence of one feature on the target depends on the value of the other feature.</p>
+<p>Two-way partial dependence plots can help identify synergies or redundancies between features, informing decisions about feature engineering or model selection to better capture complex relationships within the data.</p>
 <div id="cell-31" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1285,9 +1335,20 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </section>
 </section>
-<section id="bonus-individual-conditional-expectation" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="bonus-individual-conditional-expectation"><span class="header-section-number">4</span> Bonus: Individual Conditional Expectation</h2>
-<p>instead of performing a aggregation and plotting the result, theinndividual observations can alos be used. in the plot each blue line is an original observation were the value of <code>x_3</code> has taken over by the sampling grid. this allows you to inspect the individual datapoints. in this case we have a well beheaved dataset were all points are in agreement however this plot might give you some insights if performance is lacking for a couple of datapoints. it well may be that if the feature values is increased the target value goes up for one group and goes down for another group.</p>
+<section id="bonus-individual-conditional-expectation" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="bonus-individual-conditional-expectation"><span class="header-section-number">6</span> Bonus: Individual Conditional Expectation 🧊</h2>
+<p>Individual Conditional Expectation (ICE) plots diverge from the average effect shown in PDPs by tracing the response of each individual observation to changes in a feature. Here’s the distilled essence of ICE plots:</p>
+<section id="focused-on-the-individual" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="focused-on-the-individual"><span class="header-section-number">6.1</span> Focused on the Individual</h3>
+<p>Each line in an ICE plot represents the prediction path for a single observation as the feature of interest varies. This allows us to inspect how specific instances react to feature changes individually, rather than in aggregate.</p>
+</section>
+<section id="visual-diagnosis-of-variability" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="visual-diagnosis-of-variability"><span class="header-section-number">6.2</span> Visual Diagnosis of Variability</h3>
+<p>ICE plots can reveal if different observations respond inconsistently to a feature change, showing increases for some and decreases for others. This can pinpoint performance issues not visible in PDPs.</p>
+</section>
+<section id="enhanced-model-understanding" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="enhanced-model-understanding"><span class="header-section-number">6.3</span> Enhanced Model Understanding</h3>
+<p>By identifying how subsets of data are influenced by feature changes, ICE plots offer detailed insights into model behavior, helping to refine predictions and address potential issues at the individual level.</p>
 <div id="cell-33" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -1312,6 +1373,7 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
