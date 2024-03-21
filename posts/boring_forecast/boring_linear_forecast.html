@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Joost de Theije">
+<meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2023-03-05">
 
 <title>hyper-shotgun - Boring linear forecast</title>
@@ -159,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Boring linear forecast</h1>
-            <p class="subtitle lead">improving performance by adding some dummies</p>
+            <p class="subtitle lead">Improving Performance by Adding Some Dummies</p>
                       </div>
   </div>
     
@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Joost de Theije </p>
+               <p>Joost de Theije + LLM </p>
             </div>
     </div>
       
@@ -180,9 +180,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">April 20, 2024</p>
+      </div>
+    </div>
       
     </div>
     
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      Discover how the simple addition of dummy variables can transform a linear forecast from mundane to insightful. This article explores the significant impact of encoding seasonality into your models and provides a step-by-step guide on improving forecast accuracy.
+    </div>
+  </div>
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -222,10 +234,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="introduction" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2</span> Introduction</h2>
-<p>Linear regression is a statistical model that can be used to determine the linear relationship between variables, most of the time this is seen as a beginners model that is not particularly useful, and most of the time it is discarded and replaced by a shiny neural net or a fancy gradient-boosted model.</p>
-<p>the nice feature of linear regression is that the direction and magnitude of the relationship can be estimated with the help of linear regression. It is used in many fields including but not limited to Economics, Finance, Social science, etc. The popularity of this model is model is likely due to the fact that most systems have built-in functionality that enables the training of linear models, they are also very cheap/fast to train, and one can also determine that the model has optimal parameters. all these features make linear regression an excellent model to start with.</p>
-<p>To extend the capabilities of the linear model for time series forecasting, dummy variables can be utilized. These dummies can provide additional information about the relationship over time, can help the model to identify seasonality over time, and also gauge the effect of one-off events, examples are price reductions or natural disasters.</p>
-<p>For instance, we can create a dummy to identify certain datetime features such as what the month is or whether a particular day is a weekday or a weekend.</p>
+<p>Linear regression is a fundamental statistical model for determining linear relationships between variables, commonly used in Economics, Finance, and Social Sciences. Despite being considered basic, its ability to estimate direction and magnitude makes it valuable. The popularity of linear regression arises from its widespread availability, affordability, and ease of identifying optimal parameters.</p>
+<p>For time series forecasting, dummy variables can be employed to expand the model’s capabilities. These dummies offer insights into temporal relationships by capturing seasonality and identifying one-off events such as price reductions or natural disasters. For instance, we can create dummies for specific datetime features like month or weekday/weekend status.</p>
 </section>
 <section id="imports" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="imports"><span class="header-section-number">3</span> Imports</h2>
@@ -242,10 +252,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="reading-in-the-data" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="reading-in-the-data"><span class="header-section-number">4</span> Reading in the data</h2>
-<p>For this example, we will be using a dataset form the prophet package. I have selected this one because, in the prophet documentation, this dataset is used in the section “Seasonality, Holiday Effects, And Regressors” so it seems fitting to use it, to demonstrate the usefulness of seasonal dummies. The prophet <a href="https://facebook.github.io/prophet/docs/quick_start.html">docs</a> describes the dataset in the following way:</p>
+<p>For this example, we’ll utilize the dataset from the Prophet package. The dataset is described in the Prophet docs as follows:</p>
 <blockquote class="blockquote">
-<p>As an example, let’s look at a time series of the log daily page views for the Wikipedia page for Peyton Manning. We scraped this data using the Wikipedia trend package in R. Peyton Manning provides a nice example because it illustrates some of Prophet’s features, like multiple seasonality, changing growth rates, and the ability to model special days (such as Manning’s playoff and Superbowl appearances).</p>
+<p>As an illustration, let’s examine a time series of the log daily page views for the Wikipedia page about Peyton Manning. We obtained this data using the Wikipedia trend package in R. Peyton Manning offers an excellent example because it demonstrates some of Prophet’s features such as multiple seasonality, changing growth rates, and the ability to model special days (like his playoff and Superbowl appearances).</p>
 </blockquote>
+<p><a href="https://facebook.github.io/prophet/docs/quick_start.html">Link to the documentation</a></p>
 <div id="cell-12" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -256,7 +267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5"></a>df_in <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2012"</span>)]  <span class="co"># selecting data after 2012</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>It is always nice to see what we are working with so let us plot the data over time to see what we visually can extract from the plot. we are looking for patterns over time and other behavior and/or pattern that we can exploit.</p>
+<p>To gain a better understanding of our dataset, let’s visualize it over time and identify any observable trends or patterns. This visualization provides insights into the patterns and trends in the data, which we can then try to incorporate into our model using seasonal dummies.</p>
 <div id="cell-14" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
@@ -279,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>I have selected data from 2012 onwards, this should be enough to test drive the seasonal dummies. The first thing that I notice is that there is a dip around months 06 and 07. In early August teams play so <a href="https://en.wikipedia.org/wiki/NFL_preseason">exhibition games</a> before the start of the actual season.</p>
+<p>I’ve selected data spanning from 2012 for analyzing seasonal dummies. The initial observation is that there exists a dip around months 6 and 7. Early August hosts NFL <a href="https://en.wikipedia.org/wiki/NFL_preseason">exhibition games</a>, preceding the start of the regular football season.</p>
 <p>Also, we can observe a pattern over the year, it starts high then dips, and then and high again. This can be seen for the other years as well, so there is some repeating seasonality. Let us continue and train our first models. Starting with a simple ordinary linear regression and then adding dummies to see if they improve the performance of the model.</p>
 </section>
 <section id="train-test-split" class="level2" data-number="5">
@@ -292,7 +303,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-3"><a href="#cb4-3"></a>df_test <span class="op">=</span> df_in[(df_in[<span class="st">"ds"</span>] <span class="op">&gt;</span> <span class="st">"2015"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>To gauge the performance of the model the data is split in two parts, the train data from 2012 up to 2015 and the test data everything after 2015. The model will only see the train data and is asked to create a prediction for the test data, after which we will calculate the perfomance with the predictions and the true observations.</p>
+<p>To evaluate the performance of the model, let’s split the dataset into two parts: training data (from 2012 to 2015) and testing data (everything after 2015). The model will only be exposed to the training data and expected to generate predictions for the testing data. Once the predictions are obtained, we’ll calculate the performance using these predictions and the true observations.</p>
 <div id="cell-19" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
@@ -336,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-5"><a href="#cb6-5"></a>y_test <span class="op">=</span> df_test[<span class="st">"y"</span>].to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Shaping and converting the data so that we can fit the linear model. In this case, we are converting the date columns into an ever-increasing integer.</p>
+<p>Preprocessing the data to prepare it for fitting the linear model: In this instance, we convert the date columns into a sequence of ever-increasing integers.</p>
 <div id="cell-23" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
@@ -346,8 +357,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-4"><a href="#cb7-4"></a>y_pred <span class="op">=</span> linear.predict(X<span class="op">=</span>X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Fitting the linear model is very fast, around 4 milliseconds on my machine, and yes, I know the data volume is low(actually for time series it is pretty decent), but this allows me to fit 1000 models in 4 seconds. So, we can make predictions on 1000 different time series, all in the time it takes to take a sip of coffee☕️.</p>
-<p>Anyways lets us visually inspect the results of the model, by plotting all the components (train, test, predictions) that we have gathered. Also, let us calculate two error metrics <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error">mse</a> and <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error">mae</a> that way we can quantify the performance of the model.</p>
+<p>The linear model is swift to fit, taking approximately 4 milliseconds on my machine. Given the modest data size (though it’s significant for time series), this enables us to fit 1000 models within the span of a single coffee sip☕️.</p>
+<p>Let’s visualize the model results by plotting all relevant components: train data, test data, and predictions. Additionally, we will calculate two error metrics – Mean Squared Error (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html#sklearn.metrics.mean_squared_error">mse</a>) and Mean Absolute Error (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html#sklearn.metrics.mean_absolute_error">mae</a>) – to quantify the performance of the model.</p>
 <div id="cell-25" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
@@ -390,7 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The model is just a boring straight line, but what did you expect with a linear model ?! The green line is passing through the orange blob more or less, and intuitively it kind of moves in the right direction. However, it doesn’t capture the seasonality or other patterns of the train set. The two error metrics mse and mae are both around 0.6. this in itself does not say much, but we can use this as the ‘benchmark’ and try to improve on this with the addition of the dummies.</p>
+<p>The linear model is represented by a plain straight line, as expected from a simple linear regression model. The green line passes through the orange data points roughly, moving in an intuitively correct direction. However, it fails to capture seasonality or other patterns present in the training set. With Mean Squared Error (MSE) and Mean Absolute Error (MAE) values around 0.6, we’ll use this as a baseline for further improvement by incorporating dummies.</p>
 <div id="cell-27" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-stdout">
 <pre><code>mean squared error  = 0.617
@@ -400,8 +411,8 @@ mean absolute error = 0.615</code></pre>
 </section>
 <section id="adding-dummies" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="adding-dummies"><span class="header-section-number">7</span> Adding dummies</h2>
-<p>Let us add some dummies for the months and see if we can improve the performance of the model visually and on the metrics. For each month we create a column that can either have the value of <code>0</code> or <code>1</code>. if the value is <code>1</code> then that row corresponds to that particular month, in this way we are actively encoding this knowledge into the model. in this way the model can learn the magnitude and direction of each month and apply that to future predictions. at least that is the idea, let us test that!</p>
-<div id="cell-30" class="cell" data-execution_count="12">
+<p>Let’s introduce dummy variables for the months to see whether we can enhance our model’s performance, both visually and numerically. We’ll create a separate column for each month, where a <code>1</code> indicates the occurrence of that month, and a <code>0</code> signifies its absence. By doing so, we embed temporal information directly into the model, allowing it to discern the specific impacts of each month and adjust future predictions accordingly. That’s the theory—now, let’s put it to the test!</p>
+<div id="cell-29" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># creating dummies for the months</span></span>
@@ -560,9 +571,8 @@ mean absolute error = 0.615</code></pre>
 </div>
 </div>
 </div>
-<p>In the code block above we are adding the dummies for the month to the data. In this case <code>month_1</code> is jan and <code>month_12</code> is dec.</p>
-<p>Next up we are training the model with the added dummies and plotting the results next to the model without the dummies.</p>
-<div id="cell-32" class="cell" data-execution_count="13">
+<p>We’ve added month dummies to our data—<code>month_1</code> for January through <code>month_12</code> for December. Next, we’ll train our model with these dummies and compare performance against the original model without them.</p>
+<div id="cell-31" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># create the pipeline and fit pipeline</span></span>
@@ -620,8 +630,8 @@ mean absolute error = 0.615</code></pre>
 </div>
 </div>
 </div>
-<p>Visually the forecast already looks a lot better. It follows the peaks and valleys of the time-series, and it captures the overall trend better. this is also reflected when we look at the error metrics and the improvement factor that we have achieved. the mean squared error improved with a factor of 1.89 and the mean absolute error improved with a factor of 1.54. That is impressive for just adding a bunch of ones and zeros.</p>
-<div id="cell-34" class="cell" data-execution_count="14">
+<p>Visually, our forecast has improved significantly. It now mirrors the ups and downs of the time series more closely and captures the overall trend more accurately. These enhancements are also evident in the error metrics, with the mean squared error improving by a factor of 1.89 and the mean absolute error by a factor of 1.54. Such substantial gains from simply incorporating ones and zeros are indeed impressive.</p>
+<div id="cell-33" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="bu">print</span>(<span class="ss">f"mean squared error  = </span><span class="sc">{</span>mse_dummies<span class="sc">:.3}</span><span class="ss">"</span>)</span>
@@ -633,18 +643,18 @@ mean absolute error = 0.615</code></pre>
 <span id="cb12-7"><a href="#cb12-7"></a><span class="bu">print</span>(<span class="ss">f"improvement factor mea month dummies -&gt; </span><span class="sc">{</span>mae<span class="op">/</span>mae_dummies<span class="sc">:.3}</span><span class="ss">x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>mean squared error  = 0.325
-improvement factor mse month dummies -&gt; 1.9x
+<pre><code>mean squared error  = 0.323
+improvement factor mse month dummies -&gt; 1.91x
 -------------------------------------------------------------------------------
-mean absolute error = 0.4
-improvement factor mea month dummies -&gt; 1.54x</code></pre>
+mean absolute error = 0.397
+improvement factor mea month dummies -&gt; 1.55x</code></pre>
 </div>
 </div>
 </section>
 <section id="inspecting-the-seasonality" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="inspecting-the-seasonality"><span class="header-section-number">8</span> Inspecting the seasonality</h2>
-<p>Now that we have encoded the information about the seasonality in the model, this also allows us to inspect that seasonality by itself. this would give us some insight into the inner workings of the underlying time series model. first we access the coefficients of the linear model and put them into a separate dataframe. then we need to scale them so that the relative difference is more apparent. looking at the raw coefficients would not yield any information as the scale is not relatable to the original problem.</p>
-<div id="cell-37" class="cell" data-execution_count="15">
+<p>Now that we have encoded the information about the seasonality in the model, we can inspect that seasonality on its own. This will give us some insight into the inner workings of the underlying time series model. First, we access the coefficients of the linear model and put them into a separate DataFrame. Then, we need to scale them so that the relative difference is more apparent. Looking at the raw coefficients would not yield any meaningful information, as the scale is not relatable to the original problem.</p>
+<div id="cell-35" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># pull coefs into a seperate df, to inspect the seasonality</span></span>
@@ -665,7 +675,7 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <span id="cb14-16"><a href="#cb14-16"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-38" class="cell" data-execution_count="16">
+<div id="cell-36" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>chart <span class="op">=</span> sns.barplot(</span>
@@ -688,26 +698,30 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 </div>
 </div>
 </div>
-<p>Now we have a beautiful overview of the seasonality over the year. we can clearly see a dip in the middle of the year and a significant uptick in the month of January. in the first week of February, the super bowl is played which is a major factor in the traffic to the wiki page. Also, we noticed that there was a dip in the middle of the year which we can also clearly see at the <code>month_6</code> mark.</p>
+<p>We have a clear picture of the seasonality throughout the year. There is a dip in the middle of the year, followed by a significant uptick in January. This can be attributed to the Super Bowl, which is played in the first week of February and drives a lot of traffic to the wiki page. The dip in the middle of the year is also evident at the <code>month_6</code> mark.</p>
 </section>
 <section id="recap" class="level2" data-number="9">
 <h2 data-number="9" class="anchored" data-anchor-id="recap"><span class="header-section-number">9</span> Recap</h2>
-<p>In this blog post I have demonstrated that the performance of a simple linear regression for time series forecasting can be improved by a factor of 1.54 up to 1.89 by simply adding dummy variables for the months. the nice thing about this is that the linear regression is available in most systems that have some kind of analytical capability (yes even in <a href="https://exceljet.net/functions/linest-function">excel</a>) and adding the dummies is so simple that you can even do it in a SQL server, the added benefit of this all is that the fitting of the model is quick, therefore you can retrain the model monthly 😉, weekly, daily, hourly.</p>
+<p>In this blog post, I have demonstrated that the performance of a simple linear regression for time series forecasting can be improved by a factor of 1.54 up to 1.89 by simply adding dummy variables for the months. The nice thing about this approach is that the linear regression is available in most systems with analytical capabilities (yes, even in <a href="https://exceljet.net/functions/linest-function">Excel</a>), and adding the dummy variables is so simple that you can do it in a SQL server. The added benefit is that the model fitting is quick, allowing you to retrain the model monthly, weekly, daily, or even hourly.</p>
 </section>
 <section id="encore" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="encore"><span class="header-section-number">10</span> Encore</h2>
 <p>What if we were to dummies not just for the months, but also for other datetime features and really turn it up to <a href="https://www.youtube.com/watch?v=4xgx4k83zzc">eleven</a></p>
 <p><img src="artifacts/all_the_things.jpg" class="img-fluid"></p>
-<p>Let us create dummies for the following datetime features:</p>
+<p>Sure, let’s create the dummy variables for the given datetime features and then apply the Elastic Net linear model.</p>
+<p>First, let’s create the dummy variables for the datetime features:</p>
 <ul>
-<li>month</li>
-<li>week</li>
-<li>dayofweek</li>
-<li>is_weekend</li>
-<li>quarter</li>
+<li><strong>Month</strong>: This feature will create 12 dummy variables, one for each month.</li>
+<li><strong>Week</strong>: This feature will create 52 dummy variables, one for each week of the year.</li>
+<li><strong>Day of the Week</strong>: This feature will create 7 dummy variables, one for each day of the week.</li>
+<li><strong>Is Weekend</strong>: This feature will create 2 dummy variables, one for weekdays and one for weekends.</li>
+<li><strong>Quarter</strong>: This feature will create 4 dummy variables, one for each quarter of the year.</li>
 </ul>
-<p>when converting this to dummies it will result in a tremendous number of extra features and therefore we will apply a <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html">Elasticnet</a> linear model. Usually, this type of model can handle lots of features better than an ordinary linear regression because of the regularization, this will be left as an exercise for the reader.</p>
-<div id="cell-45" class="cell" data-execution_count="17">
+<p>By creating these dummy variables, we will end up with a large number of features, which can lead to overfitting. This is where the Elastic Net linear model comes in handy.</p>
+<p>The Elastic Net is a regularized linear regression model that combines the L1 (Lasso) and L2 (Ridge) regularization techniques. This helps to handle the large number of features and prevent overfitting. The Elastic Net model will automatically select the most important features and shrink the coefficients of the less important ones towards zero.</p>
+<p>As an exercise, you can use the <code>sklearn.linear_model.ElasticNetCV</code> class to train the Elastic Net model on your dataset. This class will automatically tune the hyperparameters (alpha and l1_ratio) using cross-validation, which can help to find the optimal balance between the L1 and L2 regularization.</p>
+<p>Remember to split your dataset into training and testing sets, and evaluate the performance of the Elastic Net model on the test set. This will give you a good idea of how well the model can handle the large number of features created by the dummy variables.</p>
+<div id="cell-42" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># creating dummies for the months</span></span>
@@ -758,36 +772,36 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">ds</th>
-<th data-quarto-table-cell-role="th">week_2</th>
-<th data-quarto-table-cell-role="th">week_3</th>
-<th data-quarto-table-cell-role="th">week_4</th>
-<th data-quarto-table-cell-role="th">week_5</th>
-<th data-quarto-table-cell-role="th">week_6</th>
-<th data-quarto-table-cell-role="th">week_7</th>
-<th data-quarto-table-cell-role="th">week_8</th>
-<th data-quarto-table-cell-role="th">week_9</th>
-<th data-quarto-table-cell-role="th">week_10</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">month_9</th>
-<th data-quarto-table-cell-role="th">month_10</th>
-<th data-quarto-table-cell-role="th">month_11</th>
-<th data-quarto-table-cell-role="th">month_12</th>
+<th data-quarto-table-cell-role="th">quarter_2</th>
+<th data-quarto-table-cell-role="th">quarter_3</th>
+<th data-quarto-table-cell-role="th">quarter_4</th>
 <th data-quarto-table-cell-role="th">dayofweek_1</th>
 <th data-quarto-table-cell-role="th">dayofweek_2</th>
 <th data-quarto-table-cell-role="th">dayofweek_3</th>
 <th data-quarto-table-cell-role="th">dayofweek_4</th>
 <th data-quarto-table-cell-role="th">dayofweek_5</th>
 <th data-quarto-table-cell-role="th">dayofweek_6</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">month_3</th>
+<th data-quarto-table-cell-role="th">month_4</th>
+<th data-quarto-table-cell-role="th">month_5</th>
+<th data-quarto-table-cell-role="th">month_6</th>
+<th data-quarto-table-cell-role="th">month_7</th>
+<th data-quarto-table-cell-role="th">month_8</th>
+<th data-quarto-table-cell-role="th">month_9</th>
+<th data-quarto-table-cell-role="th">month_10</th>
+<th data-quarto-table-cell-role="th">month_11</th>
+<th data-quarto-table-cell-role="th">month_12</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
 <td>2014-05-06</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -796,9 +810,9 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>...</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
 <td>True</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -809,11 +823,11 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td data-quarto-table-cell-role="th">1</td>
 <td>2012-07-05</td>
 <td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -822,9 +836,9 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
 <td>True</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -832,18 +846,7 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
 <td>2015-06-21</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>...</td>
-<td>False</td>
-<td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -852,6 +855,17 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>True</td>
+<td>...</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
@@ -862,18 +876,18 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
 <td>True</td>
+<td>False</td>
+<td>False</td>
 <td>...</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
 <td>True</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 </tr>
@@ -881,12 +895,12 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td data-quarto-table-cell-role="th">4</td>
 <td>2012-08-10</td>
 <td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>...</td>
@@ -895,27 +909,16 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>False</td>
-<td>False</td>
-<td>False</td>
 <td>True</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 <td>False</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
 <td>2013-05-11</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>False</td>
-<td>...</td>
-<td>False</td>
-<td>False</td>
+<td>True</td>
 <td>False</td>
 <td>False</td>
 <td>False</td>
@@ -923,6 +926,17 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 <td>False</td>
 <td>False</td>
 <td>True</td>
+<td>False</td>
+<td>...</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+<td>False</td>
 <td>False</td>
 </tr>
 </tbody>
@@ -933,7 +947,7 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-46" class="cell" data-execution_count="18">
+<div id="cell-43" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># utilzing an elasticnet linear model to compensate for the amount of features</span></span>
@@ -991,8 +1005,8 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 </div>
 </div>
 </div>
-<p>Immediately it becomes obvious that the model captures more of the fine-grained movement of the time series. this is also reflected in the fact that both error metrics have improved.</p>
-<div id="cell-48" class="cell" data-execution_count="19">
+<p>Immediately, it becomes evident that the model captures more of the fine-grained movement of the time series. This is also reflected in the fact that both error metrics have improved.</p>
+<div id="cell-45" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="bu">print</span>(<span class="ss">f"mean squared error = </span><span class="sc">{</span>mse_dummies_all<span class="sc">:.3}</span><span class="ss">"</span>)</span>
@@ -1006,11 +1020,11 @@ improvement factor mea month dummies -&gt; 1.54x</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>mean squared error = 0.262
-improvement factor mse month dummies -&gt; 1.9x
+improvement factor mse month dummies -&gt; 1.91x
 improvement factor mse all dummies   -&gt; 2.35x
 -------------------------------------------------------------------------------
 mean absolute error = 0.356
-improvement factor mea month dummies -&gt; 1.54x
+improvement factor mea month dummies -&gt; 1.55x
 improvement factor mea all dummies   -&gt; 1.73x</code></pre>
 </div>
 </div>

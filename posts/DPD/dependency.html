@@ -9,7 +9,7 @@
 <meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2024-03-14">
 
-<title>hyper-shotgun - pooking and looking 👀</title>
+<title>hyper-shotgun - intro to partial dependence plots</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -187,8 +187,8 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">pooking and looking 👀</h1>
-            <p class="subtitle lead">diving into partial dependence plots</p>
+      <h1 class="title">intro to partial dependence plots</h1>
+            <p class="subtitle lead">visualizing model relationships</p>
                       </div>
   </div>
     
@@ -246,12 +246,7 @@ window.Quarto = {
 
 
 
-<ul>
-<li>generate data</li>
-<li>train rf</li>
-<li>create pdp, and determine monotonic relations</li>
-</ul>
-<div id="cell-2" class="cell" data-execution_count="1">
+<div id="cell-1" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -264,7 +259,7 @@ window.Quarto = {
 <span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> sklearn.inspection <span class="im">import</span> PartialDependenceDisplay, partial_dependence</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-3" class="cell" data-execution_count="2">
+<div id="cell-2" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">import</span> warnings</span>
@@ -272,7 +267,7 @@ window.Quarto = {
 <span id="cb2-3"><a href="#cb2-3"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">UserWarning</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-4" class="cell" data-execution_count="3">
+<div id="cell-3" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># setting global plotting settings</span></span>
@@ -294,7 +289,7 @@ window.Quarto = {
 <p>To demonstrate this, we’ll utilize a dataset from Scikit-learn, which can be found <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.make_friedman1.html#sklearn.datasets.make_friedman1">here</a>.</p>
 <p>The formula generating the synthetic dataset is as follows: <span class="math inline">\(y(X) = 10\sin(\pi \cdot X_0 \cdot X_1) + 20 \cdot (X_2 - 0.5)^2 + 10 \cdot X_3 + 5 \cdot X_4 + \text{noise} \cdot N(0, 1)\)</span>.</p>
 <p>I will generate a dataset comprising 7 features, but only 5 will actually influence the output—meaning the remaining two have no predictive value. the generate dataset contains 2000 samples and has a noise factor of 2.</p>
-<div id="cell-6" class="cell" data-execution_count="4">
+<div id="cell-5" class="cell" data-execution_count="4">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>X_reg, y_reg <span class="op">=</span> make_friedman1(</span>
@@ -432,7 +427,7 @@ window.Quarto = {
 </div>
 <p>all input features are uniform distributed <span class="math inline">\(U(0,1)\)</span> -&gt; the mean is ~0.5 the target feature has a higher mean of ~14</p>
 <p>The data is fed into a random-forest model, <a href="https://www.linkedin.com/feed/update/urn:li:activity:7169278449243607041?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7169278449243607041%29">it is my favorite go to model</a>, no feature scaling required can handle missing values, can capture non-linearity, has ability to model non-linearity, and fitting can be quite fast.</p>
-<div id="cell-8" class="cell" data-execution_count="5">
+<div id="cell-7" class="cell" data-execution_count="5">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a>X <span class="op">=</span> df_reg.drop(columns<span class="op">=</span><span class="st">"target"</span>)</span>
@@ -448,7 +443,7 @@ window.Quarto = {
 </details>
 </div>
 <p>to determine the partial dependence (PD) of each feature on the target we need to do some dataset wrangling. lets start with a (very very small) subset of our data taken at random.</p>
-<div id="cell-10" class="cell" data-execution_count="6">
+<div id="cell-9" class="cell" data-execution_count="6">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>df_sample <span class="op">=</span> df_reg.sample(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span>
@@ -528,7 +523,7 @@ window.Quarto = {
 </ol>
 <section id="determine-the-range-of-x_0" class="level3" data-number="2.1">
 <h3 data-number="2.1" class="anchored" data-anchor-id="determine-the-range-of-x_0"><span class="header-section-number">2.1</span> determine the range of <code>x_0</code></h3>
-<div id="cell-13" class="cell" data-execution_count="7">
+<div id="cell-12" class="cell" data-execution_count="7">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>df_reg[<span class="st">"x_0"</span>].agg([<span class="st">"min"</span>, <span class="st">"max"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -548,7 +543,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="apply-the-grid-over-the-data" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="apply-the-grid-over-the-data"><span class="header-section-number">2.3</span> apply the grid over the data</h3>
 <p>by utilizing the <code>np.linspace()</code> function we can easily create the grid, and create the required dataset with a cross join. for the people that know cross joins blow up your data pretty fast as it scales quadraticly. so our initial 3 datapoints together with the grid size increase the data count to $ 3 * 7 = 21 $ the newly created column is the feature for which we want to calculate the pd, in this case <code>x_0_sample</code></p>
-<div id="cell-16" class="cell" data-execution_count="8">
+<div id="cell-15" class="cell" data-execution_count="8">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>df_pdp <span class="op">=</span> df_sample.drop(columns<span class="op">=</span><span class="st">"x_0"</span>)</span>
@@ -818,7 +813,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="predict-with-the-model" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="predict-with-the-model"><span class="header-section-number">2.4</span> predict with the model</h3>
 <p>for our new dataset we ask the model to make a prediction for each observations, so the original model is asked to create a predictions for each of the newly created 21 data points.</p>
-<div id="cell-18" class="cell" data-execution_count="9">
+<div id="cell-17" class="cell" data-execution_count="9">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>df_pdp <span class="op">=</span> df_pdp.assign(</span>
@@ -1114,7 +1109,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="average-out-the-individual-predictions" class="level3" data-number="2.5">
 <h3 data-number="2.5" class="anchored" data-anchor-id="average-out-the-individual-predictions"><span class="header-section-number">2.5</span> average out the individual predictions</h3>
 <p>the next step is the aggregate the results by taking the average. this is achieved by taking the columns <code>x_0_sample</code> , <code>y_pred</code> and grouping by <code>x_0_sample</code> and applying mean aggregation.</p>
-<div id="cell-20" class="cell" data-execution_count="10">
+<div id="cell-19" class="cell" data-execution_count="10">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>df_pdp_plot <span class="op">=</span> (</span>
@@ -1179,7 +1174,7 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 </div>
 <p>this is the dataframe that shows the average dependence of the target variable with respect to the feature <code>x_0</code> in this case. increasing the value of <code>x_0</code> also yields an increase of the target variable. as can be seen in the plot below. however keep in mind that this is done with a subset of the data on a very coarse grid. if more samples are included and the size of the grid is increased a more detailed dependence will emerge.</p>
-<div id="cell-22" class="cell" data-execution_count="11">
+<div id="cell-21" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
@@ -1199,7 +1194,7 @@ Name: x_0, dtype: float64</code></pre>
 </div>
 <p>the plot above shows that the response of the model is postive with respect to an increase in the value of feature <code>x_0</code> however this is done with just three datapoints,If we use the full dataset of 2000 samples and a sampling grid of 127 that would result in a final dataset of <span class="math inline">\(2000 * 128 = 256.000\)</span> samples. yikes that explodes fast and this is just for one feature. however we do have the ability to get a more accurate picture of the partial dependece of the <code>x_0</code> variable.</p>
 <p>below you can see the code, i placed two comments to indicate where the changes have been made.</p>
-<div id="cell-24" class="cell" data-execution_count="12">
+<div id="cell-23" class="cell" data-execution_count="12">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>df_pdp <span class="op">=</span> df_reg.drop(columns<span class="op">=</span><span class="st">"x_0"</span>)  <span class="co"># &lt;- the full dataset</span></span>
@@ -1245,7 +1240,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="one-way-partial-dependence" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="one-way-partial-dependence"><span class="header-section-number">3.1</span> one-way partial dependence</h3>
 <p>by using the scikit-learn function we can easily create plots for our entire dataset. it is just with a one-liner 😊.</p>
-<div id="cell-29" class="cell" data-execution_count="13">
+<div id="cell-28" class="cell" data-execution_count="13">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">16</span>))</span>
@@ -1269,7 +1264,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="two-way-partial-dependence" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="two-way-partial-dependence"><span class="header-section-number">3.2</span> two-way partial dependence</h3>
 <p>It is possible to adapt this approach and get the PDP of two features with respect to the target variable. the trick is to create a sample grid that is the product of the two features. but again this will increase the number of datapoints that need to be inferenced. however now you can obtain insights into the feature interactions and the results it has on the target variable.</p>
-<div id="cell-32" class="cell" data-execution_count="14">
+<div id="cell-31" class="cell" data-execution_count="14">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>FIGSIZE)</span>
@@ -1293,7 +1288,7 @@ Name: x_0, dtype: float64</code></pre>
 <section id="bonus-individual-conditional-expectation" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="bonus-individual-conditional-expectation"><span class="header-section-number">4</span> Bonus: Individual Conditional Expectation</h2>
 <p>instead of performing a aggregation and plotting the result, theinndividual observations can alos be used. in the plot each blue line is an original observation were the value of <code>x_3</code> has taken over by the sampling grid. this allows you to inspect the individual datapoints. in this case we have a well beheaved dataset were all points are in agreement however this plot might give you some insights if performance is lacking for a couple of datapoints. it well may be that if the feature values is increased the target value goes up for one group and goes down for another group.</p>
-<div id="cell-34" class="cell" data-execution_count="15">
+<div id="cell-33" class="cell" data-execution_count="15">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">9</span>))</span>
