@@ -195,25 +195,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>hello world 👋</p>
-<div id="cell-2" class="cell" data-execution_count="1">
+<div id="cell-2" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> optuna</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> time</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> optuna</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-3" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>ID <span class="op">=</span> <span class="dv">1240</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>X, y <span class="op">=</span> fetch_openml(data_id<span class="op">=</span>ID, data_home<span class="op">=</span><span class="ss">f"openml_download_</span><span class="sc">{</span>ID<span class="sc">}</span><span class="ss">"</span>, return_X_y<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a>X <span class="op">=</span> X.sample(frac<span class="op">=</span><span class="fl">0.2</span>)</span>
-<span id="cb2-5"><a href="#cb2-5"></a>X <span class="op">=</span> X.dropna(axis<span class="op">=</span><span class="dv">0</span>, how<span class="op">=</span><span class="st">"any"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6"></a>y <span class="op">=</span> y.loc[X.index]</span>
-<span id="cb2-7"><a href="#cb2-7"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># fetch data set</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>ID <span class="op">=</span> <span class="dv">1240</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>X, y <span class="op">=</span> fetch_openml(data_id<span class="op">=</span>ID, data_home<span class="op">=</span><span class="ss">f"openml_download_</span><span class="sc">{</span>ID<span class="sc">}</span><span class="ss">"</span>, return_X_y<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># downsample and create a stratified train test split</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>X <span class="op">=</span> X.sample(frac<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a>X <span class="op">=</span> X.dropna(axis<span class="op">=</span><span class="dv">0</span>, how<span class="op">=</span><span class="st">"any"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>y <span class="op">=</span> y.loc[X.index]</span>
+<span id="cb2-9"><a href="#cb2-9"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div id="cell-4" class="cell" data-execution_count="3">
@@ -323,59 +327,136 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [I 2024-03-21 22:56:09,629] Trial 9 finished with value: 0.7996608581182089 and parameters: {'depth': 3, 'iterations': 115}. Best is trial 0 with value: 0.8108783857879154.</code></pre>
 </div>
 </div>
-<div id="cell-11" class="cell" data-execution_count="10">
+<div id="cell-11" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>study.best_params</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>{'depth': 12, 'iterations': 99}</code></pre>
+</div>
+</div>
+<div id="cell-12" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-12" class="cell">
+<div id="cell-13" class="cell" data-execution_count="59">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">def</span> obj(trial, step):</span>
-<span id="cb12-2"><a href="#cb12-2"></a>    all_step_param <span class="op">=</span> {</span>
-<span id="cb12-3"><a href="#cb12-3"></a>        <span class="dv">1</span>: {</span>
-<span id="cb12-4"><a href="#cb12-4"></a>            <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
-<span id="cb12-5"><a href="#cb12-5"></a>            <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
-<span id="cb12-6"><a href="#cb12-6"></a>        },</span>
-<span id="cb12-7"><a href="#cb12-7"></a>        <span class="dv">2</span>: {</span>
-<span id="cb12-8"><a href="#cb12-8"></a>            <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
-<span id="cb12-9"><a href="#cb12-9"></a>            <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
-<span id="cb12-10"><a href="#cb12-10"></a>        },</span>
-<span id="cb12-11"><a href="#cb12-11"></a>        <span class="dv">3</span>: {</span>
-<span id="cb12-12"><a href="#cb12-12"></a>            <span class="st">"min_data_in_leaf"</span>: trial.suggest_int(<span class="st">"min_data_in_leaf"</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
-<span id="cb12-13"><a href="#cb12-13"></a>            <span class="st">"bagging_temperature"</span>: trial.suggest_float(<span class="st">"bagging_temperature"</span>, <span class="fl">0.01</span>, <span class="dv">1</span>),</span>
-<span id="cb12-14"><a href="#cb12-14"></a>        },</span>
-<span id="cb12-15"><a href="#cb12-15"></a>        <span class="dv">4</span>: {</span>
-<span id="cb12-16"><a href="#cb12-16"></a>            <span class="st">"learning_rate"</span>: trial.suggest_float(<span class="st">"learning_rate"</span>, <span class="fl">1e-3</span>, <span class="fl">0.1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb12-17"><a href="#cb12-17"></a>        },</span>
-<span id="cb12-18"><a href="#cb12-18"></a>    }</span>
-<span id="cb12-19"><a href="#cb12-19"></a></span>
-<span id="cb12-20"><a href="#cb12-20"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb12-21"><a href="#cb12-21"></a>        <span class="op">**</span>all_step_param[step],</span>
-<span id="cb12-22"><a href="#cb12-22"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb12-23"><a href="#cb12-23"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb12-24"><a href="#cb12-24"></a>    )</span>
-<span id="cb12-25"><a href="#cb12-25"></a>    cbc.fit(</span>
-<span id="cb12-26"><a href="#cb12-26"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
-<span id="cb12-27"><a href="#cb12-27"></a>    )</span>
-<span id="cb12-28"><a href="#cb12-28"></a></span>
-<span id="cb12-29"><a href="#cb12-29"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
-<span id="cb12-30"><a href="#cb12-30"></a></span>
-<span id="cb12-31"><a href="#cb12-31"></a></span>
-<span id="cb12-32"><a href="#cb12-32"></a><span class="kw">def</span> get_obj_step(step: <span class="bu">int</span>):</span>
-<span id="cb12-33"><a href="#cb12-33"></a>    <span class="cf">return</span> partial(obj, step<span class="op">=</span>step)</span>
-<span id="cb12-34"><a href="#cb12-34"></a></span>
-<span id="cb12-35"><a href="#cb12-35"></a></span>
-<span id="cb12-36"><a href="#cb12-36"></a><span class="co"># </span><span class="al">TODO</span><span class="co"> feed to previous best params forward</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> obj(trial, step: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    all_step_param <span class="op">=</span> {</span>
+<span id="cb14-3"><a href="#cb14-3"></a>        <span class="dv">1</span>: {</span>
+<span id="cb14-4"><a href="#cb14-4"></a>            <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
+<span id="cb14-5"><a href="#cb14-5"></a>            <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
+<span id="cb14-6"><a href="#cb14-6"></a>        },</span>
+<span id="cb14-7"><a href="#cb14-7"></a>        <span class="dv">2</span>: {</span>
+<span id="cb14-8"><a href="#cb14-8"></a>            <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb14-9"><a href="#cb14-9"></a>            <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb14-10"><a href="#cb14-10"></a>        },</span>
+<span id="cb14-11"><a href="#cb14-11"></a>        <span class="co"># 3: {</span></span>
+<span id="cb14-12"><a href="#cb14-12"></a>        <span class="co">#     "min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 1, 100),</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a>        <span class="co">#     "bagging_temperature": trial.suggest_float("bagging_temperature", 0.01, 1),</span></span>
+<span id="cb14-14"><a href="#cb14-14"></a>        <span class="co"># },</span></span>
+<span id="cb14-15"><a href="#cb14-15"></a>        <span class="co"># 4: {</span></span>
+<span id="cb14-16"><a href="#cb14-16"></a>        <span class="co">#     "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.1, log=True),</span></span>
+<span id="cb14-17"><a href="#cb14-17"></a>        <span class="co"># },</span></span>
+<span id="cb14-18"><a href="#cb14-18"></a>    }</span>
+<span id="cb14-19"><a href="#cb14-19"></a>    current_params <span class="op">=</span> all_step_param[step]</span>
+<span id="cb14-20"><a href="#cb14-20"></a></span>
+<span id="cb14-21"><a href="#cb14-21"></a>    <span class="bu">print</span>(current_params)</span>
+<span id="cb14-22"><a href="#cb14-22"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb14-23"><a href="#cb14-23"></a>        <span class="op">**</span>current_params,</span>
+<span id="cb14-24"><a href="#cb14-24"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb14-25"><a href="#cb14-25"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb14-26"><a href="#cb14-26"></a>    )</span>
+<span id="cb14-27"><a href="#cb14-27"></a>    cbc.fit(</span>
+<span id="cb14-28"><a href="#cb14-28"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
+<span id="cb14-29"><a href="#cb14-29"></a>    )</span>
+<span id="cb14-30"><a href="#cb14-30"></a></span>
+<span id="cb14-31"><a href="#cb14-31"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-13" class="cell">
+<div id="cell-14" class="cell" data-execution_count="60">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2"></a>study.optimize(get_obj_step(step), n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>start <span class="op">=</span> time.time()</span>
+<span id="cb15-2"><a href="#cb15-2"></a></span>
+<span id="cb15-3"><a href="#cb15-3"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb15-4"><a href="#cb15-4"></a>obj_1 <span class="op">=</span> partial(obj, step<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-5"><a href="#cb15-5"></a>study.optimize(obj_1, n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a>end <span class="op">=</span> time.time()</span>
+<span id="cb15-8"><a href="#cb15-8"></a></span>
+<span id="cb15-9"><a href="#cb15-9"></a>elapsed_time <span class="op">=</span> []</span>
+<span id="cb15-10"><a href="#cb15-10"></a>elapsed_time.append(end <span class="op">-</span> start)</span>
+<span id="cb15-11"><a href="#cb15-11"></a></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="ss">f"</span><span class="sc">{</span>end<span class="op">-</span>start<span class="sc">:.2f}</span><span class="ss"> sec"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>[I 2024-03-22 09:05:05,853] A new study created in memory with name: no-name-b152768d-030c-4422-bcbe-aed5d4a71de4
+[I 2024-03-22 09:05:09,896] Trial 0 finished with value: 0.8063223508459484 and parameters: {'depth': 8, 'iterations': 69, 'subsample': 0.9414831839310278, 'colsample_bylevel': 0.27536204961454747}. Best is trial 0 with value: 0.8063223508459484.
+[I 2024-03-22 09:05:40,828] Trial 1 finished with value: 0.8092867546357688 and parameters: {'depth': 14, 'iterations': 105, 'subsample': 0.8648713805808682, 'colsample_bylevel': 0.15102405478691028}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:05:44,118] Trial 2 finished with value: 0.7990014710471182 and parameters: {'depth': 3, 'iterations': 103, 'subsample': 0.4314496319319453, 'colsample_bylevel': 0.6431281686858351}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:05:46,510] Trial 3 finished with value: 0.7993593736097518 and parameters: {'depth': 4, 'iterations': 64, 'subsample': 0.7413468355755314, 'colsample_bylevel': 0.100893458730708}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:05:52,613] Trial 4 finished with value: 0.8073264296959886 and parameters: {'depth': 8, 'iterations': 110, 'subsample': 0.13932050964558507, 'colsample_bylevel': 0.2925627760243539}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:05:58,186] Trial 5 finished with value: 0.8047563908435023 and parameters: {'depth': 6, 'iterations': 123, 'subsample': 0.228029402223525, 'colsample_bylevel': 0.5903726744226127}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:06:01,992] Trial 6 finished with value: 0.8057958091841284 and parameters: {'depth': 6, 'iterations': 84, 'subsample': 0.42474748869421164, 'colsample_bylevel': 0.14416873825783233}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:06:06,185] Trial 7 finished with value: 0.8037711515798368 and parameters: {'depth': 5, 'iterations': 100, 'subsample': 0.31998511746479846, 'colsample_bylevel': 0.34242612117337207}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:06:11,623] Trial 8 finished with value: 0.8068270321992034 and parameters: {'depth': 7, 'iterations': 109, 'subsample': 0.3579087218435869, 'colsample_bylevel': 0.31993839733157176}. Best is trial 1 with value: 0.8092867546357688.
+[I 2024-03-22 09:06:16,291] Trial 9 finished with value: 0.805559267673393 and parameters: {'depth': 7, 'iterations': 93, 'subsample': 0.41784346177256604, 'colsample_bylevel': 0.8383802938332553}. Best is trial 1 with value: 0.8092867546357688.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'depth': 8, 'iterations': 69}
+{'depth': 14, 'iterations': 105}
+{'depth': 3, 'iterations': 103}
+{'depth': 4, 'iterations': 64}
+{'depth': 8, 'iterations': 110}
+{'depth': 6, 'iterations': 123}
+{'depth': 6, 'iterations': 84}
+{'depth': 5, 'iterations': 100}
+{'depth': 7, 'iterations': 109}
+{'depth': 7, 'iterations': 93}</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<pre><code>'70.44 sec'</code></pre>
+</div>
+</div>
+<div id="cell-15" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="op">%</span>time</span>
+<span id="cb19-2"><a href="#cb19-2"></a>study.best_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>CPU times: user 2 µs, sys: 1e+03 ns, total: 3 µs
+Wall time: 5.96 µs</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>0.8094567970728962</code></pre>
+</div>
+</div>
+<div id="cell-16" class="cell" data-execution_count="20">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>start <span class="op">=</span> time.time()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-17" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>end <span class="op">=</span> time.time()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-18" class="cell" data-execution_count="24">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="ss">f"</span><span class="sc">{</span>end<span class="op">-</span>start<span class="sc">:.2f}</span><span class="ss"> sec"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>'8.97 sec'</code></pre>
+</div>
 </div>
 
 
