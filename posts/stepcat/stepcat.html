@@ -9,7 +9,7 @@
 <meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2024-03-14">
 
-<title>hyper-shotgun - baby steps: tuneing big model one step at a time</title>
+<title>hyper-shotgun - baby steps: tuneing models one step at a time</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">baby steps: tuneing big model one step at a time</h1>
+      <h1 class="title">baby steps: tuneing models one step at a time</h1>
             <p class="subtitle lead">stepwise tuning of gradient boosting models</p>
                       </div>
   </div>
@@ -195,62 +195,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>hello world 👋</p>
-<div id="cell-2" class="cell" data-execution_count="18">
+<div id="cell-2" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> time</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> optuna</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> optuna</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">from</span> catboost <span class="im">import</span> CatBoostClassifier, Pool</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-3" class="cell" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># fetch data set</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>ID <span class="op">=</span> <span class="dv">1240</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>X, y <span class="op">=</span> fetch_openml(data_id<span class="op">=</span>ID, data_home<span class="op">=</span><span class="ss">f"openml_download_</span><span class="sc">{</span>ID<span class="sc">}</span><span class="ss">"</span>, return_X_y<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># downsample and create a stratified train test split</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>X <span class="op">=</span> X.sample(frac<span class="op">=</span><span class="fl">0.2</span>)</span>
-<span id="cb2-7"><a href="#cb2-7"></a>X <span class="op">=</span> X.dropna(axis<span class="op">=</span><span class="dv">0</span>, how<span class="op">=</span><span class="st">"any"</span>)</span>
-<span id="cb2-8"><a href="#cb2-8"></a>y <span class="op">=</span> y.loc[X.index]</span>
-<span id="cb2-9"><a href="#cb2-9"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>N_TRIALS <span class="op">=</span> <span class="dv">20</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-4" class="cell" data-execution_count="3">
+<div id="cell-4" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>classifier <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>    iterations<span class="op">=</span><span class="dv">32</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>    loss_function<span class="op">=</span><span class="st">"Logloss"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>    eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5"></a>    metric_period<span class="op">=</span><span class="dv">16</span>,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb3-7"><a href="#cb3-7"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># fetch data set</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>ID <span class="op">=</span> <span class="dv">1461</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>X, y <span class="op">=</span> fetch_openml(data_id<span class="op">=</span>ID, data_home<span class="op">=</span><span class="ss">f"openml_download_</span><span class="sc">{</span>ID<span class="sc">}</span><span class="ss">"</span>, return_X_y<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># downsample and create a stratified train test split</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>X <span class="op">=</span> X.sample(frac<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>X <span class="op">=</span> X.dropna(axis<span class="op">=</span><span class="dv">0</span>, how<span class="op">=</span><span class="st">"any"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a>y <span class="op">=</span> y.astype(<span class="bu">int</span>) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>y <span class="op">=</span> y.loc[X.index]</span>
+<span id="cb3-11"><a href="#cb3-11"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-5" class="cell" data-execution_count="4">
+<div id="cell-5" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>classifier.fit(</span>
-<span id="cb4-2"><a href="#cb4-2"></a>    X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>train_pool <span class="op">=</span> Pool(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    data<span class="op">=</span>X_train,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    label<span class="op">=</span>y_train,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>train_pool.quantize()</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a>test_pool <span class="op">=</span> Pool(</span>
+<span id="cb4-9"><a href="#cb4-9"></a>    data<span class="op">=</span>X_test,</span>
+<span id="cb4-10"><a href="#cb4-10"></a>    label<span class="op">=</span>y_test,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb4-12"><a href="#cb4-12"></a>)</span>
+<span id="cb4-13"><a href="#cb4-13"></a>test_pool.quantize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;catboost.core.CatBoostClassifier at 0x10b87b2b0&gt;</code></pre>
-</div>
-</div>
-<div id="cell-6" class="cell" data-execution_count="5">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>classifier.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>0.8007828136814482</code></pre>
-</div>
 </div>
 <ol type="1">
 <li>Tree parameters
@@ -286,176 +282,307 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>optuna in steps</li>
 <li>compare time should be less, for same or better performance</li>
 </ul>
-<div id="cell-9" class="cell" data-execution_count="6">
+<div id="cell-8" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">def</span> objective(trial):</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    param <span class="op">=</span> {</span>
-<span id="cb8-3"><a href="#cb8-3"></a>        <span class="st">"depth"</span>: trial.suggest_int(<span class="st">"depth"</span>, <span class="dv">1</span>, <span class="dv">15</span>),</span>
-<span id="cb8-4"><a href="#cb8-4"></a>        <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
-<span id="cb8-5"><a href="#cb8-5"></a>    }</span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb8-8"><a href="#cb8-8"></a>        <span class="op">**</span>param,</span>
-<span id="cb8-9"><a href="#cb8-9"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb8-11"><a href="#cb8-11"></a>    )</span>
-<span id="cb8-12"><a href="#cb8-12"></a>    cbc.fit(</span>
-<span id="cb8-13"><a href="#cb8-13"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a>    )</span>
-<span id="cb8-15"><a href="#cb8-15"></a></span>
-<span id="cb8-16"><a href="#cb8-16"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">def</span> obj_step(trial, step: <span class="bu">int</span>, best_params: <span class="bu">dict</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="cf">if</span> step <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb5-3"><a href="#cb5-3"></a>        params <span class="op">=</span> {</span>
+<span id="cb5-4"><a href="#cb5-4"></a>            <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>            <span class="st">"min_data_in_leaf"</span>: trial.suggest_int(<span class="st">"min_data_in_leaf"</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb5-6"><a href="#cb5-6"></a>        }</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="cf">elif</span> step <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb5-8"><a href="#cb5-8"></a>        params <span class="op">=</span> {</span>
+<span id="cb5-9"><a href="#cb5-9"></a>            <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb5-10"><a href="#cb5-10"></a>            <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb5-11"><a href="#cb5-11"></a>        }</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="cf">elif</span> step <span class="op">==</span> <span class="dv">3</span>:</span>
+<span id="cb5-13"><a href="#cb5-13"></a>        params <span class="op">=</span> {</span>
+<span id="cb5-14"><a href="#cb5-14"></a>            <span class="st">"l2_leaf_reg"</span>: trial.suggest_float(<span class="st">"l2_leaf_reg"</span>, <span class="fl">0.01</span>, <span class="dv">1</span>),</span>
+<span id="cb5-15"><a href="#cb5-15"></a>            <span class="st">"bagging_temperature"</span>: trial.suggest_float(</span>
+<span id="cb5-16"><a href="#cb5-16"></a>                <span class="st">"bagging_temperature"</span>, <span class="fl">0.01</span>, <span class="dv">1_000_000</span>, log<span class="op">=</span><span class="va">True</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>            ),</span>
+<span id="cb5-18"><a href="#cb5-18"></a>        }</span>
+<span id="cb5-19"><a href="#cb5-19"></a>    <span class="cf">elif</span> step <span class="op">==</span> <span class="dv">4</span>:</span>
+<span id="cb5-20"><a href="#cb5-20"></a>        params <span class="op">=</span> {</span>
+<span id="cb5-21"><a href="#cb5-21"></a>            <span class="st">"learning_rate"</span>: trial.suggest_float(<span class="st">"learning_rate"</span>, <span class="fl">1e-3</span>, <span class="fl">0.1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb5-22"><a href="#cb5-22"></a>            <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
+<span id="cb5-23"><a href="#cb5-23"></a>        }</span>
+<span id="cb5-24"><a href="#cb5-24"></a></span>
+<span id="cb5-25"><a href="#cb5-25"></a>    params.update(best_params)</span>
+<span id="cb5-26"><a href="#cb5-26"></a></span>
+<span id="cb5-27"><a href="#cb5-27"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb5-28"><a href="#cb5-28"></a>        <span class="op">**</span>params,</span>
+<span id="cb5-29"><a href="#cb5-29"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30"></a>        <span class="co"># cat_features=list(X.select_dtypes(include="category").columns),</span></span>
+<span id="cb5-31"><a href="#cb5-31"></a>    )</span>
+<span id="cb5-32"><a href="#cb5-32"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-33"><a href="#cb5-33"></a></span>
+<span id="cb5-34"><a href="#cb5-34"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-10" class="cell" data-execution_count="7">
+<div id="cell-9" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>study.optimize(objective, n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>[I 2024-03-21 22:54:51,897] A new study created in memory with name: no-name-314011ed-0df5-4293-9531-d61007dad81e
-[I 2024-03-21 22:55:04,378] Trial 0 finished with value: 0.8108783857879154 and parameters: {'depth': 12, 'iterations': 99}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:06,886] Trial 1 finished with value: 0.768937097172629 and parameters: {'depth': 1, 'iterations': 113}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:10,298] Trial 2 finished with value: 0.796464479063087 and parameters: {'depth': 2, 'iterations': 124}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:11,856] Trial 3 finished with value: 0.7971442639094042 and parameters: {'depth': 11, 'iterations': 16}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:21,657] Trial 4 finished with value: 0.8099571266077522 and parameters: {'depth': 12, 'iterations': 83}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:25,516] Trial 5 finished with value: 0.7995272500222995 and parameters: {'depth': 3, 'iterations': 126}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:27,284] Trial 6 finished with value: 0.8023090586145648 and parameters: {'depth': 6, 'iterations': 38}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:55:29,007] Trial 7 finished with value: 0.7947800182299193 and parameters: {'depth': 3, 'iterations': 54}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:56:05,942] Trial 8 finished with value: 0.8076261779876813 and parameters: {'depth': 15, 'iterations': 70}. Best is trial 0 with value: 0.8108783857879154.
-[I 2024-03-21 22:56:09,629] Trial 9 finished with value: 0.7996608581182089 and parameters: {'depth': 3, 'iterations': 115}. Best is trial 0 with value: 0.8108783857879154.</code></pre>
-</div>
-</div>
-<div id="cell-11" class="cell" data-execution_count="11">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>study.best_params</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<pre><code>{'depth': 12, 'iterations': 99}</code></pre>
-</div>
-</div>
-<div id="cell-12" class="cell" data-execution_count="10">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-13" class="cell" data-execution_count="59">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">def</span> obj(trial, step: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
-<span id="cb14-2"><a href="#cb14-2"></a>    all_step_param <span class="op">=</span> {</span>
-<span id="cb14-3"><a href="#cb14-3"></a>        <span class="dv">1</span>: {</span>
-<span id="cb14-4"><a href="#cb14-4"></a>            <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
-<span id="cb14-5"><a href="#cb14-5"></a>            <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">8</span>, <span class="dv">128</span>),</span>
-<span id="cb14-6"><a href="#cb14-6"></a>        },</span>
-<span id="cb14-7"><a href="#cb14-7"></a>        <span class="dv">2</span>: {</span>
-<span id="cb14-8"><a href="#cb14-8"></a>            <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
-<span id="cb14-9"><a href="#cb14-9"></a>            <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
-<span id="cb14-10"><a href="#cb14-10"></a>        },</span>
-<span id="cb14-11"><a href="#cb14-11"></a>        <span class="co"># 3: {</span></span>
-<span id="cb14-12"><a href="#cb14-12"></a>        <span class="co">#     "min_data_in_leaf": trial.suggest_int("min_data_in_leaf", 1, 100),</span></span>
-<span id="cb14-13"><a href="#cb14-13"></a>        <span class="co">#     "bagging_temperature": trial.suggest_float("bagging_temperature", 0.01, 1),</span></span>
-<span id="cb14-14"><a href="#cb14-14"></a>        <span class="co"># },</span></span>
-<span id="cb14-15"><a href="#cb14-15"></a>        <span class="co"># 4: {</span></span>
-<span id="cb14-16"><a href="#cb14-16"></a>        <span class="co">#     "learning_rate": trial.suggest_float("learning_rate", 1e-3, 0.1, log=True),</span></span>
-<span id="cb14-17"><a href="#cb14-17"></a>        <span class="co"># },</span></span>
-<span id="cb14-18"><a href="#cb14-18"></a>    }</span>
-<span id="cb14-19"><a href="#cb14-19"></a>    current_params <span class="op">=</span> all_step_param[step]</span>
-<span id="cb14-20"><a href="#cb14-20"></a></span>
-<span id="cb14-21"><a href="#cb14-21"></a>    <span class="bu">print</span>(current_params)</span>
-<span id="cb14-22"><a href="#cb14-22"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb14-23"><a href="#cb14-23"></a>        <span class="op">**</span>current_params,</span>
-<span id="cb14-24"><a href="#cb14-24"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb14-25"><a href="#cb14-25"></a>        cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb14-26"><a href="#cb14-26"></a>    )</span>
-<span id="cb14-27"><a href="#cb14-27"></a>    cbc.fit(</span>
-<span id="cb14-28"><a href="#cb14-28"></a>        X_train, y_train, eval_set<span class="op">=</span>(X_test, y_test), metric_period<span class="op">=</span><span class="dv">16</span>, verbose<span class="op">=</span><span class="va">False</span></span>
-<span id="cb14-29"><a href="#cb14-29"></a>    )</span>
-<span id="cb14-30"><a href="#cb14-30"></a></span>
-<span id="cb14-31"><a href="#cb14-31"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-14" class="cell" data-execution_count="60">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>start <span class="op">=</span> time.time()</span>
-<span id="cb15-2"><a href="#cb15-2"></a></span>
-<span id="cb15-3"><a href="#cb15-3"></a>study <span class="op">=</span> optuna.create_study(direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4"></a>obj_1 <span class="op">=</span> partial(obj, step<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb15-5"><a href="#cb15-5"></a>study.optimize(obj_1, n_trials<span class="op">=</span><span class="dv">10</span>, timeout<span class="op">=</span><span class="dv">120</span>)</span>
-<span id="cb15-6"><a href="#cb15-6"></a></span>
-<span id="cb15-7"><a href="#cb15-7"></a>end <span class="op">=</span> time.time()</span>
-<span id="cb15-8"><a href="#cb15-8"></a></span>
-<span id="cb15-9"><a href="#cb15-9"></a>elapsed_time <span class="op">=</span> []</span>
-<span id="cb15-10"><a href="#cb15-10"></a>elapsed_time.append(end <span class="op">-</span> start)</span>
-<span id="cb15-11"><a href="#cb15-11"></a></span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="ss">f"</span><span class="sc">{</span>end<span class="op">-</span>start<span class="sc">:.2f}</span><span class="ss"> sec"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>best_params, elapsed_time <span class="op">=</span> {<span class="st">"iterations"</span>: <span class="dv">128</span>}, []</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">5</span>):</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    start <span class="op">=</span> time.time()</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    obj_i <span class="op">=</span> partial(obj_step, step<span class="op">=</span>i, best_params<span class="op">=</span>best_params)</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    study <span class="op">=</span> optuna.create_study(study_name<span class="op">=</span><span class="st">"baby-steps"</span>, direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    study.optimize(obj_i, n_trials<span class="op">=</span>N_TRIALS, timeout<span class="op">=</span><span class="dv">120</span>)</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a>    end <span class="op">=</span> time.time()</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    elapsed_time.append(end <span class="op">-</span> start)</span>
+<span id="cb6-11"><a href="#cb6-11"></a>    best_params.update(study.best_params)</span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb6-13"><a href="#cb6-13"></a>    <span class="bu">print</span>(<span class="ss">f"time step </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>elapsed_time[i<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.2f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="bu">print</span>(<span class="ss">f"total time step : </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">sum</span>(elapsed_time)<span class="sc">:.2f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>best_params<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_value<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-17"><a href="#cb6-17"></a>    <span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>[I 2024-03-22 09:05:05,853] A new study created in memory with name: no-name-b152768d-030c-4422-bcbe-aed5d4a71de4
-[I 2024-03-22 09:05:09,896] Trial 0 finished with value: 0.8063223508459484 and parameters: {'depth': 8, 'iterations': 69, 'subsample': 0.9414831839310278, 'colsample_bylevel': 0.27536204961454747}. Best is trial 0 with value: 0.8063223508459484.
-[I 2024-03-22 09:05:40,828] Trial 1 finished with value: 0.8092867546357688 and parameters: {'depth': 14, 'iterations': 105, 'subsample': 0.8648713805808682, 'colsample_bylevel': 0.15102405478691028}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:05:44,118] Trial 2 finished with value: 0.7990014710471182 and parameters: {'depth': 3, 'iterations': 103, 'subsample': 0.4314496319319453, 'colsample_bylevel': 0.6431281686858351}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:05:46,510] Trial 3 finished with value: 0.7993593736097518 and parameters: {'depth': 4, 'iterations': 64, 'subsample': 0.7413468355755314, 'colsample_bylevel': 0.100893458730708}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:05:52,613] Trial 4 finished with value: 0.8073264296959886 and parameters: {'depth': 8, 'iterations': 110, 'subsample': 0.13932050964558507, 'colsample_bylevel': 0.2925627760243539}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:05:58,186] Trial 5 finished with value: 0.8047563908435023 and parameters: {'depth': 6, 'iterations': 123, 'subsample': 0.228029402223525, 'colsample_bylevel': 0.5903726744226127}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:06:01,992] Trial 6 finished with value: 0.8057958091841284 and parameters: {'depth': 6, 'iterations': 84, 'subsample': 0.42474748869421164, 'colsample_bylevel': 0.14416873825783233}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:06:06,185] Trial 7 finished with value: 0.8037711515798368 and parameters: {'depth': 5, 'iterations': 100, 'subsample': 0.31998511746479846, 'colsample_bylevel': 0.34242612117337207}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:06:11,623] Trial 8 finished with value: 0.8068270321992034 and parameters: {'depth': 7, 'iterations': 109, 'subsample': 0.3579087218435869, 'colsample_bylevel': 0.31993839733157176}. Best is trial 1 with value: 0.8092867546357688.
-[I 2024-03-22 09:06:16,291] Trial 9 finished with value: 0.805559267673393 and parameters: {'depth': 7, 'iterations': 93, 'subsample': 0.41784346177256604, 'colsample_bylevel': 0.8383802938332553}. Best is trial 1 with value: 0.8092867546357688.</code></pre>
+<pre><code>[I 2024-03-22 17:28:52,521] A new study created in memory with name: baby-steps
+[I 2024-03-22 17:28:52,714] Trial 0 finished with value: 0.4660194174757281 and parameters: {'depth': 4, 'min_data_in_leaf': 29}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:52,957] Trial 1 finished with value: 0.45625 and parameters: {'depth': 6, 'min_data_in_leaf': 96}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:53,131] Trial 2 finished with value: 0.4660194174757281 and parameters: {'depth': 4, 'min_data_in_leaf': 75}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:55,009] Trial 3 finished with value: 0.396039603960396 and parameters: {'depth': 13, 'min_data_in_leaf': 52}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:55,432] Trial 4 finished with value: 0.4299674267100977 and parameters: {'depth': 10, 'min_data_in_leaf': 93}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:56,472] Trial 5 finished with value: 0.4473684210526315 and parameters: {'depth': 12, 'min_data_in_leaf': 32}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:56,702] Trial 6 finished with value: 0.45061728395061723 and parameters: {'depth': 5, 'min_data_in_leaf': 34}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:56,920] Trial 7 finished with value: 0.45061728395061723 and parameters: {'depth': 5, 'min_data_in_leaf': 11}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:57,212] Trial 8 finished with value: 0.4635761589403974 and parameters: {'depth': 7, 'min_data_in_leaf': 53}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:57,533] Trial 9 finished with value: 0.46056782334384855 and parameters: {'depth': 8, 'min_data_in_leaf': 46}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:57,654] Trial 10 finished with value: 0.35842293906810035 and parameters: {'depth': 1, 'min_data_in_leaf': 2}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:57,806] Trial 11 finished with value: 0.4252491694352159 and parameters: {'depth': 2, 'min_data_in_leaf': 70}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:57,984] Trial 12 finished with value: 0.45222929936305734 and parameters: {'depth': 3, 'min_data_in_leaf': 74}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:28:58,179] Trial 13 finished with value: 0.4660194174757281 and parameters: {'depth': 4, 'min_data_in_leaf': 76}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:07,127] Trial 14 finished with value: 0.4161073825503356 and parameters: {'depth': 15, 'min_data_in_leaf': 23}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:07,672] Trial 15 finished with value: 0.43260188087774293 and parameters: {'depth': 9, 'min_data_in_leaf': 59}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:07,844] Trial 16 finished with value: 0.45222929936305734 and parameters: {'depth': 3, 'min_data_in_leaf': 38}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:07,971] Trial 17 finished with value: 0.35842293906810035 and parameters: {'depth': 1, 'min_data_in_leaf': 83}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:08,224] Trial 18 finished with value: 0.45625 and parameters: {'depth': 6, 'min_data_in_leaf': 19}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:08,418] Trial 19 finished with value: 0.4660194174757281 and parameters: {'depth': 4, 'min_data_in_leaf': 62}. Best is trial 0 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:08,419] A new study created in memory with name: baby-steps
+[I 2024-03-22 17:29:08,577] Trial 0 finished with value: 0.46349206349206346 and parameters: {'subsample': 0.4023942922675988, 'colsample_bylevel': 0.6425748131413359}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:08,713] Trial 1 finished with value: 0.4573170731707317 and parameters: {'subsample': 0.22419557625732472, 'colsample_bylevel': 0.5305767025019139}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:08,870] Trial 2 finished with value: 0.44728434504792336 and parameters: {'subsample': 0.17872908071922383, 'colsample_bylevel': 0.6230192267675259}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,005] Trial 3 finished with value: 0.4258064516129032 and parameters: {'subsample': 0.41137163981615493, 'colsample_bylevel': 0.1388071407379855}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,181] Trial 4 finished with value: 0.44375 and parameters: {'subsample': 0.9904427446380495, 'colsample_bylevel': 0.5189454182141292}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,331] Trial 5 finished with value: 0.43278688524590164 and parameters: {'subsample': 0.03438701026739289, 'colsample_bylevel': 0.5727137782015534}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,503] Trial 6 finished with value: 0.419672131147541 and parameters: {'subsample': 0.48477526414679223, 'colsample_bylevel': 0.7741203233237859}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,605] Trial 7 finished with value: 0.3 and parameters: {'subsample': 0.11876705954617361, 'colsample_bylevel': 0.07227435228712403}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,707] Trial 8 finished with value: 0.17467248908296942 and parameters: {'subsample': 0.9201100014245686, 'colsample_bylevel': 0.03690716799153043}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:09,900] Trial 9 finished with value: 0.4487179487179487 and parameters: {'subsample': 0.9432876356032376, 'colsample_bylevel': 0.9213586730552094}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:10,069] Trial 10 finished with value: 0.44025157232704404 and parameters: {'subsample': 0.722413740183558, 'colsample_bylevel': 0.2892857809890623}. Best is trial 0 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:10,234] Trial 11 finished with value: 0.4660194174757281 and parameters: {'subsample': 0.3152169831966806, 'colsample_bylevel': 0.32859226341433706}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:10,395] Trial 12 finished with value: 0.44585987261146504 and parameters: {'subsample': 0.35297966144166326, 'colsample_bylevel': 0.3356580277386137}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:10,571] Trial 13 finished with value: 0.43533123028391163 and parameters: {'subsample': 0.6779532557580588, 'colsample_bylevel': 0.33640388202285476}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:10,731] Trial 14 finished with value: 0.4458204334365325 and parameters: {'subsample': 0.31858002113862727, 'colsample_bylevel': 0.740852564795141}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:10,889] Trial 15 finished with value: 0.4336569579288026 and parameters: {'subsample': 0.6223135713905885, 'colsample_bylevel': 0.23321284608828308}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:11,050] Trial 16 finished with value: 0.4571428571428572 and parameters: {'subsample': 0.5533474683625101, 'colsample_bylevel': 0.41767327743449767}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:11,220] Trial 17 finished with value: 0.439344262295082 and parameters: {'subsample': 0.31752240976415336, 'colsample_bylevel': 0.7301775277331476}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:11,406] Trial 18 finished with value: 0.43589743589743596 and parameters: {'subsample': 0.4612785411052133, 'colsample_bylevel': 0.8978541820587806}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:11,568] Trial 19 finished with value: 0.46202531645569617 and parameters: {'subsample': 0.8346833537462557, 'colsample_bylevel': 0.42549429087616164}. Best is trial 11 with value: 0.4660194174757281.
+[I 2024-03-22 17:29:11,569] A new study created in memory with name: baby-steps
+[I 2024-03-22 17:29:11,709] Trial 0 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.5721534883883784, 'bagging_temperature': 12.446483994382758}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:11,855] Trial 1 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.2835165516423327, 'bagging_temperature': 117.92580541598309}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:11,997] Trial 2 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.07823760999938806, 'bagging_temperature': 61.3739716182452}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,147] Trial 3 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.15971716429359725, 'bagging_temperature': 52689.55456068125}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,286] Trial 4 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.3109284664330199, 'bagging_temperature': 0.02528531429478604}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,436] Trial 5 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.6110043984555555, 'bagging_temperature': 79180.42840159491}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,590] Trial 6 finished with value: 0.2983870967741935 and parameters: {'l2_leaf_reg': 0.9107772255898172, 'bagging_temperature': 136.8913992242083}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,746] Trial 7 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.3635004649376322, 'bagging_temperature': 277957.89608214935}. Best is trial 0 with value: 0.29959514170040485.
+[I 2024-03-22 17:29:12,893] Trial 8 finished with value: 0.312 and parameters: {'l2_leaf_reg': 0.22645656496651975, 'bagging_temperature': 0.1479103713938864}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,041] Trial 9 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.4351102257947199, 'bagging_temperature': 179502.96520341455}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,202] Trial 10 finished with value: 0.30400000000000005 and parameters: {'l2_leaf_reg': 0.7383459520875426, 'bagging_temperature': 0.010174627722822238}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,349] Trial 11 finished with value: 0.30522088353413657 and parameters: {'l2_leaf_reg': 0.8159430817687472, 'bagging_temperature': 0.01761341806346838}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,514] Trial 12 finished with value: 0.2983870967741935 and parameters: {'l2_leaf_reg': 0.9345329684778965, 'bagging_temperature': 0.3923335456107295}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,664] Trial 13 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.7602538321467076, 'bagging_temperature': 1.1226320551611089}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,798] Trial 14 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.02525403634777376, 'bagging_temperature': 0.19915936796909}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:13,956] Trial 15 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.7763156077741511, 'bagging_temperature': 3.775453807045521}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:14,115] Trial 16 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.18070367791393982, 'bagging_temperature': 0.06988888541186113}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:14,278] Trial 17 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.5107067209390742, 'bagging_temperature': 2131.7651404060744}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:14,429] Trial 18 finished with value: 0.29959514170040485 and parameters: {'l2_leaf_reg': 0.6680971000774005, 'bagging_temperature': 0.08328472207986772}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:14,588] Trial 19 finished with value: 0.2983870967741935 and parameters: {'l2_leaf_reg': 0.8576881858037221, 'bagging_temperature': 1800.5929046067643}. Best is trial 8 with value: 0.312.
+[I 2024-03-22 17:29:14,589] A new study created in memory with name: baby-steps
+[I 2024-03-22 17:29:14,735] Trial 0 finished with value: 0.0 and parameters: {'learning_rate': 0.0013689366501988126, 'iterations': 126}. Best is trial 0 with value: 0.0.
+[I 2024-03-22 17:29:14,884] Trial 1 finished with value: 0.11320754716981131 and parameters: {'learning_rate': 0.017117014143124828, 'iterations': 95}. Best is trial 1 with value: 0.11320754716981131.
+[I 2024-03-22 17:29:15,036] Trial 2 finished with value: 0.4294871794871795 and parameters: {'learning_rate': 0.08156906571376626, 'iterations': 64}. Best is trial 2 with value: 0.4294871794871795.
+[I 2024-03-22 17:29:15,180] Trial 3 finished with value: 0.0 and parameters: {'learning_rate': 0.00462371673795551, 'iterations': 124}. Best is trial 2 with value: 0.4294871794871795.
+[I 2024-03-22 17:29:15,334] Trial 4 finished with value: 0.4415584415584416 and parameters: {'learning_rate': 0.07716440416578711, 'iterations': 72}. Best is trial 4 with value: 0.4415584415584416.
+[I 2024-03-22 17:29:15,487] Trial 5 finished with value: 0.0 and parameters: {'learning_rate': 0.0010287219837477018, 'iterations': 102}. Best is trial 4 with value: 0.4415584415584416.
+[I 2024-03-22 17:29:15,621] Trial 6 finished with value: 0.44370860927152317 and parameters: {'learning_rate': 0.07183770874707367, 'iterations': 107}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:15,754] Trial 7 finished with value: 0.23076923076923078 and parameters: {'learning_rate': 0.024693971713523926, 'iterations': 29}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:15,904] Trial 8 finished with value: 0.049019607843137254 and parameters: {'learning_rate': 0.010570195852138684, 'iterations': 30}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,048] Trial 9 finished with value: 0.0 and parameters: {'learning_rate': 0.0012714427142665504, 'iterations': 108}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,200] Trial 10 finished with value: 0.3690036900369003 and parameters: {'learning_rate': 0.04112091587115876, 'iterations': 67}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,353] Trial 11 finished with value: 0.43589743589743596 and parameters: {'learning_rate': 0.09960919917145357, 'iterations': 81}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,510] Trial 12 finished with value: 0.3494423791821561 and parameters: {'learning_rate': 0.04222040273048052, 'iterations': 51}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,664] Trial 13 finished with value: 0.3642857142857143 and parameters: {'learning_rate': 0.04809563640252797, 'iterations': 87}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,816] Trial 14 finished with value: 0.0 and parameters: {'learning_rate': 0.0053781454574815795, 'iterations': 47}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:16,976] Trial 15 finished with value: 0.39041095890410965 and parameters: {'learning_rate': 0.06172723491902303, 'iterations': 11}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:17,127] Trial 16 finished with value: 0.22033898305084748 and parameters: {'learning_rate': 0.02578913368598807, 'iterations': 114}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:17,283] Trial 17 finished with value: 0.22222222222222224 and parameters: {'learning_rate': 0.0250863582548761, 'iterations': 79}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:17,436] Trial 18 finished with value: 0.0 and parameters: {'learning_rate': 0.0028919900008065585, 'iterations': 55}. Best is trial 6 with value: 0.44370860927152317.
+[I 2024-03-22 17:29:17,604] Trial 19 finished with value: 0.05853658536585366 and parameters: {'learning_rate': 0.012174587549446728, 'iterations': 93}. Best is trial 6 with value: 0.44370860927152317.</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'depth': 8, 'iterations': 69}
-{'depth': 14, 'iterations': 105}
-{'depth': 3, 'iterations': 103}
-{'depth': 4, 'iterations': 64}
-{'depth': 8, 'iterations': 110}
-{'depth': 6, 'iterations': 123}
-{'depth': 6, 'iterations': 84}
-{'depth': 5, 'iterations': 100}
-{'depth': 7, 'iterations': 109}
-{'depth': 7, 'iterations': 93}</code></pre>
+<pre><code>----------
+time step 1: 15.90 sec
+total time step : 15.90 sec
+best_params={'iterations': 128, 'depth': 4, 'min_data_in_leaf': 29}
+study.best_value=0.4660194174757281
+----------
+----------
+time step 2: 3.15 sec
+total time step : 19.05 sec
+best_params={'iterations': 128, 'depth': 4, 'min_data_in_leaf': 29, 'subsample': 0.3152169831966806, 'colsample_bylevel': 0.32859226341433706}
+study.best_value=0.4660194174757281
+----------
+----------
+time step 3: 3.02 sec
+total time step : 22.07 sec
+best_params={'iterations': 128, 'depth': 4, 'min_data_in_leaf': 29, 'subsample': 0.3152169831966806, 'colsample_bylevel': 0.32859226341433706, 'l2_leaf_reg': 0.22645656496651975, 'bagging_temperature': 0.1479103713938864}
+study.best_value=0.312
+----------
+----------
+time step 4: 3.02 sec
+total time step : 25.08 sec
+best_params={'iterations': 107, 'depth': 4, 'min_data_in_leaf': 29, 'subsample': 0.3152169831966806, 'colsample_bylevel': 0.32859226341433706, 'l2_leaf_reg': 0.22645656496651975, 'bagging_temperature': 0.1479103713938864, 'learning_rate': 0.07183770874707367}
+study.best_value=0.44370860927152317
+----------</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="60">
-<pre><code>'70.44 sec'</code></pre>
 </div>
-</div>
-<div id="cell-15" class="cell" data-execution_count="17">
+<div id="cell-10" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="op">%</span>time</span>
-<span id="cb19-2"><a href="#cb19-2"></a>study.best_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">def</span> obj_all(trial) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb9-2"><a href="#cb9-2"></a>    params <span class="op">=</span> {</span>
+<span id="cb9-3"><a href="#cb9-3"></a>        <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
+<span id="cb9-4"><a href="#cb9-4"></a>        <span class="st">"min_data_in_leaf"</span>: trial.suggest_int(<span class="st">"min_data_in_leaf"</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb9-5"><a href="#cb9-5"></a>        <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb9-6"><a href="#cb9-6"></a>        <span class="st">"colsample_bylevel"</span>: trial.suggest_float(<span class="st">"colsample_bylevel"</span>, <span class="fl">0.01</span>, <span class="fl">1.0</span>),</span>
+<span id="cb9-7"><a href="#cb9-7"></a>        <span class="st">"l2_leaf_reg"</span>: trial.suggest_float(<span class="st">"l2_leaf_reg"</span>, <span class="fl">0.01</span>, <span class="dv">1</span>),</span>
+<span id="cb9-8"><a href="#cb9-8"></a>        <span class="st">"bagging_temperature"</span>: trial.suggest_float(</span>
+<span id="cb9-9"><a href="#cb9-9"></a>            <span class="st">"bagging_temperature"</span>, <span class="fl">1e-3</span>, <span class="dv">1_000_000</span>, log<span class="op">=</span><span class="va">True</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>        ),</span>
+<span id="cb9-11"><a href="#cb9-11"></a>        <span class="st">"learning_rate"</span>: trial.suggest_float(<span class="st">"learning_rate"</span>, <span class="fl">1e-3</span>, <span class="fl">0.1</span>, log<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb9-12"><a href="#cb9-12"></a>        <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">1</span>, <span class="dv">256</span>),</span>
+<span id="cb9-13"><a href="#cb9-13"></a>    }</span>
+<span id="cb9-14"><a href="#cb9-14"></a></span>
+<span id="cb9-15"><a href="#cb9-15"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb9-16"><a href="#cb9-16"></a>        <span class="op">**</span>params,</span>
+<span id="cb9-17"><a href="#cb9-17"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18"></a>        <span class="co"># cat_features=list(X.select_dtypes(include="category").columns),</span></span>
+<span id="cb9-19"><a href="#cb9-19"></a>    )</span>
+<span id="cb9-20"><a href="#cb9-20"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-21"><a href="#cb9-21"></a></span>
+<span id="cb9-22"><a href="#cb9-22"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb9-23"><a href="#cb9-23"></a></span>
+<span id="cb9-24"><a href="#cb9-24"></a></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb9-26"><a href="#cb9-26"></a></span>
+<span id="cb9-27"><a href="#cb9-27"></a>start <span class="op">=</span> time.time()</span>
+<span id="cb9-28"><a href="#cb9-28"></a>study <span class="op">=</span> optuna.create_study(study_name<span class="op">=</span><span class="st">"all-in"</span>, direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb9-29"><a href="#cb9-29"></a>study.optimize(obj_all, n_trials<span class="op">=</span><span class="dv">4</span> <span class="op">*</span> N_TRIALS, timeout<span class="op">=</span><span class="dv">120</span>)</span>
+<span id="cb9-30"><a href="#cb9-30"></a></span>
+<span id="cb9-31"><a href="#cb9-31"></a>end <span class="op">=</span> time.time()</span>
+<span id="cb9-32"><a href="#cb9-32"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb9-33"><a href="#cb9-33"></a><span class="bu">print</span>(<span class="ss">f"time all-in: </span><span class="sc">{</span>end <span class="op">-</span> start<span class="sc">:.2f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_params<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_value<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>[I 2024-03-22 17:29:17,609] A new study created in memory with name: all-in
+[I 2024-03-22 17:29:17,811] Trial 0 finished with value: 0.03940886699507389 and parameters: {'depth': 6, 'min_data_in_leaf': 100, 'subsample': 0.5510380902367414, 'colsample_bylevel': 0.17501771607858782, 'l2_leaf_reg': 0.12834473825438214, 'bagging_temperature': 0.016781291725149878, 'learning_rate': 0.008377392575886848, 'iterations': 188}. Best is trial 0 with value: 0.03940886699507389.
+[I 2024-03-22 17:29:18,379] Trial 1 finished with value: 0.0861244019138756 and parameters: {'depth': 2, 'min_data_in_leaf': 58, 'subsample': 0.11973766131987405, 'colsample_bylevel': 0.5591365846810507, 'l2_leaf_reg': 0.12568741591024649, 'bagging_temperature': 188.89834390756937, 'learning_rate': 0.006405065787627228, 'iterations': 245}. Best is trial 1 with value: 0.0861244019138756.
+[I 2024-03-22 17:29:18,503] Trial 2 finished with value: 0.13023255813953488 and parameters: {'depth': 8, 'min_data_in_leaf': 23, 'subsample': 0.8997806207121376, 'colsample_bylevel': 0.8937438687954574, 'l2_leaf_reg': 0.6095641252486295, 'bagging_temperature': 12026.423943225267, 'learning_rate': 0.02989872480841636, 'iterations': 37}. Best is trial 2 with value: 0.13023255813953488.
+[I 2024-03-22 17:29:20,647] Trial 3 finished with value: 0.19008264462809915 and parameters: {'depth': 15, 'min_data_in_leaf': 67, 'subsample': 0.8542353861108808, 'colsample_bylevel': 0.7428449656014825, 'l2_leaf_reg': 0.9920656440033521, 'bagging_temperature': 16.575682605418898, 'learning_rate': 0.0035071932778124367, 'iterations': 66}. Best is trial 3 with value: 0.19008264462809915.
+[I 2024-03-22 17:29:20,807] Trial 4 finished with value: 0.0297029702970297 and parameters: {'depth': 3, 'min_data_in_leaf': 28, 'subsample': 0.39100388402260455, 'colsample_bylevel': 0.3398055162468349, 'l2_leaf_reg': 0.4510340014405416, 'bagging_temperature': 84.99019779806775, 'learning_rate': 0.009645088196090754, 'iterations': 139}. Best is trial 3 with value: 0.19008264462809915.
+[I 2024-03-22 17:29:21,366] Trial 5 finished with value: 0.06796116504854369 and parameters: {'depth': 2, 'min_data_in_leaf': 61, 'subsample': 0.10993086191641792, 'colsample_bylevel': 0.6124414906427097, 'l2_leaf_reg': 0.35960961091005633, 'bagging_temperature': 111311.65860204732, 'learning_rate': 0.004193383336839307, 'iterations': 237}. Best is trial 3 with value: 0.19008264462809915.
+[I 2024-03-22 17:29:21,421] Trial 6 finished with value: 0.08653846153846154 and parameters: {'depth': 1, 'min_data_in_leaf': 62, 'subsample': 0.5067485135864916, 'colsample_bylevel': 0.9278236589434822, 'l2_leaf_reg': 0.07774595557739357, 'bagging_temperature': 0.003269352001192922, 'learning_rate': 0.07375012995579733, 'iterations': 41}. Best is trial 3 with value: 0.19008264462809915.
+[I 2024-03-22 17:29:35,719] Trial 7 finished with value: 0.366412213740458 and parameters: {'depth': 15, 'min_data_in_leaf': 5, 'subsample': 0.6229158768918233, 'colsample_bylevel': 0.8730751633272952, 'l2_leaf_reg': 0.7895094650022927, 'bagging_temperature': 12310.090324970135, 'learning_rate': 0.008397437889366985, 'iterations': 229}. Best is trial 7 with value: 0.366412213740458.
+[I 2024-03-22 17:29:36,512] Trial 8 finished with value: 0.2868852459016394 and parameters: {'depth': 10, 'min_data_in_leaf': 25, 'subsample': 0.43334216845727136, 'colsample_bylevel': 0.6644714052386261, 'l2_leaf_reg': 0.4636012249859608, 'bagging_temperature': 8025.55228180442, 'learning_rate': 0.0014350148692127813, 'iterations': 205}. Best is trial 7 with value: 0.366412213740458.
+[I 2024-03-22 17:29:37,158] Trial 9 finished with value: 0.3054545454545454 and parameters: {'depth': 5, 'min_data_in_leaf': 87, 'subsample': 0.37453743783238613, 'colsample_bylevel': 0.5006819442294876, 'l2_leaf_reg': 0.957457067910525, 'bagging_temperature': 324.9197590718789, 'learning_rate': 0.0015880476224949924, 'iterations': 204}. Best is trial 7 with value: 0.366412213740458.
+[I 2024-03-22 17:29:37,257] Trial 10 finished with value: 0.0 and parameters: {'depth': 15, 'min_data_in_leaf': 4, 'subsample': 0.7168482919194026, 'colsample_bylevel': 0.039132921888962, 'l2_leaf_reg': 0.7858125073257758, 'bagging_temperature': 1.0212207625671712, 'learning_rate': 0.02628940130784566, 'iterations': 113}. Best is trial 7 with value: 0.366412213740458.
+[I 2024-03-22 17:29:37,910] Trial 11 finished with value: 0.2518518518518518 and parameters: {'depth': 12, 'min_data_in_leaf': 92, 'subsample': 0.31517566553525866, 'colsample_bylevel': 0.45564616263936586, 'l2_leaf_reg': 0.9934539181653749, 'bagging_temperature': 1951.9325432786486, 'learning_rate': 0.0017043609381860332, 'iterations': 173}. Best is trial 7 with value: 0.366412213740458.
+[I 2024-03-22 17:29:38,745] Trial 12 finished with value: 0.39333333333333337 and parameters: {'depth': 5, 'min_data_in_leaf': 81, 'subsample': 0.6674836046777022, 'colsample_bylevel': 0.38269839865307465, 'l2_leaf_reg': 0.7685719304339349, 'bagging_temperature': 967745.880109411, 'learning_rate': 0.01917591218899694, 'iterations': 253}. Best is trial 12 with value: 0.39333333333333337.
+[I 2024-03-22 17:29:40,493] Trial 13 finished with value: 0.38383838383838387 and parameters: {'depth': 12, 'min_data_in_leaf': 39, 'subsample': 0.6864372643978139, 'colsample_bylevel': 0.3037676134844115, 'l2_leaf_reg': 0.7526698188642353, 'bagging_temperature': 538397.5078412292, 'learning_rate': 0.019791859859961392, 'iterations': 250}. Best is trial 12 with value: 0.39333333333333337.
+[I 2024-03-22 17:29:41,935] Trial 14 finished with value: 0.39333333333333337 and parameters: {'depth': 11, 'min_data_in_leaf': 38, 'subsample': 0.7421643105681107, 'colsample_bylevel': 0.32465764510202083, 'l2_leaf_reg': 0.7250677455572826, 'bagging_temperature': 934886.7423795386, 'learning_rate': 0.02488942285252776, 'iterations': 253}. Best is trial 12 with value: 0.39333333333333337.
+[I 2024-03-22 17:29:42,256] Trial 15 finished with value: 0.4350649350649351 and parameters: {'depth': 8, 'min_data_in_leaf': 77, 'subsample': 0.9762983450591336, 'colsample_bylevel': 0.3523930143730865, 'l2_leaf_reg': 0.6317937954102434, 'bagging_temperature': 582468.6240103723, 'learning_rate': 0.06341057540119423, 'iterations': 149}. Best is trial 15 with value: 0.4350649350649351.
+[I 2024-03-22 17:29:42,403] Trial 16 finished with value: 0.4119601328903654 and parameters: {'depth': 6, 'min_data_in_leaf': 78, 'subsample': 0.8391780218732999, 'colsample_bylevel': 0.18050636663947292, 'l2_leaf_reg': 0.6116625355013556, 'bagging_temperature': 88246.70669546725, 'learning_rate': 0.09913737827988808, 'iterations': 103}. Best is trial 15 with value: 0.4350649350649351.
+[I 2024-03-22 17:29:42,569] Trial 17 finished with value: 0.4444444444444444 and parameters: {'depth': 8, 'min_data_in_leaf': 74, 'subsample': 0.8456833766427252, 'colsample_bylevel': 0.17511145922932078, 'l2_leaf_reg': 0.2892103564225315, 'bagging_temperature': 1.1671038157153804, 'learning_rate': 0.09272328426627645, 'iterations': 97}. Best is trial 17 with value: 0.4444444444444444.
+[I 2024-03-22 17:29:42,667] Trial 18 finished with value: 0.0 and parameters: {'depth': 9, 'min_data_in_leaf': 73, 'subsample': 0.9349286752655532, 'colsample_bylevel': 0.023003697850077526, 'l2_leaf_reg': 0.3501516001116991, 'bagging_temperature': 0.7059116863183651, 'learning_rate': 0.0573685220208274, 'iterations': 150}. Best is trial 17 with value: 0.4444444444444444.
+[I 2024-03-22 17:29:42,801] Trial 19 finished with value: 0.27464788732394363 and parameters: {'depth': 7, 'min_data_in_leaf': 49, 'subsample': 0.9580110560116629, 'colsample_bylevel': 0.19621005062636412, 'l2_leaf_reg': 0.24669383330579925, 'bagging_temperature': 3.6474883111294383, 'learning_rate': 0.049083191172270606, 'iterations': 76}. Best is trial 17 with value: 0.4444444444444444.
+[I 2024-03-22 17:29:42,941] Trial 20 finished with value: 0.17467248908296942 and parameters: {'depth': 9, 'min_data_in_leaf': 51, 'subsample': 0.990149473060538, 'colsample_bylevel': 0.10701830414020769, 'l2_leaf_reg': 0.25045224807573246, 'bagging_temperature': 0.03272717025377595, 'learning_rate': 0.03905170072778752, 'iterations': 95}. Best is trial 17 with value: 0.4444444444444444.
+[I 2024-03-22 17:29:43,128] Trial 21 finished with value: 0.45283018867924524 and parameters: {'depth': 7, 'min_data_in_leaf': 75, 'subsample': 0.8227990648120405, 'colsample_bylevel': 0.23820789216311478, 'l2_leaf_reg': 0.5949715806661976, 'bagging_temperature': 77864.57800839211, 'learning_rate': 0.08999336372016119, 'iterations': 118}. Best is trial 21 with value: 0.45283018867924524.
+[I 2024-03-22 17:29:43,377] Trial 22 finished with value: 0.4565916398713826 and parameters: {'depth': 8, 'min_data_in_leaf': 72, 'subsample': 0.803011462716464, 'colsample_bylevel': 0.25813123981896796, 'l2_leaf_reg': 0.5979333193415328, 'bagging_temperature': 83131.80212168414, 'learning_rate': 0.0915585031632922, 'iterations': 126}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:43,548] Trial 23 finished with value: 0.4509803921568627 and parameters: {'depth': 4, 'min_data_in_leaf': 92, 'subsample': 0.7975454260636219, 'colsample_bylevel': 0.2658167261953646, 'l2_leaf_reg': 0.5138285519050256, 'bagging_temperature': 0.21725142265694147, 'learning_rate': 0.09703492578700428, 'iterations': 125}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:43,744] Trial 24 finished with value: 0.3663003663003663 and parameters: {'depth': 4, 'min_data_in_leaf': 99, 'subsample': 0.7609225608753483, 'colsample_bylevel': 0.44441166231688056, 'l2_leaf_reg': 0.5376434635970055, 'bagging_temperature': 0.08993712775740526, 'learning_rate': 0.04201559628363898, 'iterations': 123}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:43,780] Trial 25 finished with value: 0.0 and parameters: {'depth': 4, 'min_data_in_leaf': 88, 'subsample': 0.5957483132679242, 'colsample_bylevel': 0.25858080376569, 'l2_leaf_reg': 0.5304979720352123, 'bagging_temperature': 1731.4688195619783, 'learning_rate': 0.015107737317085927, 'iterations': 9}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,030] Trial 26 finished with value: 0.4472049689440994 and parameters: {'depth': 6, 'min_data_in_leaf': 69, 'subsample': 0.7927079254667174, 'colsample_bylevel': 0.250113556619431, 'l2_leaf_reg': 0.6607261541480104, 'bagging_temperature': 55585.39009513835, 'learning_rate': 0.09947561718187452, 'iterations': 166}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,180] Trial 27 finished with value: 0.3065134099616858 and parameters: {'depth': 7, 'min_data_in_leaf': 84, 'subsample': 0.7746088326105022, 'colsample_bylevel': 0.09464418903559574, 'l2_leaf_reg': 0.3997892470700266, 'bagging_temperature': 7.481000219716417, 'learning_rate': 0.06952321188785392, 'iterations': 132}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,322] Trial 28 finished with value: 0.2317596566523605 and parameters: {'depth': 4, 'min_data_in_leaf': 96, 'subsample': 0.27196349712172896, 'colsample_bylevel': 0.4311452689965268, 'l2_leaf_reg': 0.5489147359889042, 'bagging_temperature': 1135.7710546140822, 'learning_rate': 0.038507375558946795, 'iterations': 78}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,549] Trial 29 finished with value: 0.22978723404255316 and parameters: {'depth': 7, 'min_data_in_leaf': 100, 'subsample': 0.5291379428163794, 'colsample_bylevel': 0.2507760800107405, 'l2_leaf_reg': 0.8900823945260843, 'bagging_temperature': 0.0010646054872797037, 'learning_rate': 0.014722947529518023, 'iterations': 166}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,683] Trial 30 finished with value: 0.30158730158730157 and parameters: {'depth': 5, 'min_data_in_leaf': 53, 'subsample': 0.6030392763616278, 'colsample_bylevel': 0.10116186665029142, 'l2_leaf_reg': 0.6781510433973041, 'bagging_temperature': 0.09489658210156457, 'learning_rate': 0.0741146475856809, 'iterations': 120}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:44,934] Trial 31 finished with value: 0.432258064516129 and parameters: {'depth': 6, 'min_data_in_leaf': 68, 'subsample': 0.8378400991673146, 'colsample_bylevel': 0.23602815099039096, 'l2_leaf_reg': 0.6642084367894752, 'bagging_temperature': 94938.66548246813, 'learning_rate': 0.09821150604053006, 'iterations': 163}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:45,188] Trial 32 finished with value: 0.432258064516129 and parameters: {'depth': 6, 'min_data_in_leaf': 68, 'subsample': 0.7812884835197554, 'colsample_bylevel': 0.24991780712665845, 'l2_leaf_reg': 0.5624604763527674, 'bagging_temperature': 33832.713012130844, 'learning_rate': 0.05837830651696962, 'iterations': 183}. Best is trial 22 with value: 0.4565916398713826.
+[I 2024-03-22 17:29:45,647] Trial 33 finished with value: 0.46349206349206346 and parameters: {'depth': 9, 'min_data_in_leaf': 83, 'subsample': 0.898718146670683, 'colsample_bylevel': 0.39753119988702074, 'l2_leaf_reg': 0.46931848080729766, 'bagging_temperature': 5692.546452939264, 'learning_rate': 0.08244027540677362, 'iterations': 150}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:46,026] Trial 34 finished with value: 0.3857142857142858 and parameters: {'depth': 10, 'min_data_in_leaf': 92, 'subsample': 0.9129480610277688, 'colsample_bylevel': 0.4180872191175601, 'l2_leaf_reg': 0.427502430092523, 'bagging_temperature': 9334.672126109217, 'learning_rate': 0.03279099510388739, 'iterations': 145}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:46,448] Trial 35 finished with value: 0.3917525773195876 and parameters: {'depth': 9, 'min_data_in_leaf': 83, 'subsample': 0.8862327799744835, 'colsample_bylevel': 0.5303236795097055, 'l2_leaf_reg': 0.4881628706132087, 'bagging_temperature': 76.98841259300823, 'learning_rate': 0.049107666451836826, 'iterations': 111}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:46,664] Trial 36 finished with value: 0.09433962264150944 and parameters: {'depth': 8, 'min_data_in_leaf': 90, 'subsample': 0.03326601818020625, 'colsample_bylevel': 0.30044821920881515, 'l2_leaf_reg': 0.5854993320596256, 'bagging_temperature': 196417.00801871886, 'learning_rate': 0.005323145691180174, 'iterations': 133}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:46,754] Trial 37 finished with value: 0.26938775510204077 and parameters: {'depth': 2, 'min_data_in_leaf': 61, 'subsample': 0.8869082886907798, 'colsample_bylevel': 0.6053637497914635, 'l2_leaf_reg': 0.37642930381271983, 'bagging_temperature': 21902.910096055897, 'learning_rate': 0.07873091629189337, 'iterations': 54}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:46,869] Trial 38 finished with value: 0.29959514170040485 and parameters: {'depth': 10, 'min_data_in_leaf': 80, 'subsample': 0.6838710456769211, 'colsample_bylevel': 0.13288069384842174, 'l2_leaf_reg': 0.49618366278754145, 'bagging_temperature': 369.8532764877114, 'learning_rate': 0.050248842861485385, 'iterations': 93}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:47,060] Trial 39 finished with value: 0.01990049751243781 and parameters: {'depth': 3, 'min_data_in_leaf': 73, 'subsample': 0.8216628770199833, 'colsample_bylevel': 0.3866387881592427, 'l2_leaf_reg': 0.857027761240398, 'bagging_temperature': 4831.656533850226, 'learning_rate': 0.0020961715503327693, 'iterations': 152}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:48,090] Trial 40 finished with value: 0.4128113879003559 and parameters: {'depth': 13, 'min_data_in_leaf': 57, 'subsample': 0.9972060260605864, 'colsample_bylevel': 0.9876325197649055, 'l2_leaf_reg': 0.17012760906153818, 'bagging_temperature': 194535.90293095543, 'learning_rate': 0.07462861201591452, 'iterations': 83}. Best is trial 33 with value: 0.46349206349206346.
+[I 2024-03-22 17:29:48,431] Trial 41 finished with value: 0.4764890282131662 and parameters: {'depth': 7, 'min_data_in_leaf': 66, 'subsample': 0.7920239790464081, 'colsample_bylevel': 0.2782857183194383, 'l2_leaf_reg': 0.6812036496154472, 'bagging_temperature': 50343.84993588016, 'learning_rate': 0.08668340118273181, 'iterations': 195}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:49,237] Trial 42 finished with value: 0.4337349397590361 and parameters: {'depth': 7, 'min_data_in_leaf': 65, 'subsample': 0.9003836164454768, 'colsample_bylevel': 0.2947670156351108, 'l2_leaf_reg': 0.7012629674330468, 'bagging_temperature': 271561.3302196968, 'learning_rate': 0.08365924055232694, 'iterations': 211}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:49,870] Trial 43 finished with value: 0.4591194968553459 and parameters: {'depth': 9, 'min_data_in_leaf': 85, 'subsample': 0.7261048003438604, 'colsample_bylevel': 0.48679357145042246, 'l2_leaf_reg': 0.6020757343801455, 'bagging_temperature': 20933.229394138343, 'learning_rate': 0.06389654072363007, 'iterations': 192}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:50,538] Trial 44 finished with value: 0.4556962025316456 and parameters: {'depth': 9, 'min_data_in_leaf': 84, 'subsample': 0.7203499595676899, 'colsample_bylevel': 0.49376427290819475, 'l2_leaf_reg': 0.621225211486688, 'bagging_temperature': 23688.698712433226, 'learning_rate': 0.06962973968273038, 'iterations': 193}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:51,249] Trial 45 finished with value: 0.4350649350649351 and parameters: {'depth': 11, 'min_data_in_leaf': 83, 'subsample': 0.46432057056481363, 'colsample_bylevel': 0.49934739249095583, 'l2_leaf_reg': 0.850006114817905, 'bagging_temperature': 2993.9671306960613, 'learning_rate': 0.06163044320271605, 'iterations': 191}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:52,921] Trial 46 finished with value: 0.4478527607361963 and parameters: {'depth': 9, 'min_data_in_leaf': 86, 'subsample': 0.6470195044039267, 'colsample_bylevel': 0.6687135649870876, 'l2_leaf_reg': 0.6346092738618594, 'bagging_temperature': 20190.128255562406, 'learning_rate': 0.032394207260348, 'iterations': 226}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:54,424] Trial 47 finished with value: 0.3973941368078176 and parameters: {'depth': 11, 'min_data_in_leaf': 71, 'subsample': 0.7487401021251869, 'colsample_bylevel': 0.6041259293607141, 'l2_leaf_reg': 0.7146355477895096, 'bagging_temperature': 589.914677221828, 'learning_rate': 0.04700166354024376, 'iterations': 218}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:54,792] Trial 48 finished with value: 0.32142857142857145 and parameters: {'depth': 10, 'min_data_in_leaf': 44, 'subsample': 0.7121813692556708, 'colsample_bylevel': 0.483255448897807, 'l2_leaf_reg': 0.44878888405086187, 'bagging_temperature': 5236.920137995449, 'learning_rate': 0.0011147894532168314, 'iterations': 193}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:55,198] Trial 49 finished with value: 0.46349206349206346 and parameters: {'depth': 8, 'min_data_in_leaf': 64, 'subsample': 0.5695458039086502, 'colsample_bylevel': 0.7719491006585617, 'l2_leaf_reg': 0.7531696155559213, 'bagging_temperature': 34125.49819172007, 'learning_rate': 0.06187073659102015, 'iterations': 176}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:55,582] Trial 50 finished with value: 0.4 and parameters: {'depth': 8, 'min_data_in_leaf': 64, 'subsample': 0.5690484991974533, 'colsample_bylevel': 0.5679503905615669, 'l2_leaf_reg': 0.7851157067256144, 'bagging_temperature': 56.93707052651226, 'learning_rate': 0.02710215313754248, 'iterations': 172}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:55,955] Trial 51 finished with value: 0.44303797468354433 and parameters: {'depth': 8, 'min_data_in_leaf': 57, 'subsample': 0.7100726552951044, 'colsample_bylevel': 0.36286517186614, 'l2_leaf_reg': 0.7296493238699975, 'bagging_temperature': 34582.10162987679, 'learning_rate': 0.06257675639470697, 'iterations': 182}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:56,768] Trial 52 finished with value: 0.43589743589743596 and parameters: {'depth': 9, 'min_data_in_leaf': 80, 'subsample': 0.622356202557866, 'colsample_bylevel': 0.8372818145126557, 'l2_leaf_reg': 0.8314464985556483, 'bagging_temperature': 11990.262069806819, 'learning_rate': 0.07461239680394927, 'iterations': 194}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:57,364] Trial 53 finished with value: 0.46202531645569617 and parameters: {'depth': 10, 'min_data_in_leaf': 77, 'subsample': 0.560235951030843, 'colsample_bylevel': 0.7880483439433087, 'l2_leaf_reg': 0.5827617348854078, 'bagging_temperature': 225073.71776495603, 'learning_rate': 0.054749481027042794, 'iterations': 198}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:29:58,535] Trial 54 finished with value: 0.4061538461538462 and parameters: {'depth': 10, 'min_data_in_leaf': 77, 'subsample': 0.4794423151252391, 'colsample_bylevel': 0.8133354821855963, 'l2_leaf_reg': 0.5612382729756449, 'bagging_temperature': 283271.4981750775, 'learning_rate': 0.052162495342878944, 'iterations': 202}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:00,893] Trial 55 finished with value: 0.38834951456310673 and parameters: {'depth': 12, 'min_data_in_leaf': 59, 'subsample': 0.559716149456917, 'colsample_bylevel': 0.7464394537950365, 'l2_leaf_reg': 0.6823859335880716, 'bagging_temperature': 466787.5151177891, 'learning_rate': 0.02217442582650683, 'iterations': 235}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:01,286] Trial 56 finished with value: 0.44372990353697744 and parameters: {'depth': 8, 'min_data_in_leaf': 13, 'subsample': 0.38642889833127914, 'colsample_bylevel': 0.74394942478767, 'l2_leaf_reg': 0.7448733159771087, 'bagging_temperature': 57489.3975170907, 'learning_rate': 0.04065814044261581, 'iterations': 179}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:02,946] Trial 57 finished with value: 0.40390879478827363 and parameters: {'depth': 11, 'min_data_in_leaf': 65, 'subsample': 0.6547647777430077, 'colsample_bylevel': 0.6907601566099204, 'l2_leaf_reg': 0.9158761728264754, 'bagging_temperature': 164860.36161584588, 'learning_rate': 0.08393327258732809, 'iterations': 214}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:04,880] Trial 58 finished with value: 0.38596491228070173 and parameters: {'depth': 13, 'min_data_in_leaf': 77, 'subsample': 0.31785632848675127, 'colsample_bylevel': 0.7937112413201022, 'l2_leaf_reg': 0.4719792647536101, 'bagging_temperature': 5781.569864090939, 'learning_rate': 0.035750259514679784, 'iterations': 161}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:05,763] Trial 59 finished with value: 0.3187250996015936 and parameters: {'depth': 7, 'min_data_in_leaf': 71, 'subsample': 0.9398716123980652, 'colsample_bylevel': 0.8756614917189511, 'l2_leaf_reg': 0.6483262735843852, 'bagging_temperature': 979651.5204608922, 'learning_rate': 0.0027834219466492355, 'iterations': 222}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:07,267] Trial 60 finished with value: 0.3533568904593639 and parameters: {'depth': 9, 'min_data_in_leaf': 95, 'subsample': 0.5198825608171298, 'colsample_bylevel': 0.9062939756050893, 'l2_leaf_reg': 0.5947848982481039, 'bagging_temperature': 163.44618812035543, 'learning_rate': 0.010828794918044832, 'iterations': 203}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:07,792] Trial 61 finished with value: 0.46394984326018807 and parameters: {'depth': 9, 'min_data_in_leaf': 81, 'subsample': 0.731588306542802, 'colsample_bylevel': 0.4030149566709941, 'l2_leaf_reg': 0.6227055168658935, 'bagging_temperature': 37581.77980032874, 'learning_rate': 0.06461293035746485, 'iterations': 174}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:08,212] Trial 62 finished with value: 0.4495114006514658 and parameters: {'depth': 10, 'min_data_in_leaf': 88, 'subsample': 0.8740030103598379, 'colsample_bylevel': 0.4000752159647135, 'l2_leaf_reg': 0.8094875812495339, 'bagging_temperature': 56644.210704577636, 'learning_rate': 0.057656351043081255, 'iterations': 158}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:08,477] Trial 63 finished with value: 0.42071197411003236 and parameters: {'depth': 8, 'min_data_in_leaf': 74, 'subsample': 0.4429827256151503, 'colsample_bylevel': 0.3305488001780572, 'l2_leaf_reg': 0.5785665535952669, 'bagging_temperature': 130703.63239197514, 'learning_rate': 0.04338547417850036, 'iterations': 141}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:08,983] Trial 64 finished with value: 0.4444444444444444 and parameters: {'depth': 9, 'min_data_in_leaf': 80, 'subsample': 0.80665707295144, 'colsample_bylevel': 0.3543250936810204, 'l2_leaf_reg': 0.517097013037695, 'bagging_temperature': 15162.10756104374, 'learning_rate': 0.06894633050312336, 'iterations': 174}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:09,411] Trial 65 finished with value: 0.45625 and parameters: {'depth': 10, 'min_data_in_leaf': 71, 'subsample': 0.852188824299653, 'colsample_bylevel': 0.20648213335208815, 'l2_leaf_reg': 0.6144944335825436, 'bagging_temperature': 462522.47100182157, 'learning_rate': 0.08440468224526253, 'iterations': 154}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:09,747] Trial 66 finished with value: 0.44516129032258067 and parameters: {'depth': 7, 'min_data_in_leaf': 76, 'subsample': 0.7434922139833999, 'colsample_bylevel': 0.5362682625508199, 'l2_leaf_reg': 0.700093105436903, 'bagging_temperature': 39878.52258592654, 'learning_rate': 0.05609457598104462, 'iterations': 172}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:10,044] Trial 67 finished with value: 0.4370860927152318 and parameters: {'depth': 8, 'min_data_in_leaf': 62, 'subsample': 0.5968484592811094, 'colsample_bylevel': 0.4532285758350943, 'l2_leaf_reg': 0.028992677987455417, 'bagging_temperature': 2886.8516523483927, 'learning_rate': 0.06516179750009336, 'iterations': 138}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:10,333] Trial 68 finished with value: 0.457680250783699 and parameters: {'depth': 5, 'min_data_in_leaf': 53, 'subsample': 0.6803184018851155, 'colsample_bylevel': 0.7054162720454622, 'l2_leaf_reg': 0.4221142002207719, 'bagging_temperature': 1092.738082019182, 'learning_rate': 0.089053033039852, 'iterations': 186}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:10,780] Trial 69 finished with value: 0.2835249042145594 and parameters: {'depth': 1, 'min_data_in_leaf': 52, 'subsample': 0.6798006088690413, 'colsample_bylevel': 0.7114251722483832, 'l2_leaf_reg': 0.31520325361525237, 'bagging_temperature': 732.8395431907123, 'learning_rate': 0.04519341621873913, 'iterations': 208}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:11,085] Trial 70 finished with value: 0.4571428571428572 and parameters: {'depth': 5, 'min_data_in_leaf': 46, 'subsample': 0.6249872451272143, 'colsample_bylevel': 0.7912924442659061, 'l2_leaf_reg': 0.4128625297098765, 'bagging_temperature': 8924.16587049828, 'learning_rate': 0.08534247458830198, 'iterations': 185}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:11,385] Trial 71 finished with value: 0.46875 and parameters: {'depth': 5, 'min_data_in_leaf': 43, 'subsample': 0.6338843383443135, 'colsample_bylevel': 0.8402824052692428, 'l2_leaf_reg': 0.4027234640360845, 'bagging_temperature': 9146.890321135326, 'learning_rate': 0.08365310049069252, 'iterations': 199}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:12,163] Trial 72 finished with value: 0.43209876543209885 and parameters: {'depth': 5, 'min_data_in_leaf': 40, 'subsample': 0.5735637568447383, 'colsample_bylevel': 0.8423924378372079, 'l2_leaf_reg': 0.31262516793869205, 'bagging_temperature': 1308.4583872190724, 'learning_rate': 0.0555600347839594, 'iterations': 204}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:12,503] Trial 73 finished with value: 0.44303797468354433 and parameters: {'depth': 6, 'min_data_in_leaf': 35, 'subsample': 0.6438328650584066, 'colsample_bylevel': 0.6422450025652413, 'l2_leaf_reg': 0.4445685739826767, 'bagging_temperature': 3646.9195318312068, 'learning_rate': 0.07185277016101699, 'iterations': 188}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:12,768] Trial 74 finished with value: 0.4565916398713826 and parameters: {'depth': 4, 'min_data_in_leaf': 49, 'subsample': 0.5396684985494017, 'colsample_bylevel': 0.7601860867295276, 'l2_leaf_reg': 0.36364040399069747, 'bagging_temperature': 12770.400438991614, 'learning_rate': 0.08987460566905704, 'iterations': 198}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:13,007] Trial 75 finished with value: 0.4401294498381877 and parameters: {'depth': 3, 'min_data_in_leaf': 55, 'subsample': 0.6881071439306339, 'colsample_bylevel': 0.9128056552553294, 'l2_leaf_reg': 0.5033319155602306, 'bagging_temperature': 30783.811622869245, 'learning_rate': 0.06441213357679827, 'iterations': 177}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:13,299] Trial 76 finished with value: 0.461038961038961 and parameters: {'depth': 6, 'min_data_in_leaf': 34, 'subsample': 0.7142468787925823, 'colsample_bylevel': 0.707719531165338, 'l2_leaf_reg': 0.3921210358747813, 'bagging_temperature': 2147.8169055256476, 'learning_rate': 0.053498278365417866, 'iterations': 168}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:14,291] Trial 77 finished with value: 0.4458204334365325 and parameters: {'depth': 6, 'min_data_in_leaf': 35, 'subsample': 0.7718426844849966, 'colsample_bylevel': 0.9352086647932536, 'l2_leaf_reg': 0.3923784103521996, 'bagging_temperature': 79106.82643119238, 'learning_rate': 0.03622315663714669, 'iterations': 240}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:14,660] Trial 78 finished with value: 0.4347826086956522 and parameters: {'depth': 7, 'min_data_in_leaf': 40, 'subsample': 0.7249130319101184, 'colsample_bylevel': 0.9700397527588464, 'l2_leaf_reg': 0.33063017791237703, 'bagging_temperature': 7157.007390039275, 'learning_rate': 0.05001377351081688, 'iterations': 167}. Best is trial 41 with value: 0.4764890282131662.
+[I 2024-03-22 17:30:14,903] Trial 79 finished with value: 0.45141065830721 and parameters: {'depth': 6, 'min_data_in_leaf': 24, 'subsample': 0.4925769733820692, 'colsample_bylevel': 0.4710720410944147, 'l2_leaf_reg': 0.5427107225462886, 'bagging_temperature': 22.425449337137028, 'learning_rate': 0.07646364344874555, 'iterations': 156}. Best is trial 41 with value: 0.4764890282131662.</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>CPU times: user 2 µs, sys: 1e+03 ns, total: 3 µs
-Wall time: 5.96 µs</code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="17">
-<pre><code>0.8094567970728962</code></pre>
-</div>
-</div>
-<div id="cell-16" class="cell" data-execution_count="20">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>start <span class="op">=</span> time.time()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-17" class="cell" data-execution_count="21">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>end <span class="op">=</span> time.time()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="cell-18" class="cell" data-execution_count="24">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="ss">f"</span><span class="sc">{</span>end<span class="op">-</span>start<span class="sc">:.2f}</span><span class="ss"> sec"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-display" data-execution_count="24">
-<pre><code>'8.97 sec'</code></pre>
+<pre><code>----------
+----------
+time all-in: 57.29 sec
+study.best_params={'depth': 7, 'min_data_in_leaf': 66, 'subsample': 0.7920239790464081, 'colsample_bylevel': 0.2782857183194383, 'l2_leaf_reg': 0.6812036496154472, 'bagging_temperature': 50343.84993588016, 'learning_rate': 0.08668340118273181, 'iterations': 195}
+study.best_value=0.4764890282131662</code></pre>
 </div>
 </div>
 
