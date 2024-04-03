@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.552">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -59,7 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -104,10 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -257,7 +253,7 @@ window.Quarto = {
 
 
 
-<div id="cell-1" class="cell" data-execution_count="1">
+<div id="cell-1" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> time</span>
@@ -276,7 +272,7 @@ window.Quarto = {
 <span id="cb1-14"><a href="#cb1-14"></a><span class="im">from</span> tqdm.notebook <span class="im">import</span> tqdm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-2" class="cell" data-execution_count="2">
+<div id="cell-2" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
@@ -312,20 +308,22 @@ window.Quarto = {
 <section id="visual-represantation" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="visual-represantation"><span class="header-section-number">1.4</span> visual represantation</h2>
 <p>To illustrate the distinction between the three sampling methods, let’s consider a hypothetical scenario in a two-dimensional space, spanning from 0 to 1 inclusively and apply the three sampling strategies random, lhs, and grid.</p>
-<div id="cell-8" class="cell" data-execution_count="3">
+<div id="cell-8" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>uni_sample <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, (<span class="dv">100</span>, <span class="dv">2</span>))</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>sampler <span class="op">=</span> qmc.LatinHypercube(d<span class="op">=</span><span class="dv">2</span>, optimization<span class="op">=</span><span class="st">"lloyd"</span>)</span>
-<span id="cb3-4"><a href="#cb3-4"></a>lhs_sample <span class="op">=</span> sampler.random(n<span class="op">=</span><span class="dv">100</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a></span>
-<span id="cb3-6"><a href="#cb3-6"></a>grid_sample <span class="op">=</span> np.array(</span>
-<span id="cb3-7"><a href="#cb3-7"></a>    [[i, j] <span class="cf">for</span> i <span class="kw">in</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>) <span class="cf">for</span> j <span class="kw">in</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>)]</span>
-<span id="cb3-8"><a href="#cb3-8"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3"></a>uni_sample <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, (<span class="dv">100</span>, <span class="dv">2</span>))</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>sampler <span class="op">=</span> qmc.LatinHypercube(d<span class="op">=</span><span class="dv">2</span>, optimization<span class="op">=</span><span class="st">"lloyd"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>lhs_sample <span class="op">=</span> sampler.random(n<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a>grid_sample <span class="op">=</span> np.array(</span>
+<span id="cb3-9"><a href="#cb3-9"></a>    [[i, j] <span class="cf">for</span> i <span class="kw">in</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>) <span class="cf">for</span> j <span class="kw">in</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">10</span>)]</span>
+<span id="cb3-10"><a href="#cb3-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-9" class="cell" data-execution_count="4">
+<div id="cell-9" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a>_, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">4</span>))</span>
@@ -370,13 +368,6 @@ window.Quarto = {
 <span id="cb4-40"><a href="#cb4-40"></a>plt.tight_layout()</span>
 <span id="cb4-41"><a href="#cb4-41"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="stepcat_files/figure-html/cell-5-output-1.svg" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 </section>
@@ -388,7 +379,7 @@ window.Quarto = {
 <section id="dataset" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="dataset"><span class="header-section-number">2.1</span> dataset</h2>
 <p>We can utilize the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_openml.html#sklearn.datasets.fetch_openml"><code>fetch_openml</code></a> function from scikit-learn to automatically fetch the appropriate dataset. Following this, the data will be split into train and test sets with stratification controlled on the target variable. That is, the distribution of the target variable (y) is maintained equal for both the training and testing sets.</p>
-<div id="cell-12" class="cell" data-execution_count="5">
+<div id="cell-12" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># fetch data set</span></span>
@@ -418,55 +409,30 @@ window.Quarto = {
 <section id="info-on-dataset" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="info-on-dataset"><span class="header-section-number">2.2</span> info on dataset</h2>
 <p>As mentioned earlier, the dataset comprises 9 categorical and 7 numerical features. This configuration makes the dataset well-suited for using CatBoost. CatBoost employs a specialized technique called “ordered target encoding” that converts categorical features into numerical values, rendering them amenable to gradient boosting models. This approach can result in enhanced model performance and accuracy compared to other machine learning algorithms, particularly when managing datasets replete with a substantial number of categorical features.</p>
-<div id="cell-14" class="cell" data-execution_count="6">
+<div id="cell-14" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a>X.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-Index: 11303 entries, 1513 to 28981
-Data columns (total 16 columns):
- #   Column  Non-Null Count  Dtype   
----  ------  --------------  -----   
- 0   V1      11303 non-null  int64   
- 1   V2      11303 non-null  category
- 2   V3      11303 non-null  category
- 3   V4      11303 non-null  category
- 4   V5      11303 non-null  category
- 5   V6      11303 non-null  int64   
- 6   V7      11303 non-null  category
- 7   V8      11303 non-null  category
- 8   V9      11303 non-null  category
- 9   V10     11303 non-null  int64   
- 10  V11     11303 non-null  category
- 11  V12     11303 non-null  int64   
- 12  V13     11303 non-null  int64   
- 13  V14     11303 non-null  int64   
- 14  V15     11303 non-null  int64   
- 15  V16     11303 non-null  category
-dtypes: category(9), int64(7)
-memory usage: 807.6 KB</code></pre>
-</div>
 </div>
 </section>
 <section id="creating-data-pools" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="creating-data-pools"><span class="header-section-number">2.3</span> creating data pools</h2>
 <p>CatBoost provides an option to create pools of data. This feature allows CatBoost to optimize the handling of large files internally. In this specific case, defining categorical features in one place and being able to reuse them later is a benefit for improving reproducibility.</p>
-<div id="cell-16" class="cell" data-execution_count="7">
+<div id="cell-16" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>train_pool <span class="op">=</span> Pool(</span>
-<span id="cb8-2"><a href="#cb8-2"></a>    data<span class="op">=</span>X_train,</span>
-<span id="cb8-3"><a href="#cb8-3"></a>    label<span class="op">=</span>y_train,</span>
-<span id="cb8-4"><a href="#cb8-4"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb8-5"><a href="#cb8-5"></a>)</span>
-<span id="cb8-6"><a href="#cb8-6"></a></span>
-<span id="cb8-7"><a href="#cb8-7"></a>test_pool <span class="op">=</span> Pool(</span>
-<span id="cb8-8"><a href="#cb8-8"></a>    data<span class="op">=</span>X_test,</span>
-<span id="cb8-9"><a href="#cb8-9"></a>    label<span class="op">=</span>y_test,</span>
-<span id="cb8-10"><a href="#cb8-10"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
-<span id="cb8-11"><a href="#cb8-11"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a>train_pool <span class="op">=</span> Pool(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>    data<span class="op">=</span>X_train,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    label<span class="op">=</span>y_train,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb7-5"><a href="#cb7-5"></a>)</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a>test_pool <span class="op">=</span> Pool(</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    data<span class="op">=</span>X_test,</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    label<span class="op">=</span>y_test,</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    cat_features<span class="op">=</span><span class="bu">list</span>(X.select_dtypes(include<span class="op">=</span><span class="st">"category"</span>).columns),</span>
+<span id="cb7-11"><a href="#cb7-11"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -485,634 +451,202 @@ memory usage: 807.6 KB</code></pre>
 <section id="grid-search" class="level2" data-number="2.5">
 <h2 data-number="2.5" class="anchored" data-anchor-id="grid-search"><span class="header-section-number">2.5</span> grid search</h2>
 <p>To adhere to the limit of 100 samples, we use <span class="math inline">\(100^{1/4}\approx 3\)</span> this results in <span class="math inline">\(3^4=81\)</span> samples.</p>
-<div id="cell-19" class="cell" data-execution_count="8">
+<div id="cell-19" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>n_grid_samples <span class="op">=</span> np.power(N_SAMPLES, <span class="dv">1</span> <span class="op">/</span> <span class="dv">4</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>n_grid_samples <span class="op">=</span> np.floor(n_grid_samples).astype(<span class="bu">int</span>)</span>
-<span id="cb9-3"><a href="#cb9-3"></a></span>
-<span id="cb9-4"><a href="#cb9-4"></a>param_grid <span class="op">=</span> {</span>
-<span id="cb9-5"><a href="#cb9-5"></a>    <span class="st">"depth"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">15</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
-<span id="cb9-6"><a href="#cb9-6"></a>    <span class="st">"iterations"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">1024</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
-<span id="cb9-7"><a href="#cb9-7"></a>    <span class="st">"subsample"</span>: np.linspace(<span class="fl">0.1</span>, <span class="dv">1</span>, n_grid_samples, endpoint<span class="op">=</span><span class="va">False</span>),</span>
-<span id="cb9-8"><a href="#cb9-8"></a>    <span class="st">"bagging_temperature"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">1000000</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
-<span id="cb9-9"><a href="#cb9-9"></a>}</span>
-<span id="cb9-10"><a href="#cb9-10"></a></span>
-<span id="cb9-11"><a href="#cb9-11"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(ParameterGrid(param_grid<span class="op">=</span>param_grid))</span>
-<span id="cb9-12"><a href="#cb9-12"></a></span>
-<span id="cb9-13"><a href="#cb9-13"></a>cube_search <span class="op">=</span> []</span>
-<span id="cb9-14"><a href="#cb9-14"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
-<span id="cb9-15"><a href="#cb9-15"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb9-16"><a href="#cb9-16"></a>        <span class="op">**</span>param,</span>
-<span id="cb9-17"><a href="#cb9-17"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb9-18"><a href="#cb9-18"></a>    )</span>
-<span id="cb9-19"><a href="#cb9-19"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-20"><a href="#cb9-20"></a></span>
-<span id="cb9-21"><a href="#cb9-21"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
-<span id="cb9-22"><a href="#cb9-22"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
-<span id="cb9-23"><a href="#cb9-23"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
-<span id="cb9-24"><a href="#cb9-24"></a></span>
-<span id="cb9-25"><a href="#cb9-25"></a>    cube_search.append(param)</span>
-<span id="cb9-26"><a href="#cb9-26"></a>grid_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>n_grid_samples <span class="op">=</span> np.power(N_SAMPLES, <span class="dv">1</span> <span class="op">/</span> <span class="dv">4</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>n_grid_samples <span class="op">=</span> np.floor(n_grid_samples).astype(<span class="bu">int</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a>param_grid <span class="op">=</span> {</span>
+<span id="cb8-5"><a href="#cb8-5"></a>    <span class="st">"depth"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">15</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="st">"iterations"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">1024</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="st">"subsample"</span>: np.linspace(<span class="fl">0.1</span>, <span class="dv">1</span>, n_grid_samples, endpoint<span class="op">=</span><span class="va">False</span>),</span>
+<span id="cb8-8"><a href="#cb8-8"></a>    <span class="st">"bagging_temperature"</span>: np.linspace(<span class="dv">1</span>, <span class="dv">1000000</span>, n_grid_samples, dtype<span class="op">=</span><span class="bu">int</span>),</span>
+<span id="cb8-9"><a href="#cb8-9"></a>}</span>
+<span id="cb8-10"><a href="#cb8-10"></a></span>
+<span id="cb8-11"><a href="#cb8-11"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(ParameterGrid(param_grid<span class="op">=</span>param_grid))</span>
+<span id="cb8-12"><a href="#cb8-12"></a></span>
+<span id="cb8-13"><a href="#cb8-13"></a>cube_search <span class="op">=</span> []</span>
+<span id="cb8-14"><a href="#cb8-14"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb8-16"><a href="#cb8-16"></a>        <span class="op">**</span>param,</span>
+<span id="cb8-17"><a href="#cb8-17"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18"></a>    )</span>
+<span id="cb8-19"><a href="#cb8-19"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-20"><a href="#cb8-20"></a></span>
+<span id="cb8-21"><a href="#cb8-21"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb8-22"><a href="#cb8-22"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
+<span id="cb8-23"><a href="#cb8-23"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
+<span id="cb8-24"><a href="#cb8-24"></a></span>
+<span id="cb8-25"><a href="#cb8-25"></a>    cube_search.append(param)</span>
+<span id="cb8-26"><a href="#cb8-26"></a>grid_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"c816a16946dd42b6968fffc8c9e5c70d","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
 </div>
-</div>
-<div id="cell-20" class="cell" data-execution_count="9">
+<div id="cell-20" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>grid_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a>grid_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">bagging_temperature</th>
-<th data-quarto-table-cell-role="th">depth</th>
-<th data-quarto-table-cell-role="th">iterations</th>
-<th data-quarto-table-cell-role="th">subsample</th>
-<th data-quarto-table-cell-role="th">score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">41</td>
-<td>500000</td>
-<td>8</td>
-<td>284</td>
-<td>0.7</td>
-<td>0.503432</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">14</td>
-<td>1</td>
-<td>8</td>
-<td>284</td>
-<td>0.7</td>
-<td>0.503432</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">68</td>
-<td>1000000</td>
-<td>8</td>
-<td>284</td>
-<td>0.7</td>
-<td>0.503432</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">69</td>
-<td>1000000</td>
-<td>8</td>
-<td>778</td>
-<td>0.1</td>
-<td>0.500000</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">42</td>
-<td>500000</td>
-<td>8</td>
-<td>778</td>
-<td>0.1</td>
-<td>0.500000</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 </div>
 </section>
 <section id="random-search" class="level2" data-number="2.6">
 <h2 data-number="2.6" class="anchored" data-anchor-id="random-search"><span class="header-section-number">2.6</span> Random search</h2>
 <p>for depth and iterations the model excpects integers, so <code>randint</code> is used and for subsample and bagging_temperature <code>uniform</code> is used, as the model accepts float values for those.</p>
-<div id="cell-22" class="cell" data-execution_count="10">
+<div id="cell-22" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>random_sample <span class="op">=</span> np.hstack(</span>
-<span id="cb11-2"><a href="#cb11-2"></a>    (</span>
-<span id="cb11-3"><a href="#cb11-3"></a>        np.random.randint(<span class="dv">1</span>, <span class="dv">15</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
-<span id="cb11-4"><a href="#cb11-4"></a>        np.random.randint(<span class="dv">1</span>, <span class="dv">1024</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
-<span id="cb11-5"><a href="#cb11-5"></a>        np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
-<span id="cb11-6"><a href="#cb11-6"></a>        np.random.uniform(<span class="dv">1</span>, <span class="dv">1_000_000</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
-<span id="cb11-7"><a href="#cb11-7"></a>    )</span>
-<span id="cb11-8"><a href="#cb11-8"></a>)</span>
-<span id="cb11-9"><a href="#cb11-9"></a></span>
-<span id="cb11-10"><a href="#cb11-10"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb11-11"><a href="#cb11-11"></a>    pd.DataFrame(</span>
-<span id="cb11-12"><a href="#cb11-12"></a>        data<span class="op">=</span>random_sample,</span>
-<span id="cb11-13"><a href="#cb11-13"></a>        columns<span class="op">=</span>[<span class="st">"depth"</span>, <span class="st">"iterations"</span>, <span class="st">"subsample"</span>, <span class="st">"bagging_temperature"</span>],</span>
-<span id="cb11-14"><a href="#cb11-14"></a>    )</span>
-<span id="cb11-15"><a href="#cb11-15"></a>    .to_dict(<span class="st">"index"</span>)</span>
-<span id="cb11-16"><a href="#cb11-16"></a>    .values()</span>
-<span id="cb11-17"><a href="#cb11-17"></a>)</span>
-<span id="cb11-18"><a href="#cb11-18"></a></span>
-<span id="cb11-19"><a href="#cb11-19"></a>cube_search <span class="op">=</span> []</span>
-<span id="cb11-20"><a href="#cb11-20"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
-<span id="cb11-21"><a href="#cb11-21"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb11-22"><a href="#cb11-22"></a>        <span class="op">**</span>param,</span>
-<span id="cb11-23"><a href="#cb11-23"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb11-24"><a href="#cb11-24"></a>    )</span>
-<span id="cb11-25"><a href="#cb11-25"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb11-26"><a href="#cb11-26"></a></span>
-<span id="cb11-27"><a href="#cb11-27"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
-<span id="cb11-28"><a href="#cb11-28"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
-<span id="cb11-29"><a href="#cb11-29"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
-<span id="cb11-30"><a href="#cb11-30"></a></span>
-<span id="cb11-31"><a href="#cb11-31"></a>    cube_search.append(param)</span>
-<span id="cb11-32"><a href="#cb11-32"></a>random_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a>random_sample <span class="op">=</span> np.hstack(</span>
+<span id="cb10-2"><a href="#cb10-2"></a>    (</span>
+<span id="cb10-3"><a href="#cb10-3"></a>        np.random.randint(<span class="dv">1</span>, <span class="dv">15</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
+<span id="cb10-4"><a href="#cb10-4"></a>        np.random.randint(<span class="dv">1</span>, <span class="dv">1024</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
+<span id="cb10-5"><a href="#cb10-5"></a>        np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
+<span id="cb10-6"><a href="#cb10-6"></a>        np.random.uniform(<span class="dv">1</span>, <span class="dv">1_000_000</span>, (N_SAMPLES, <span class="dv">1</span>)),</span>
+<span id="cb10-7"><a href="#cb10-7"></a>    )</span>
+<span id="cb10-8"><a href="#cb10-8"></a>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(</span>
+<span id="cb10-11"><a href="#cb10-11"></a>    pd.DataFrame(</span>
+<span id="cb10-12"><a href="#cb10-12"></a>        data<span class="op">=</span>random_sample,</span>
+<span id="cb10-13"><a href="#cb10-13"></a>        columns<span class="op">=</span>[<span class="st">"depth"</span>, <span class="st">"iterations"</span>, <span class="st">"subsample"</span>, <span class="st">"bagging_temperature"</span>],</span>
+<span id="cb10-14"><a href="#cb10-14"></a>    )</span>
+<span id="cb10-15"><a href="#cb10-15"></a>    .to_dict(<span class="st">"index"</span>)</span>
+<span id="cb10-16"><a href="#cb10-16"></a>    .values()</span>
+<span id="cb10-17"><a href="#cb10-17"></a>)</span>
+<span id="cb10-18"><a href="#cb10-18"></a></span>
+<span id="cb10-19"><a href="#cb10-19"></a><span class="bu">print</span>(param_combo)</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a>cube_search <span class="op">=</span> []</span>
+<span id="cb10-22"><a href="#cb10-22"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
+<span id="cb10-23"><a href="#cb10-23"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb10-24"><a href="#cb10-24"></a>        <span class="op">**</span>param,</span>
+<span id="cb10-25"><a href="#cb10-25"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb10-26"><a href="#cb10-26"></a>    )</span>
+<span id="cb10-27"><a href="#cb10-27"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-28"><a href="#cb10-28"></a></span>
+<span id="cb10-29"><a href="#cb10-29"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb10-30"><a href="#cb10-30"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
+<span id="cb10-31"><a href="#cb10-31"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
+<span id="cb10-32"><a href="#cb10-32"></a></span>
+<span id="cb10-33"><a href="#cb10-33"></a>    cube_search.append(param)</span>
+<span id="cb10-34"><a href="#cb10-34"></a>random_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ec317d02599e4fbcaa442fc04385893c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
 </div>
-</div>
-<div id="cell-23" class="cell" data-execution_count="11">
+<div id="cell-23" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>random_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a>random_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="11">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">depth</th>
-<th data-quarto-table-cell-role="th">iterations</th>
-<th data-quarto-table-cell-role="th">subsample</th>
-<th data-quarto-table-cell-role="th">bagging_temperature</th>
-<th data-quarto-table-cell-role="th">score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">19</td>
-<td>4.0</td>
-<td>482</td>
-<td>0.444048</td>
-<td>606137.431661</td>
-<td>0.526316</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">34</td>
-<td>5.0</td>
-<td>456</td>
-<td>0.387908</td>
-<td>50673.160631</td>
-<td>0.524138</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">94</td>
-<td>5.0</td>
-<td>565</td>
-<td>0.454874</td>
-<td>491525.165733</td>
-<td>0.523918</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">32</td>
-<td>5.0</td>
-<td>323</td>
-<td>0.514352</td>
-<td>600657.923939</td>
-<td>0.523918</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">97</td>
-<td>7.0</td>
-<td>569</td>
-<td>0.647182</td>
-<td>970569.671420</td>
-<td>0.523077</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 </div>
 </section>
 <section id="lhs-search" class="level2" data-number="2.7">
 <h2 data-number="2.7" class="anchored" data-anchor-id="lhs-search"><span class="header-section-number">2.7</span> LHS search</h2>
 <p>when applying the LHS technqiue you need to specify how many dimensions the resulting sample should have and how many samples you want. these are on a different scale than the searchspace that you want to explore, so a scaling is applied to get it to the desired space. afterwhich a type conversion is applied.</p>
-<div id="cell-25" class="cell" data-execution_count="12">
+<div id="cell-25" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>sampler <span class="op">=</span> qmc.LatinHypercube(d<span class="op">=</span><span class="dv">4</span>, optimization<span class="op">=</span><span class="st">"lloyd"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2"></a>sample <span class="op">=</span> sampler.random(n<span class="op">=</span>N_SAMPLES)</span>
-<span id="cb13-3"><a href="#cb13-3"></a></span>
-<span id="cb13-4"><a href="#cb13-4"></a>l_bounds <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]</span>
-<span id="cb13-5"><a href="#cb13-5"></a>u_bounds <span class="op">=</span> [<span class="dv">15</span>, <span class="dv">1024</span>, <span class="dv">1</span>, <span class="dv">1000000</span>]</span>
-<span id="cb13-6"><a href="#cb13-6"></a>sample_scaled <span class="op">=</span> qmc.scale(sample, l_bounds, u_bounds)</span>
-<span id="cb13-7"><a href="#cb13-7"></a></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># convert to int</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a>sample_scaled[:, :<span class="dv">2</span>] <span class="op">=</span> sample_scaled[:, :<span class="dv">2</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb13-10"><a href="#cb13-10"></a></span>
-<span id="cb13-11"><a href="#cb13-11"></a></span>
-<span id="cb13-12"><a href="#cb13-12"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb13-13"><a href="#cb13-13"></a>    pd.DataFrame(</span>
-<span id="cb13-14"><a href="#cb13-14"></a>        data<span class="op">=</span>sample_scaled,</span>
-<span id="cb13-15"><a href="#cb13-15"></a>        columns<span class="op">=</span>[<span class="st">"depth"</span>, <span class="st">"iterations"</span>, <span class="st">"subsample"</span>, <span class="st">"bagging_temperature"</span>],</span>
-<span id="cb13-16"><a href="#cb13-16"></a>    )</span>
-<span id="cb13-17"><a href="#cb13-17"></a>    .to_dict(<span class="st">"index"</span>)</span>
-<span id="cb13-18"><a href="#cb13-18"></a>    .values()</span>
-<span id="cb13-19"><a href="#cb13-19"></a>)</span>
-<span id="cb13-20"><a href="#cb13-20"></a></span>
-<span id="cb13-21"><a href="#cb13-21"></a>cube_search <span class="op">=</span> []</span>
-<span id="cb13-22"><a href="#cb13-22"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
-<span id="cb13-23"><a href="#cb13-23"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb13-24"><a href="#cb13-24"></a>        <span class="op">**</span>param,</span>
-<span id="cb13-25"><a href="#cb13-25"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb13-26"><a href="#cb13-26"></a>    )</span>
-<span id="cb13-27"><a href="#cb13-27"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb13-28"><a href="#cb13-28"></a></span>
-<span id="cb13-29"><a href="#cb13-29"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
-<span id="cb13-30"><a href="#cb13-30"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
-<span id="cb13-31"><a href="#cb13-31"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
-<span id="cb13-32"><a href="#cb13-32"></a></span>
-<span id="cb13-33"><a href="#cb13-33"></a>    cube_search.append(param)</span>
-<span id="cb13-34"><a href="#cb13-34"></a>lhs_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a>sampler <span class="op">=</span> qmc.LatinHypercube(d<span class="op">=</span><span class="dv">4</span>, optimization<span class="op">=</span><span class="st">"lloyd"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a>sample <span class="op">=</span> sampler.random(n<span class="op">=</span>N_SAMPLES)</span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a>l_bounds <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb12-5"><a href="#cb12-5"></a>u_bounds <span class="op">=</span> [<span class="dv">15</span>, <span class="dv">1024</span>, <span class="dv">1</span>, <span class="dv">1000000</span>]</span>
+<span id="cb12-6"><a href="#cb12-6"></a>sample_scaled <span class="op">=</span> qmc.scale(sample, l_bounds, u_bounds)</span>
+<span id="cb12-7"><a href="#cb12-7"></a></span>
+<span id="cb12-8"><a href="#cb12-8"></a><span class="co"># convert to int</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>sample_scaled[:, :<span class="dv">2</span>] <span class="op">=</span> sample_scaled[:, :<span class="dv">2</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a>param_combo <span class="op">=</span> <span class="bu">list</span>(</span>
+<span id="cb12-13"><a href="#cb12-13"></a>    pd.DataFrame(</span>
+<span id="cb12-14"><a href="#cb12-14"></a>        data<span class="op">=</span>sample_scaled,</span>
+<span id="cb12-15"><a href="#cb12-15"></a>        columns<span class="op">=</span>[<span class="st">"depth"</span>, <span class="st">"iterations"</span>, <span class="st">"subsample"</span>, <span class="st">"bagging_temperature"</span>],</span>
+<span id="cb12-16"><a href="#cb12-16"></a>    )</span>
+<span id="cb12-17"><a href="#cb12-17"></a>    .to_dict(<span class="st">"index"</span>)</span>
+<span id="cb12-18"><a href="#cb12-18"></a>    .values()</span>
+<span id="cb12-19"><a href="#cb12-19"></a>)</span>
+<span id="cb12-20"><a href="#cb12-20"></a></span>
+<span id="cb12-21"><a href="#cb12-21"></a>cube_search <span class="op">=</span> []</span>
+<span id="cb12-22"><a href="#cb12-22"></a><span class="cf">for</span> param <span class="kw">in</span> tqdm(param_combo):</span>
+<span id="cb12-23"><a href="#cb12-23"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb12-24"><a href="#cb12-24"></a>        <span class="op">**</span>param,</span>
+<span id="cb12-25"><a href="#cb12-25"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb12-26"><a href="#cb12-26"></a>    )</span>
+<span id="cb12-27"><a href="#cb12-27"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-28"><a href="#cb12-28"></a></span>
+<span id="cb12-29"><a href="#cb12-29"></a>    score <span class="op">=</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb12-30"><a href="#cb12-30"></a>    param[<span class="st">"score"</span>] <span class="op">=</span> score</span>
+<span id="cb12-31"><a href="#cb12-31"></a>    param[<span class="st">"iterations"</span>] <span class="op">=</span> cbc.get_best_iteration()</span>
+<span id="cb12-32"><a href="#cb12-32"></a></span>
+<span id="cb12-33"><a href="#cb12-33"></a>    cube_search.append(param)</span>
+<span id="cb12-34"><a href="#cb12-34"></a>lhs_results <span class="op">=</span> pd.DataFrame(cube_search).sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"6e6b6ffa2d7d4c2887c89ba39bea52a7","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
 </div>
-</div>
-<div id="cell-26" class="cell" data-execution_count="13">
+<div id="cell-26" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>lhs_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a>lhs_results.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="13">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">depth</th>
-<th data-quarto-table-cell-role="th">iterations</th>
-<th data-quarto-table-cell-role="th">subsample</th>
-<th data-quarto-table-cell-role="th">bagging_temperature</th>
-<th data-quarto-table-cell-role="th">score</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">76</td>
-<td>4.0</td>
-<td>793</td>
-<td>0.523234</td>
-<td>594167.506028</td>
-<td>0.529148</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">74</td>
-<td>5.0</td>
-<td>534</td>
-<td>0.342021</td>
-<td>618119.516388</td>
-<td>0.527027</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">98</td>
-<td>5.0</td>
-<td>477</td>
-<td>0.415617</td>
-<td>118646.524412</td>
-<td>0.523490</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">77</td>
-<td>4.0</td>
-<td>208</td>
-<td>0.642794</td>
-<td>546713.587582</td>
-<td>0.520737</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">19</td>
-<td>5.0</td>
-<td>365</td>
-<td>0.379220</td>
-<td>296885.784490</td>
-<td>0.520179</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 </div>
 </section>
 <section id="compare-the-three-results" class="level2" data-number="2.8">
 <h2 data-number="2.8" class="anchored" data-anchor-id="compare-the-three-results"><span class="header-section-number">2.8</span> compare the three results</h2>
-<div id="cell-28" class="cell" data-execution_count="14">
+<div id="cell-28" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a>df_all_sample <span class="op">=</span> pd.concat(</span>
-<span id="cb15-2"><a href="#cb15-2"></a>    [</span>
-<span id="cb15-3"><a href="#cb15-3"></a>        lhs_results.assign(sampling<span class="op">=</span><span class="st">"lhs"</span>),</span>
-<span id="cb15-4"><a href="#cb15-4"></a>        random_results.assign(sampling<span class="op">=</span><span class="st">"random"</span>),</span>
-<span id="cb15-5"><a href="#cb15-5"></a>        grid_results.assign(sampling<span class="op">=</span><span class="st">"grid"</span>),</span>
-<span id="cb15-6"><a href="#cb15-6"></a>    ],</span>
-<span id="cb15-7"><a href="#cb15-7"></a>    axis<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb15-8"><a href="#cb15-8"></a>)</span>
-<span id="cb15-9"><a href="#cb15-9"></a></span>
-<span id="cb15-10"><a href="#cb15-10"></a>df_all_sample <span class="op">=</span> df_all_sample.sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb15-11"><a href="#cb15-11"></a></span>
-<span id="cb15-12"><a href="#cb15-12"></a>df_all_sample.head(n<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a>df_all_sample <span class="op">=</span> pd.concat(</span>
+<span id="cb14-2"><a href="#cb14-2"></a>    [</span>
+<span id="cb14-3"><a href="#cb14-3"></a>        lhs_results.assign(sampling<span class="op">=</span><span class="st">"lhs"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4"></a>        random_results.assign(sampling<span class="op">=</span><span class="st">"random"</span>),</span>
+<span id="cb14-5"><a href="#cb14-5"></a>        grid_results.assign(sampling<span class="op">=</span><span class="st">"grid"</span>),</span>
+<span id="cb14-6"><a href="#cb14-6"></a>    ],</span>
+<span id="cb14-7"><a href="#cb14-7"></a>    axis<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb14-8"><a href="#cb14-8"></a>)</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a>df_all_sample <span class="op">=</span> df_all_sample.sort_values(by<span class="op">=</span><span class="st">"score"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb14-11"><a href="#cb14-11"></a></span>
+<span id="cb14-12"><a href="#cb14-12"></a>df_all_sample.head(n<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="14">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">depth</th>
-<th data-quarto-table-cell-role="th">iterations</th>
-<th data-quarto-table-cell-role="th">subsample</th>
-<th data-quarto-table-cell-role="th">bagging_temperature</th>
-<th data-quarto-table-cell-role="th">score</th>
-<th data-quarto-table-cell-role="th">sampling</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">76</td>
-<td>4.0</td>
-<td>793</td>
-<td>0.523234</td>
-<td>594167.506028</td>
-<td>0.529148</td>
-<td>lhs</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">74</td>
-<td>5.0</td>
-<td>534</td>
-<td>0.342021</td>
-<td>618119.516388</td>
-<td>0.527027</td>
-<td>lhs</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">19</td>
-<td>4.0</td>
-<td>482</td>
-<td>0.444048</td>
-<td>606137.431661</td>
-<td>0.526316</td>
-<td>random</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">34</td>
-<td>5.0</td>
-<td>456</td>
-<td>0.387908</td>
-<td>50673.160631</td>
-<td>0.524138</td>
-<td>random</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">94</td>
-<td>5.0</td>
-<td>565</td>
-<td>0.454874</td>
-<td>491525.165733</td>
-<td>0.523918</td>
-<td>random</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">32</td>
-<td>5.0</td>
-<td>323</td>
-<td>0.514352</td>
-<td>600657.923939</td>
-<td>0.523918</td>
-<td>random</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">98</td>
-<td>5.0</td>
-<td>477</td>
-<td>0.415617</td>
-<td>118646.524412</td>
-<td>0.523490</td>
-<td>lhs</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">97</td>
-<td>7.0</td>
-<td>569</td>
-<td>0.647182</td>
-<td>970569.671420</td>
-<td>0.523077</td>
-<td>random</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">77</td>
-<td>4.0</td>
-<td>208</td>
-<td>0.642794</td>
-<td>546713.587582</td>
-<td>0.520737</td>
-<td>lhs</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">19</td>
-<td>5.0</td>
-<td>365</td>
-<td>0.379220</td>
-<td>296885.784490</td>
-<td>0.520179</td>
-<td>lhs</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
 </div>
 </section>
 </section>
 <section id="bonus-optuna-hyperparameter-optimization-framework" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Bonus: Optuna hyperparameter optimization framework</h1>
 <p><a href="https://optuna.readthedocs.io/en/stable/">Optuna</a> bayes hyperparameter tuning, tradeoff between explotation and exploration</p>
-<div id="cell-31" class="cell" data-execution_count="15">
+<div id="cell-31" class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">def</span> obj_all(trial) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
-<span id="cb16-2"><a href="#cb16-2"></a>    params <span class="op">=</span> {</span>
-<span id="cb16-3"><a href="#cb16-3"></a>        <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
-<span id="cb16-4"><a href="#cb16-4"></a>        <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">1</span>, <span class="dv">1024</span>),</span>
-<span id="cb16-5"><a href="#cb16-5"></a>        <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="dv">0</span>, <span class="fl">1.0</span>),</span>
-<span id="cb16-6"><a href="#cb16-6"></a>        <span class="st">"bagging_temperature"</span>: trial.suggest_float(</span>
-<span id="cb16-7"><a href="#cb16-7"></a>            <span class="st">"bagging_temperature"</span>, <span class="fl">1e-10</span>, <span class="dv">1_000_000</span>, log<span class="op">=</span><span class="va">True</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a>        ),</span>
-<span id="cb16-9"><a href="#cb16-9"></a>    }</span>
-<span id="cb16-10"><a href="#cb16-10"></a></span>
-<span id="cb16-11"><a href="#cb16-11"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
-<span id="cb16-12"><a href="#cb16-12"></a>        <span class="op">**</span>params,</span>
-<span id="cb16-13"><a href="#cb16-13"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
-<span id="cb16-14"><a href="#cb16-14"></a>    )</span>
-<span id="cb16-15"><a href="#cb16-15"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb16-16"><a href="#cb16-16"></a></span>
-<span id="cb16-17"><a href="#cb16-17"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
-<span id="cb16-18"><a href="#cb16-18"></a></span>
-<span id="cb16-19"><a href="#cb16-19"></a></span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
-<span id="cb16-21"><a href="#cb16-21"></a></span>
-<span id="cb16-22"><a href="#cb16-22"></a>start <span class="op">=</span> time.time()</span>
-<span id="cb16-23"><a href="#cb16-23"></a>study <span class="op">=</span> optuna.create_study(study_name<span class="op">=</span><span class="st">"all-in"</span>, direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
-<span id="cb16-24"><a href="#cb16-24"></a>study.optimize(</span>
-<span id="cb16-25"><a href="#cb16-25"></a>    obj_all,</span>
-<span id="cb16-26"><a href="#cb16-26"></a>    n_trials<span class="op">=</span>N_SAMPLES,</span>
-<span id="cb16-27"><a href="#cb16-27"></a>)</span>
-<span id="cb16-28"><a href="#cb16-28"></a></span>
-<span id="cb16-29"><a href="#cb16-29"></a>end <span class="op">=</span> time.time()</span>
-<span id="cb16-30"><a href="#cb16-30"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
-<span id="cb16-31"><a href="#cb16-31"></a><span class="bu">print</span>(<span class="ss">f"time all-in: </span><span class="sc">{</span>end <span class="op">-</span> start<span class="sc">:.2f}</span><span class="ss"> sec"</span>)</span>
-<span id="cb16-32"><a href="#cb16-32"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_params<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb16-33"><a href="#cb16-33"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_value<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>[I 2024-04-03 11:13:43,930] A new study created in memory with name: all-in
-[I 2024-04-03 11:13:44,080] Trial 0 finished with value: 0.46268656716417916 and parameters: {'depth': 9, 'iterations': 33, 'subsample': 0.9640613108562923, 'bagging_temperature': 5.305150585145187e-09}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:10,440] Trial 1 finished with value: 0.39276485788113696 and parameters: {'depth': 15, 'iterations': 265, 'subsample': 0.34222082075647053, 'bagging_temperature': 0.11357955079406305}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:17,508] Trial 2 finished with value: 0.44655581947743467 and parameters: {'depth': 10, 'iterations': 1009, 'subsample': 0.44509612138676635, 'bagging_temperature': 5.923308412962046e-08}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:19,486] Trial 3 finished with value: 0.44723618090452255 and parameters: {'depth': 13, 'iterations': 133, 'subsample': 0.09212931963223636, 'bagging_temperature': 0.0024883838405106375}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:29,643] Trial 4 finished with value: 0.45320197044334976 and parameters: {'depth': 13, 'iterations': 450, 'subsample': 0.9411874801885756, 'bagging_temperature': 0.0001369128929611743}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:42,112] Trial 5 finished with value: 0.44389027431421446 and parameters: {'depth': 12, 'iterations': 957, 'subsample': 0.08842972855182163, 'bagging_temperature': 0.020639187999542258}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:49,227] Trial 6 finished with value: 0.4389027431421446 and parameters: {'depth': 12, 'iterations': 536, 'subsample': 0.3706788162321297, 'bagging_temperature': 37.367004017457546}. Best is trial 0 with value: 0.46268656716417916.
-[I 2024-04-03 11:14:50,075] Trial 7 finished with value: 0.4918032786885246 and parameters: {'depth': 2, 'iterations': 297, 'subsample': 0.3315312874630827, 'bagging_temperature': 1.8053910302939191e-09}. Best is trial 7 with value: 0.4918032786885246.
-[I 2024-04-03 11:15:09,332] Trial 8 finished with value: 0.42216358839050133 and parameters: {'depth': 14, 'iterations': 402, 'subsample': 0.18492439197306665, 'bagging_temperature': 352702.6046926117}. Best is trial 7 with value: 0.4918032786885246.
-[I 2024-04-03 11:15:43,789] Trial 9 finished with value: 0.39686684073107054 and parameters: {'depth': 14, 'iterations': 713, 'subsample': 0.2682486521848164, 'bagging_temperature': 5.4571969697694184e-08}. Best is trial 7 with value: 0.4918032786885246.
-[I 2024-04-03 11:15:45,775] Trial 10 finished with value: 0.5034013605442177 and parameters: {'depth': 2, 'iterations': 677, 'subsample': 0.6656113797142797, 'bagging_temperature': 4.1526080873435867e-10}. Best is trial 10 with value: 0.5034013605442177.
-[I 2024-04-03 11:15:47,480] Trial 11 finished with value: 0.44390243902439025 and parameters: {'depth': 1, 'iterations': 685, 'subsample': 0.6694456092147847, 'bagging_temperature': 4.691299388962401e-10}. Best is trial 10 with value: 0.5034013605442177.
-[I 2024-04-03 11:15:49,570] Trial 12 finished with value: 0.5124716553287982 and parameters: {'depth': 2, 'iterations': 704, 'subsample': 0.6017974943126716, 'bagging_temperature': 5.657147835811715e-06}. Best is trial 12 with value: 0.5124716553287982.
-[I 2024-04-03 11:15:52,739] Trial 13 finished with value: 0.5180180180180181 and parameters: {'depth': 4, 'iterations': 795, 'subsample': 0.648684264356351, 'bagging_temperature': 3.19839526699575e-06}. Best is trial 13 with value: 0.5180180180180181.
-[I 2024-04-03 11:15:56,456] Trial 14 finished with value: 0.5178571428571429 and parameters: {'depth': 5, 'iterations': 854, 'subsample': 0.6346019151999029, 'bagging_temperature': 3.4175334659283816e-05}. Best is trial 13 with value: 0.5180180180180181.
-[I 2024-04-03 11:16:00,280] Trial 15 finished with value: 0.4966442953020134 and parameters: {'depth': 5, 'iterations': 876, 'subsample': 0.8002408676623718, 'bagging_temperature': 9.2752933614509e-06}. Best is trial 13 with value: 0.5180180180180181.
-[I 2024-04-03 11:16:04,148] Trial 16 finished with value: 0.5205479452054794 and parameters: {'depth': 6, 'iterations': 821, 'subsample': 0.5352689277963433, 'bagging_temperature': 3.2927597546437744}. Best is trial 16 with value: 0.5205479452054794.
-[I 2024-04-03 11:16:08,201] Trial 17 finished with value: 0.5080091533180777 and parameters: {'depth': 6, 'iterations': 855, 'subsample': 0.48981772236661936, 'bagging_temperature': 34.54681134413033}. Best is trial 16 with value: 0.5205479452054794.
-[I 2024-04-03 11:16:11,269] Trial 18 finished with value: 0.5265486725663716 and parameters: {'depth': 7, 'iterations': 581, 'subsample': 0.7985446721374487, 'bagging_temperature': 4.142024243348501}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:14,210] Trial 19 finished with value: 0.4966442953020134 and parameters: {'depth': 7, 'iterations': 561, 'subsample': 0.7523963664317427, 'bagging_temperature': 40.8199968682222}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:18,027] Trial 20 finished with value: 0.5022831050228311 and parameters: {'depth': 8, 'iterations': 607, 'subsample': 0.8280172960955824, 'bagging_temperature': 37656.56518230192}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:21,183] Trial 21 finished with value: 0.5219399538106235 and parameters: {'depth': 4, 'iterations': 796, 'subsample': 0.5531108301252888, 'bagging_temperature': 0.7900869355563174}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:24,244] Trial 22 finished with value: 0.5123595505617977 and parameters: {'depth': 4, 'iterations': 782, 'subsample': 0.5487440450281859, 'bagging_temperature': 0.9801329021739883}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:29,178] Trial 23 finished with value: 0.4977777777777778 and parameters: {'depth': 7, 'iterations': 926, 'subsample': 0.8594700194579553, 'bagging_temperature': 2434.465835632135}. Best is trial 18 with value: 0.5265486725663716.
-[I 2024-04-03 11:16:32,184] Trial 24 finished with value: 0.53125 and parameters: {'depth': 4, 'iterations': 768, 'subsample': 0.42870961951878384, 'bagging_temperature': 1.750992583462229}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:34,561] Trial 25 finished with value: 0.5113122171945701 and parameters: {'depth': 4, 'iterations': 614, 'subsample': 0.43284379482417495, 'bagging_temperature': 1306.2244959696677}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:36,255] Trial 26 finished with value: 0.5045045045045045 and parameters: {'depth': 3, 'iterations': 474, 'subsample': 0.7306185381242332, 'bagging_temperature': 0.001316653103872882}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:41,007] Trial 27 finished with value: 0.47685185185185186 and parameters: {'depth': 8, 'iterations': 749, 'subsample': 0.8819977495236011, 'bagging_temperature': 0.3584682657211065}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:45,343] Trial 28 finished with value: 0.47115384615384615 and parameters: {'depth': 10, 'iterations': 628, 'subsample': 0.20607509191500162, 'bagging_temperature': 804.18548310943}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:48,603] Trial 29 finished with value: 0.49765258215962443 and parameters: {'depth': 9, 'iterations': 386, 'subsample': 0.9934533728406629, 'bagging_temperature': 0.02484953342390773}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:48,751] Trial 30 finished with value: 0.4619164619164619 and parameters: {'depth': 6, 'iterations': 57, 'subsample': 0.5671110074888962, 'bagging_temperature': 12.230563071623763}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:52,443] Trial 31 finished with value: 0.5124716553287982 and parameters: {'depth': 6, 'iterations': 780, 'subsample': 0.5163961711098494, 'bagging_temperature': 2.0337241586218786}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:56,037] Trial 32 finished with value: 0.5223214285714286 and parameters: {'depth': 5, 'iterations': 834, 'subsample': 0.45185281814667766, 'bagging_temperature': 5.435402352747047}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:16:59,566] Trial 33 finished with value: 0.5135135135135135 and parameters: {'depth': 3, 'iterations': 1021, 'subsample': 0.4172904715999073, 'bagging_temperature': 0.11101889155383075}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:03,493] Trial 34 finished with value: 0.5191873589164786 and parameters: {'depth': 5, 'iterations': 929, 'subsample': 0.33140774588404975, 'bagging_temperature': 172.5795453336902}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:06,542] Trial 35 finished with value: 0.49411764705882355 and parameters: {'depth': 3, 'iterations': 885, 'subsample': 0.01714446982067397, 'bagging_temperature': 0.14086188174755582}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:09,832] Trial 36 finished with value: 0.5034013605442177 and parameters: {'depth': 7, 'iterations': 639, 'subsample': 0.4785892045600295, 'bagging_temperature': 0.0018400854153899735}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:12,952] Trial 37 finished with value: 0.506787330316742 and parameters: {'depth': 5, 'iterations': 732, 'subsample': 0.3775167903975773, 'bagging_temperature': 20163.527563248394}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:14,341] Trial 38 finished with value: 0.44059405940594065 and parameters: {'depth': 1, 'iterations': 567, 'subsample': 0.26055803017506696, 'bagging_temperature': 5.10364859378896}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:20,484] Trial 39 finished with value: 0.49549549549549543 and parameters: {'depth': 8, 'iterations': 984, 'subsample': 0.714540729109848, 'bagging_temperature': 0.01323990321087351}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:21,315] Trial 40 finished with value: 0.4883720930232558 and parameters: {'depth': 4, 'iterations': 201, 'subsample': 0.9326498494050852, 'bagging_temperature': 0.00032939533453883523}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:25,047] Trial 41 finished with value: 0.5159817351598174 and parameters: {'depth': 6, 'iterations': 788, 'subsample': 0.5440300165165217, 'bagging_temperature': 1.5299636051726915}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:29,358] Trial 42 finished with value: 0.4943310657596372 and parameters: {'depth': 7, 'iterations': 832, 'subsample': 0.4610707692209727, 'bagging_temperature': 311.26501769033337}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:33,200] Trial 43 finished with value: 0.528216704288939 and parameters: {'depth': 5, 'iterations': 913, 'subsample': 0.38789847480701467, 'bagging_temperature': 8.98686164775015}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:36,356] Trial 44 finished with value: 0.5181818181818182 and parameters: {'depth': 3, 'iterations': 918, 'subsample': 0.30463263604080193, 'bagging_temperature': 0.04584512282386953}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:40,418] Trial 45 finished with value: 0.5203619909502263 and parameters: {'depth': 5, 'iterations': 948, 'subsample': 0.3920118558417613, 'bagging_temperature': 62.52378908052025}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:42,988] Trial 46 finished with value: 0.5011600928074246 and parameters: {'depth': 4, 'iterations': 666, 'subsample': 0.2045966041818475, 'bagging_temperature': 0.4032841193617225}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:45,177] Trial 47 finished with value: 0.5057471264367815 and parameters: {'depth': 2, 'iterations': 743, 'subsample': 0.5845821722164812, 'bagging_temperature': 8.925167604721047}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:49,315] Trial 48 finished with value: 0.4748858447488584 and parameters: {'depth': 9, 'iterations': 511, 'subsample': 0.2499472361407169, 'bagging_temperature': 11126.35793297089}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:53,506] Trial 49 finished with value: 0.5092592592592592 and parameters: {'depth': 5, 'iterations': 981, 'subsample': 0.12262162339312732, 'bagging_temperature': 0.004089124377205947}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:17:57,006] Trial 50 finished with value: 0.5089285714285714 and parameters: {'depth': 4, 'iterations': 890, 'subsample': 0.34988044418933967, 'bagging_temperature': 131.89676296583062}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:00,957] Trial 51 finished with value: 0.5146726862302482 and parameters: {'depth': 6, 'iterations': 824, 'subsample': 0.49986662277686633, 'bagging_temperature': 8.962247277492587}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:04,810] Trial 52 finished with value: 0.5079365079365079 and parameters: {'depth': 6, 'iterations': 822, 'subsample': 0.43515202994881913, 'bagging_temperature': 0.6526462621762836}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:06,534] Trial 53 finished with value: 0.501138952164009 and parameters: {'depth': 7, 'iterations': 326, 'subsample': 0.6138335436050837, 'bagging_temperature': 2.8888536611324906}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:10,460] Trial 54 finished with value: 0.5201793721973095 and parameters: {'depth': 5, 'iterations': 895, 'subsample': 0.5261763005084181, 'bagging_temperature': 26.016879583361806}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:16,463] Trial 55 finished with value: 0.4847058823529412 and parameters: {'depth': 9, 'iterations': 724, 'subsample': 0.3969889623489561, 'bagging_temperature': 0.09763507703288256}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:19,436] Trial 56 finished with value: 0.5158371040723982 and parameters: {'depth': 3, 'iterations': 849, 'subsample': 0.6900997342968993, 'bagging_temperature': 4464.1766180890445}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:21,484] Trial 57 finished with value: 0.48970251716247143 and parameters: {'depth': 2, 'iterations': 685, 'subsample': 0.7801758756828572, 'bagging_temperature': 2.729910787701152}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:25,115] Trial 58 finished with value: 0.5114155251141552 and parameters: {'depth': 6, 'iterations': 769, 'subsample': 0.3012233377392974, 'bagging_temperature': 232512.76850532973}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:35,879] Trial 59 finished with value: 0.48410757946210264 and parameters: {'depth': 12, 'iterations': 811, 'subsample': 0.44741312718489595, 'bagging_temperature': 3.359369613830742e-07}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:39,742] Trial 60 finished with value: 0.5168539325842697 and parameters: {'depth': 4, 'iterations': 982, 'subsample': 0.6090630671010124, 'bagging_temperature': 0.4268107818911711}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:43,721] Trial 61 finished with value: 0.5034324942791762 and parameters: {'depth': 5, 'iterations': 927, 'subsample': 0.35887611841319533, 'bagging_temperature': 65.91882411126188}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:48,563] Trial 62 finished with value: 0.5023041474654378 and parameters: {'depth': 7, 'iterations': 943, 'subsample': 0.4041622041353274, 'bagging_temperature': 331.33287049298286}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:52,453] Trial 63 finished with value: 0.5146726862302482 and parameters: {'depth': 5, 'iterations': 861, 'subsample': 0.3930112850892531, 'bagging_temperature': 22.420857385759337}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:56,616] Trial 64 finished with value: 0.5137614678899082 and parameters: {'depth': 5, 'iterations': 962, 'subsample': 0.4785923080275862, 'bagging_temperature': 47.071975468514566}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:18:59,974] Trial 65 finished with value: 0.5079365079365079 and parameters: {'depth': 4, 'iterations': 856, 'subsample': 0.31474575284203676, 'bagging_temperature': 5.172736720413998}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:04,245] Trial 66 finished with value: 0.509009009009009 and parameters: {'depth': 6, 'iterations': 903, 'subsample': 0.517748016948528, 'bagging_temperature': 614.5841169626206}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:06,890] Trial 67 finished with value: 0.5103448275862069 and parameters: {'depth': 3, 'iterations': 756, 'subsample': 0.5718869397903923, 'bagging_temperature': 0.18905761151580935}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:08,572] Trial 68 finished with value: 0.5251141552511415 and parameters: {'depth': 4, 'iterations': 425, 'subsample': 0.6472301326888862, 'bagging_temperature': 0.04698634097763855}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:10,484] Trial 69 finished with value: 0.510250569476082 and parameters: {'depth': 4, 'iterations': 476, 'subsample': 0.6288409079406546, 'bagging_temperature': 0.007541989298145237}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:11,811] Trial 70 finished with value: 0.4953271028037384 and parameters: {'depth': 2, 'iterations': 435, 'subsample': 0.6642480185240239, 'bagging_temperature': 1.1854082634212597}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:13,384] Trial 71 finished with value: 0.5011709601873535 and parameters: {'depth': 5, 'iterations': 363, 'subsample': 0.46446495303332574, 'bagging_temperature': 0.07985015962231212}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:14,830] Trial 72 finished with value: 0.5011600928074246 and parameters: {'depth': 7, 'iterations': 279, 'subsample': 0.5442288416038483, 'bagging_temperature': 0.021414283574207497}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:17,089] Trial 73 finished with value: 0.5173210161662819 and parameters: {'depth': 4, 'iterations': 567, 'subsample': 0.4236373269733742, 'bagging_temperature': 110.9288352122287}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:18,598] Trial 74 finished with value: 0.5023041474654378 and parameters: {'depth': 3, 'iterations': 419, 'subsample': 0.7574948764240265, 'bagging_temperature': 16.47923257558198}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:22,519] Trial 75 finished with value: 0.5034324942791762 and parameters: {'depth': 6, 'iterations': 802, 'subsample': 0.8974474786638966, 'bagging_temperature': 0.9446995695867888}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:27,087] Trial 76 finished with value: 0.510250569476082 and parameters: {'depth': 5, 'iterations': 1024, 'subsample': 0.8199470596572745, 'bagging_temperature': 3.8669112708913405}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:49,747] Trial 77 finished with value: 0.4177545691906005 and parameters: {'depth': 15, 'iterations': 228, 'subsample': 0.5024594379158427, 'bagging_temperature': 0.21234195314349633}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:52,971] Trial 78 finished with value: 0.4814814814814814 and parameters: {'depth': 8, 'iterations': 527, 'subsample': 0.37117560103011543, 'bagging_temperature': 0.04615636383866753}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:55,799] Trial 79 finished with value: 0.5136363636363637 and parameters: {'depth': 4, 'iterations': 711, 'subsample': 0.5865897345452443, 'bagging_temperature': 8.399089131972923}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:19:58,122] Trial 80 finished with value: 0.4954545454545455 and parameters: {'depth': 6, 'iterations': 495, 'subsample': 0.5538094429781467, 'bagging_temperature': 0.0005837139028564634}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:20:02,295] Trial 81 finished with value: 0.5125858123569794 and parameters: {'depth': 5, 'iterations': 967, 'subsample': 0.5232206263212841, 'bagging_temperature': 33.99534201184764}. Best is trial 24 with value: 0.53125.
-[I 2024-04-03 11:20:06,121] Trial 82 finished with value: 0.5315315315315315 and parameters: {'depth': 5, 'iterations': 895, 'subsample': 0.4610841389309397, 'bagging_temperature': 26.134285043614568}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:09,866] Trial 83 finished with value: 0.506787330316742 and parameters: {'depth': 5, 'iterations': 885, 'subsample': 0.43680196834491586, 'bagging_temperature': 1.7528189522463729}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:12,776] Trial 84 finished with value: 0.5125858123569794 and parameters: {'depth': 3, 'iterations': 836, 'subsample': 0.4530396389212853, 'bagging_temperature': 0.49816248412265657}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:15,285] Trial 85 finished with value: 0.5136363636363637 and parameters: {'depth': 4, 'iterations': 644, 'subsample': 0.47169685374660475, 'bagging_temperature': 2236.096692006733}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:18,313] Trial 86 finished with value: 0.5135135135135135 and parameters: {'depth': 7, 'iterations': 590, 'subsample': 0.41507865352320417, 'bagging_temperature': 230.56119601147788}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:22,840] Trial 87 finished with value: 0.5081585081585082 and parameters: {'depth': 6, 'iterations': 941, 'subsample': 0.7073015363956764, 'bagging_temperature': 84.42605283008008}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:26,292] Trial 88 finished with value: 0.5100671140939598 and parameters: {'depth': 5, 'iterations': 796, 'subsample': 0.4971200063038114, 'bagging_temperature': 8.2567796672405}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:30,878] Trial 89 finished with value: 0.5161290322580644 and parameters: {'depth': 6, 'iterations': 994, 'subsample': 0.2864730189100224, 'bagging_temperature': 628.8394497434377}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:34,385] Trial 90 finished with value: 0.5106382978723405 and parameters: {'depth': 4, 'iterations': 906, 'subsample': 0.33895521230986886, 'bagging_temperature': 19.08598584266684}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:38,108] Trial 91 finished with value: 0.49549549549549543 and parameters: {'depth': 5, 'iterations': 887, 'subsample': 0.379256377342676, 'bagging_temperature': 2.6055865425790774}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:41,896] Trial 92 finished with value: 0.5045045045045045 and parameters: {'depth': 5, 'iterations': 870, 'subsample': 0.5176411031441357, 'bagging_temperature': 42.9074274007428}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:43,388] Trial 93 finished with value: 0.5046296296296298 and parameters: {'depth': 4, 'iterations': 375, 'subsample': 0.5311722702064573, 'bagging_temperature': 0.2756930584826365}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:47,372] Trial 94 finished with value: 0.505800464037123 and parameters: {'depth': 6, 'iterations': 839, 'subsample': 0.5897644770876922, 'bagging_temperature': 0.997860094502856}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:50,703] Trial 95 finished with value: 0.5089285714285714 and parameters: {'depth': 5, 'iterations': 763, 'subsample': 0.628670020805008, 'bagging_temperature': 5.609636300963752}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:56,291] Trial 96 finished with value: 0.47417840375586856 and parameters: {'depth': 8, 'iterations': 916, 'subsample': 0.49384511299423217, 'bagging_temperature': 22.643425659462373}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:20:59,630] Trial 97 finished with value: 0.5103448275862069 and parameters: {'depth': 3, 'iterations': 951, 'subsample': 0.5592171551289313, 'bagging_temperature': 1.2142647655456222e-10}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:21:03,486] Trial 98 finished with value: 0.5022831050228311 and parameters: {'depth': 4, 'iterations': 1002, 'subsample': 0.4013573208304879, 'bagging_temperature': 0.04726629797325266}. Best is trial 82 with value: 0.5315315315315315.
-[I 2024-04-03 11:21:07,306] Trial 99 finished with value: 0.4954128440366973 and parameters: {'depth': 6, 'iterations': 822, 'subsample': 0.4528094600022697, 'bagging_temperature': 13.728504393917056}. Best is trial 82 with value: 0.5315315315315315.</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>----------
-----------
-time all-in: 443.38 sec
-study.best_params={'depth': 5, 'iterations': 895, 'subsample': 0.4610841389309397, 'bagging_temperature': 26.134285043614568}
-study.best_value=0.5315315315315315</code></pre>
-</div>
-</div>
-<div id="cell-32" class="cell" data-execution_count="16">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="im">import</span> gif</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">def</span> obj_all(trial) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb15-2"><a href="#cb15-2"></a>    params <span class="op">=</span> {</span>
+<span id="cb15-3"><a href="#cb15-3"></a>        <span class="st">"depth"</span>: trial.suggest_int(name<span class="op">=</span><span class="st">"depth"</span>, low<span class="op">=</span><span class="dv">1</span>, high<span class="op">=</span><span class="dv">15</span>),</span>
+<span id="cb15-4"><a href="#cb15-4"></a>        <span class="st">"iterations"</span>: trial.suggest_int(<span class="st">"iterations"</span>, <span class="dv">1</span>, <span class="dv">1024</span>),</span>
+<span id="cb15-5"><a href="#cb15-5"></a>        <span class="st">"subsample"</span>: trial.suggest_float(<span class="st">"subsample"</span>, <span class="dv">0</span>, <span class="fl">1.0</span>),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>        <span class="st">"bagging_temperature"</span>: trial.suggest_float(</span>
+<span id="cb15-7"><a href="#cb15-7"></a>            <span class="st">"bagging_temperature"</span>, <span class="fl">1e-10</span>, <span class="dv">1_000_000</span>, log<span class="op">=</span><span class="va">True</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>        ),</span>
+<span id="cb15-9"><a href="#cb15-9"></a>    }</span>
+<span id="cb15-10"><a href="#cb15-10"></a></span>
+<span id="cb15-11"><a href="#cb15-11"></a>    cbc <span class="op">=</span> CatBoostClassifier(</span>
+<span id="cb15-12"><a href="#cb15-12"></a>        <span class="op">**</span>params,</span>
+<span id="cb15-13"><a href="#cb15-13"></a>        eval_metric<span class="op">=</span><span class="st">"F1"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14"></a>    )</span>
+<span id="cb15-15"><a href="#cb15-15"></a>    cbc.fit(train_pool, eval_set<span class="op">=</span>(test_pool), verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb15-16"><a href="#cb15-16"></a></span>
+<span id="cb15-17"><a href="#cb15-17"></a>    <span class="cf">return</span> cbc.get_best_score().get(<span class="st">"validation"</span>).get(<span class="st">"F1"</span>)</span>
+<span id="cb15-18"><a href="#cb15-18"></a></span>
+<span id="cb15-19"><a href="#cb15-19"></a></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb15-21"><a href="#cb15-21"></a></span>
+<span id="cb15-22"><a href="#cb15-22"></a>start <span class="op">=</span> time.time()</span>
+<span id="cb15-23"><a href="#cb15-23"></a>study <span class="op">=</span> optuna.create_study(study_name<span class="op">=</span><span class="st">"all-in"</span>, direction<span class="op">=</span><span class="st">"maximize"</span>)</span>
+<span id="cb15-24"><a href="#cb15-24"></a>study.optimize(</span>
+<span id="cb15-25"><a href="#cb15-25"></a>    obj_all,</span>
+<span id="cb15-26"><a href="#cb15-26"></a>    n_trials<span class="op">=</span>N_SAMPLES,</span>
+<span id="cb15-27"><a href="#cb15-27"></a>)</span>
+<span id="cb15-28"><a href="#cb15-28"></a></span>
+<span id="cb15-29"><a href="#cb15-29"></a>end <span class="op">=</span> time.time()</span>
+<span id="cb15-30"><a href="#cb15-30"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">10</span>)</span>
+<span id="cb15-31"><a href="#cb15-31"></a><span class="bu">print</span>(<span class="ss">f"time all-in: </span><span class="sc">{</span>end <span class="op">-</span> start<span class="sc">:.2f}</span><span class="ss"> sec"</span>)</span>
+<span id="cb15-32"><a href="#cb15-32"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_params<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb15-33"><a href="#cb15-33"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>study<span class="sc">.</span>best_value<span class="op">=</span><span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
