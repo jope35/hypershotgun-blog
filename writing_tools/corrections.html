@@ -57,7 +57,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -102,10 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -166,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="cell-0" class="cell" data-execution_count="120">
+<div id="cell-0" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> json</span>
@@ -175,14 +171,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4"></a><span class="im">from</span> tqdm.notebook <span class="im">import</span> tqdm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-1" class="cell" data-execution_count="121">
+<div id="cell-1" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../posts/cluster/cluster_reflect.ipynb"</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
 <span id="cb2-2"><a href="#cb2-2"></a>    notebook <span class="op">=</span> json.load(<span class="bu">file</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-2" class="cell" data-execution_count="122">
+<div id="cell-2" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a>instruction <span class="op">=</span> <span class="st">"Your job: </span><span class="ch">\</span></span>
@@ -197,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10"></a><span class="st">- only return the corrected text, no summaries of changes or list of improvements"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="cell-3" class="cell" data-execution_count="123">
+<div id="cell-3" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">for</span> cell <span class="kw">in</span> tqdm(notebook[<span class="st">"cells"</span>]):</span>
@@ -207,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-5"><a href="#cb4-5"></a>        <span class="bu">print</span>(cell[<span class="st">"source"</span>])</span>
 <span id="cb4-6"><a href="#cb4-6"></a></span>
 <span id="cb4-7"><a href="#cb4-7"></a>        response <span class="op">=</span> ollama.generate(</span>
-<span id="cb4-8"><a href="#cb4-8"></a>            model<span class="op">=</span><span class="st">"mistral"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>            model<span class="op">=</span><span class="st">"phi"</span>,</span>
 <span id="cb4-9"><a href="#cb4-9"></a>            system<span class="op">=</span>instruction,</span>
 <span id="cb4-10"><a href="#cb4-10"></a>            prompt<span class="op">=</span><span class="st">" "</span>.join(cell[<span class="st">"source"</span>]),</span>
 <span id="cb4-11"><a href="#cb4-11"></a>            keep_alive<span class="op">=</span><span class="st">"5m"</span>,</span>
@@ -215,29 +211,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-13"><a href="#cb4-13"></a></span>
 <span id="cb4-14"><a href="#cb4-14"></a>        cell[<span class="st">"source"</span>].append(<span class="st">"--- </span><span class="ch">\n</span><span class="st"> "</span> <span class="op">+</span> response[<span class="st">"response"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"9531c4de0f364b7592cb8398b4607d4b","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
-</script>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>------
-['## TLDR;\n', '\n', '- **Unsupervised Learning** -&gt; Clustering algorithms are used for unsupervised learning, ideal for exploratory data analysis.\n', '- **Grouping Data** -&gt; These algorithms group similar data into clusters based on specific criteria.\n', "- **Variety of Applications** -&gt; They're used in diverse fields like customer segmentation, anomaly detection, and more.\n", '- **Different Techniques** -&gt; Various types exist, like K-means and DBSCAN, each with unique strengths and suited for specific data types.\n', '- **Choice of Parameters** -&gt; The selection and tuning of parameters, like the number of clusters, significantly influence the results.\n', '\n', 'In the field of machine learning,clustering algorithms play a role in uncovering hidden patterns present in the data. they group together datapoints based on the simalirty of features without the need for labeled data, these groups are refered to as clusters.\n', 'There are multiple algorithms that can be used to perform cluster analysis.\n', '\n', '- centroid based (K-means)\n', '- connectivity-based aka hierarchical clustering (Agglomerative lcustering)\n', '- distribution based (Gaussian-mixture modelling)\n', '- density based (DBSCAN)\n', '\n', 'Clustering algorithms have found their place in a diverse range of real-world applications, from customer segmentation in marketing strategies to image segmentation in computer vision, and anomaly detection in cybersecurity for insightful data-driven decision making.\n', '\n', 'To demonstrate the workflow, I will use a K-means clustering algorithm to group together similar shoppers at a shopping mall.\n']
-------
-['## Business Problem Introduction\n', '\n', 'As the owners of a thriving supermarket mall, you seek a deeper understanding of your customer base. Data points including demographics, spending habits, and loyalty program membership details are at your disposal. Your goal is to identify distinct groups within your customers to tailor marketing initiatives, thereby maximizing the efficiency of your promotional efforts.\n', '\n', 'To achieve this, you opt for clustering algorithms to group similar customers based on characteristics and behaviors. By isolating specific segments of your customer base, you aim to tailor marketing strategies to respective subgroups, increasing the likelihood of a successful outcome and resulting in maximizing the bang for your marketing buck.\n']
-------
-['## Data Preprocessing\n', '\n', "In this initial stage, the goal is to prepare the data for analysis. This involves cleaning the data by removing or filling in missing values, which could be done through various strategies like dropping the missing rows, filling them with mean/median/mode, or using a prediction model. It's also crucial to handle outliers and potentially normalize features if they're on different scales. This stage might also involve dealing with categorical variables using encoding techniques. Effective preprocessing is crucial for reliable results in the subsequent stages.\n", '\n', 'the owner of the mall has provide the following [dataset](https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python)\n', '\n', '| Field                  | Description                                                               |\n', '| ---------------------- | ------------------------------------------------------------------------- |\n', '| CustomerID             | Unique ID assigned to the customer                                        |\n', '| Gender                 | Gender of the customer                                                    |\n', '| Age                    | Age of the customer                                                       |\n', '| Annual Income (k$)     | Annual income of the customer                                             |\n', '| Spending Score (1-100) | Score assigned by the mall based on customer behavior and spending nature |\n']
-------
-['So, upon taking a look at the dataset, it seems like we\'ve got a mix of numeric and non-numeric columns. Specifically, the `gender` column is the only non-numeric feature - it\'s all categorical data, with customers labeled as either "Male" or "Female". All the other columns - `id`, `age`, `income`, and `spending` - are numeric data types.\n', '\n', "The `id` column looks like it's just a unique identifier for each customer, so we can exclude that one from our feature set for clustering. Makes sense, right?\n", '\n', "Now, the other features need to be in the same ballpark (i.e., normalized) to work effectively with clustering algorithms. Otherwise, the algorithm will group together instances based on the features with the highest numbers, rather than looking at all the features. That'd be like trying to compare apples and oranges!\n", '\n', 'So, we need to process the `gender` column by encoding those categories as numbers. One common way to do this is to map "Male" and "Female" to 1 and 0, respectively. Once we\'ve done that, gender will be represented numerically like the other features.\n', '\n', "In a nutshell, we need to encode the gender categorical data, exclude the customer `id` column, and normalize the remaining columns before we can apply clustering algorithms. Luckily for us, there are no NULL values in the data, so we don't have to worry about dealing with those. Easy peasy!\n"]
-------
-['I used one-hot encoding to convert the string values of the gender column into numerical values, using the pandas map method in combination with a simple mapping of "male" to 1 and "female" to 0. This resulted in a new "gender" column with 0/1 encoding.\n', 'The `id` column is dropped from the feature dataframe.\n']</code></pre>
-</div>
-</div>
-<div id="cell-4" class="cell" data-execution_count="125">
+<div id="cell-4" class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../posts/cluster/cluster_reflect.ipynb"</span>, mode<span class="op">=</span><span class="st">"w"</span>) <span class="im">as</span> output_file:</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    json.dump(notebook, output_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"../posts/cluster/cluster_reflect.ipynb"</span>, mode<span class="op">=</span><span class="st">"w"</span>) <span class="im">as</span> output_file:</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    json.dump(notebook, output_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
