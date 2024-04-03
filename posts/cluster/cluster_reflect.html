@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Joost de Theije + LLM">
+<meta name="dcterms.date" content="2024-01-17">
 
-<title>hyper-shotgun - whois 🤖</title>
+<title>hyper-shotgun - Cluster</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +22,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicons/hyper_favi.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -79,10 +116,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./apple-touch-icon.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">hyper-shotgun</span>
     </a>
   </div>
@@ -93,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./whois.html" aria-current="page"> 
+    <a class="nav-link" href="../../whois.html"> 
 <span class="menu-text">whois 🤖</span></a>
   </li>  
   <li class="nav-item">
@@ -118,61 +155,183 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">whois 🤖</h1>
+      <h1 class="title">Cluster</h1>
+            <p class="subtitle lead">together</p>
                       </div>
   </div>
+    
+  
   <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joost de Theije + LLM </p>
+            </div>
     </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 17, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of Contents</h2>
+   
   <ul>
-  <li><a href="#whois" id="toc-whois" class="nav-link active" data-scroll-target="#whois"><span class="header-section-number">1</span> whois</a></li>
+  <li><a href="#tldr" id="toc-tldr" class="nav-link active" data-scroll-target="#tldr"><span class="header-section-number">1</span> TLDR;</a></li>
+  <li><a href="#business-problem-introduction" id="toc-business-problem-introduction" class="nav-link" data-scroll-target="#business-problem-introduction"><span class="header-section-number">2</span> Business Problem Introduction</a></li>
+  <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing"><span class="header-section-number">3</span> Data Preprocessing</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-solana column-body content">
-  <div class="about-entity">
-    <div class="entity-contents">
-       <div class="about-links">
-  <a href="https://twitter.com/joostdetheije" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://www.linkedin.com/in/joostdetheije/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/jope35" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-      <div class="about-contents"><main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
-<section id="whois" class="level2" data-number="1">
-<h2 data-number="1" data-anchor-id="whois"><span class="header-section-number">1</span> whois</h2>
+
+
+
+
+<section id="tldr" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="tldr"><span class="header-section-number">1</span> TLDR;</h2>
 <ul>
-<li>Machine Learning Scientist 🤖</li>
-<li>loves to puzzle 🧩</li>
-<li>Amsterdam area 🇳🇱🇪🇺</li>
+<li><strong>Unsupervised Learning</strong> -&gt; Clustering algorithms are used for unsupervised learning, ideal for exploratory data analysis.</li>
+<li><strong>Grouping Data</strong> -&gt; These algorithms group similar data into clusters based on specific criteria.</li>
+<li><strong>Variety of Applications</strong> -&gt; They’re used in diverse fields like customer segmentation, anomaly detection, and more.</li>
+<li><strong>Different Techniques</strong> -&gt; Various types exist, like K-means and DBSCAN, each with unique strengths and suited for specific data types.</li>
+<li><strong>Choice of Parameters</strong> -&gt; The selection and tuning of parameters, like the number of clusters, significantly influence the results.</li>
 </ul>
-<!-- ## Education
-## Experience -->
+<p>In the field of machine learning,clustering algorithms play a role in uncovering hidden patterns present in the data. they group together datapoints based on the simalirty of features without the need for labeled data, these groups are refered to as clusters. There are multiple algorithms that can be used to perform cluster analysis.</p>
+<ul>
+<li>centroid based (K-means)</li>
+<li>connectivity-based aka hierarchical clustering (Agglomerative lcustering)</li>
+<li>distribution based (Gaussian-mixture modelling)</li>
+<li>density based (DBSCAN)</li>
+</ul>
+<p>Clustering algorithms have found their place in a diverse range of real-world applications, from customer segmentation in marketing strategies to image segmentation in computer vision, and anomaly detection in cybersecurity for insightful data-driven decision making.</p>
+<p>To demonstrate the workflow, I will use a K-means clustering algorithm to group together similar shoppers at a shopping mall.</p>
+</section>
+<section id="business-problem-introduction" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="business-problem-introduction"><span class="header-section-number">2</span> Business Problem Introduction</h2>
+<p>As the owners of a thriving supermarket mall, you seek a deeper understanding of your customer base. Data points including demographics, spending habits, and loyalty program membership details are at your disposal. Your goal is to identify distinct groups within your customers to tailor marketing initiatives, thereby maximizing the efficiency of your promotional efforts.</p>
+<p>To achieve this, you opt for clustering algorithms to group similar customers based on characteristics and behaviors. By isolating specific segments of your customer base, you aim to tailor marketing strategies to respective subgroups, increasing the likelihood of a successful outcome and resulting in maximizing the bang for your marketing buck.</p>
+</section>
+<section id="data-preprocessing" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="data-preprocessing"><span class="header-section-number">3</span> Data Preprocessing</h2>
+<p>In this initial stage, the goal is to prepare the data for analysis. This involves cleaning the data by removing or filling in missing values, which could be done through various strategies like dropping the missing rows, filling them with mean/median/mode, or using a prediction model. It’s also crucial to handle outliers and potentially normalize features if they’re on different scales. This stage might also involve dealing with categorical variables using encoding techniques. Effective preprocessing is crucial for reliable results in the subsequent stages.</p>
+<p>the owner of the mall has provide the following <a href="https://www.kaggle.com/datasets/vjchoudhary7/customer-segmentation-tutorial-in-python">dataset</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 76%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CustomerID</td>
+<td>Unique ID assigned to the customer</td>
+</tr>
+<tr class="even">
+<td>Gender</td>
+<td>Gender of the customer</td>
+</tr>
+<tr class="odd">
+<td>Age</td>
+<td>Age of the customer</td>
+</tr>
+<tr class="even">
+<td>Annual Income (k$)</td>
+<td>Annual income of the customer</td>
+</tr>
+<tr class="odd">
+<td>Spending Score (1-100)</td>
+<td>Score assigned by the mall based on customer behavior and spending nature</td>
+</tr>
+</tbody>
+</table>
+<div id="cell-4" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># imports</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># setting global plotting settings</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># set_matplotlib_formats("svg")</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>sns.set_palette(<span class="st">"tab10"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-5" class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Load the customer dataset to analyze shopping patterns</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>df_mall <span class="op">=</span> pd.read_csv(<span class="st">"artifacts/Mall_Customers.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># rename columns to be lowercase, for easy typing</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>df_mall <span class="op">=</span> df_mall.rename(</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    columns<span class="op">=</span>{</span>
+<span id="cb2-7"><a href="#cb2-7"></a>        <span class="st">"CustomerID "</span>: <span class="st">"id"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8"></a>        <span class="st">"Gender "</span>: <span class="st">"gender"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9"></a>        <span class="st">"Age "</span>: <span class="st">"age"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10"></a>        <span class="st">"Annual Income (k$) "</span>: <span class="st">"income"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11"></a>        <span class="st">"Spending Score (1-100)"</span>: <span class="st">"spending"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    }</span>
+<span id="cb2-13"><a href="#cb2-13"></a>)</span>
+<span id="cb2-14"><a href="#cb2-14"></a>df_mall[<span class="st">"gender"</span>] <span class="op">=</span> df_mall[<span class="st">"gender"</span>].<span class="bu">str</span>.lower()</span>
+<span id="cb2-15"><a href="#cb2-15"></a>df_mall[<span class="st">"gender"</span>] <span class="op">=</span> df_mall[<span class="st">"gender"</span>].<span class="bu">str</span>.strip()</span>
+<span id="cb2-16"><a href="#cb2-16"></a></span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="bu">print</span>(<span class="ss">f"amount of NULL </span><span class="ch">\n</span><span class="sc">{</span>df_mall<span class="sc">.</span>isna()<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> </span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb2-20"><a href="#cb2-20"></a></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="co"># look at a random sample to validate the contents</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>df_mall.sample(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>So, upon taking a look at the dataset, it seems like we’ve got a mix of numeric and non-numeric columns. Specifically, the <code>gender</code> column is the only non-numeric feature - it’s all categorical data, with customers labeled as either “Male” or “Female”. All the other columns - <code>id</code>, <code>age</code>, <code>income</code>, and <code>spending</code> - are numeric data types.</p>
+<p>The <code>id</code> column looks like it’s just a unique identifier for each customer, so we can exclude that one from our feature set for clustering. Makes sense, right?</p>
+<p>Now, the other features need to be in the same ballpark (i.e., normalized) to work effectively with clustering algorithms. Otherwise, the algorithm will group together instances based on the features with the highest numbers, rather than looking at all the features. That’d be like trying to compare apples and oranges!</p>
+<p>So, we need to process the <code>gender</code> column by encoding those categories as numbers. One common way to do this is to map “Male” and “Female” to 1 and 0, respectively. Once we’ve done that, gender will be represented numerically like the other features.</p>
+<p>In a nutshell, we need to encode the gender categorical data, exclude the customer <code>id</code> column, and normalize the remaining columns before we can apply clustering algorithms. Luckily for us, there are no NULL values in the data, so we don’t have to worry about dealing with those. Easy peasy!</p>
+<div id="cell-7" class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># convert gender to a numerical value via one-hot-encoding</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># clustering models usally need numerical values</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>df_mall <span class="op">=</span> df_mall.assign(gender<span class="op">=</span>df_mall[<span class="st">"gender"</span>].<span class="bu">map</span>({<span class="st">"male"</span>: <span class="dv">1</span>, <span class="st">"female"</span>: <span class="dv">0</span>}))</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co"># list with features for easy reference</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>features <span class="op">=</span> [<span class="st">"age"</span>, <span class="st">"income"</span>, <span class="st">"spending"</span>, <span class="st">"gender"</span>]</span>
+<span id="cb3-7"><a href="#cb3-7"></a>df_feature <span class="op">=</span> df_mall[features]</span>
+<span id="cb3-8"><a href="#cb3-8"></a></span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># look at a random sample to validate the contents</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>df_feature.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>I used one-hot encoding to convert the string values of the gender column into numerical values, using the pandas map method in combination with a simple mapping of “male” to 1 and “female” to 0. This resulted in a new “gender” column with 0/1 encoding. The <code>id</code> column is dropped from the feature dataframe.</p>
 
 
 </section>
-</main></div>
-    </div>
-    <img src="favicons/HS_logo.png" class="about-image
-  rounded " style="width: 15em;">
-  </div>
-</div>
- <!-- /main -->
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -337,6 +496,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   } else {
     toggleColorMode(false);
   }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     
