@@ -229,11 +229,10 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
   <ul class="collapse">
-  <li><a href="#grid-search" id="toc-grid-search" class="nav-link" data-scroll-target="#grid-search"><span class="header-section-number">1.1</span> Grid Search</a></li>
+  <li><a href="#gridsearch" id="toc-gridsearch" class="nav-link" data-scroll-target="#gridsearch"><span class="header-section-number">1.1</span> GridSearch</a></li>
   <li><a href="#randomsearch" id="toc-randomsearch" class="nav-link" data-scroll-target="#randomsearch"><span class="header-section-number">1.2</span> RandomSearch</a></li>
-  <li><a href="#randomized-search-for-hyperparameter-tuning" id="toc-randomized-search-for-hyperparameter-tuning" class="nav-link" data-scroll-target="#randomized-search-for-hyperparameter-tuning"><span class="header-section-number">1.3</span> Randomized Search for Hyperparameter Tuning</a></li>
-  <li><a href="#something-in-between" id="toc-something-in-between" class="nav-link" data-scroll-target="#something-in-between"><span class="header-section-number">1.4</span> Something in Between</a></li>
-  <li><a href="#visual-representation" id="toc-visual-representation" class="nav-link" data-scroll-target="#visual-representation"><span class="header-section-number">1.5</span> Visual Representation</a></li>
+  <li><a href="#something-in-between" id="toc-something-in-between" class="nav-link" data-scroll-target="#something-in-between"><span class="header-section-number">1.3</span> Something in Between</a></li>
+  <li><a href="#visual-representation" id="toc-visual-representation" class="nav-link" data-scroll-target="#visual-representation"><span class="header-section-number">1.4</span> Visual Representation</a></li>
   </ul></li>
   <li><a href="#apply-lhs-to-a-real-application" id="toc-apply-lhs-to-a-real-application" class="nav-link" data-scroll-target="#apply-lhs-to-a-real-application"><span class="header-section-number">2</span> Apply LHS to a Real Application</a>
   <ul class="collapse">
@@ -243,7 +242,7 @@ window.Quarto = {
   <li><a href="#creating-data-pools" id="toc-creating-data-pools" class="nav-link" data-scroll-target="#creating-data-pools"><span class="header-section-number">2.1.1</span> Creating Data Pools</a></li>
   </ul></li>
   <li><a href="#applying-three-sampling-techniques-grid-random-and-latin-hypercube" id="toc-applying-three-sampling-techniques-grid-random-and-latin-hypercube" class="nav-link" data-scroll-target="#applying-three-sampling-techniques-grid-random-and-latin-hypercube"><span class="header-section-number">2.2</span> Applying Three Sampling Techniques: Grid, Random, and Latin Hypercube</a></li>
-  <li><a href="#grid-search-1" id="toc-grid-search-1" class="nav-link" data-scroll-target="#grid-search-1"><span class="header-section-number">2.3</span> Grid Search</a></li>
+  <li><a href="#grid-search" id="toc-grid-search" class="nav-link" data-scroll-target="#grid-search"><span class="header-section-number">2.3</span> Grid Search</a></li>
   <li><a href="#random-search" id="toc-random-search" class="nav-link" data-scroll-target="#random-search"><span class="header-section-number">2.4</span> Random Search</a></li>
   <li><a href="#lhs-search" id="toc-lhs-search" class="nav-link" data-scroll-target="#lhs-search"><span class="header-section-number">2.5</span> LHS Search</a></li>
   <li><a href="#analysis-of-results" id="toc-analysis-of-results" class="nav-link" data-scroll-target="#analysis-of-results"><span class="header-section-number">2.6</span> Analysis of results</a></li>
@@ -296,21 +295,16 @@ window.Quarto = {
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
 <p>We’ve all been in this situation. The point when we believe our features are good enough, and we’re ready to train our first model. Initially, we start with the default settings of the model, which yields acceptable performance. However, to achieve better results, we determine that hyperparameter tuning is necessary. According to the Scikit-Learn documentation, there are several options: GridSearchCV and RandomizedSearchCV.</p>
 <p><a href="https://scikit-learn.org/stable/modules/classes.html#module-model_selection">Scikit-Learn</a></p>
-<section id="grid-search" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="grid-search"><span class="header-section-number">1.1</span> Grid Search</h2>
+<section id="gridsearch" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="gridsearch"><span class="header-section-number">1.1</span> GridSearch</h2>
 <p>GridSearchCV is a hyperparameter tuning method in Scikit-Learn that utilizes exhaustive search to determine the optimal combination of estimator parameters. It evaluates each set of specified parameter values by trying all possible combinations using cross-validation. The advantages of this approach include exhaustive exploration, providing detailed performance information. However, it is time-consuming and memory-intensive since it tests all combinations. The choice of cross-validation method and the number of folds significantly impact the results.</p>
 </section>
 <section id="randomsearch" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="randomsearch"><span class="header-section-number">1.2</span> RandomSearch</h2>
-<p>RandomizedSearchCV is a hyperparameter tuning method in Scikit-Learn that uses random sampling to search for the best combination of estimator parameters. Unlike GridSearchCV, which tries all possible combinations, it samples a fixed number of parameter settings from specified distributions. It is more efficient than exhaustive search but may not find the absolute best set of parameters. Cross-validation is used to evaluate each sampled set, and continuous or categorical distributions can be specified. The choice of distributions and iterations impacts results, as well as the cross-validation method and number of folds.</p>
-<hr>
-</section>
-<section id="randomized-search-for-hyperparameter-tuning" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="randomized-search-for-hyperparameter-tuning"><span class="header-section-number">1.3</span> Randomized Search for Hyperparameter Tuning</h2>
 <p>RandomizedSearchCV is a hyperparameter tuning method in Scikit-Learn that utilizes random sampling to find the optimal combination of estimator parameters. In contrast to GridSearchCV, which tests all possible combinations, RandomizedSearchCV samples a fixed number of parameter settings from specified distributions, making it more efficient in exploring the entire search-space. Cross-validation is employed to assess each sampled set, and continuous or categorical distributions can be defined. The chosen distributions, iterations, cross-validation method, and the number of folds all impact the results.</p>
 </section>
-<section id="something-in-between" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="something-in-between"><span class="header-section-number">1.4</span> Something in Between</h2>
+<section id="something-in-between" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="something-in-between"><span class="header-section-number">1.3</span> Something in Between</h2>
 <p>There are techniques, such as Latin Hypercube Sampling (LHS) or <a href="https://www.youtube.com/watch?v=flQgnCUxHlw">Poisson Disc sampling</a>, that combine grid and random sampling methods.</p>
 <p>Latin Hypercube Sampling is a deterministic, space-filling design technique that selects a representative sample from the parameter space. It does so by ensuring that every hyperrectangle enclosing each unique combination of parameters contains at least one sample. In simpler terms, LHS aims to provide a representative and uniform distribution of samples across the entire range of possible combinations.</p>
 <p>Consider the analogy of a Sudoku puzzle. Each square on the board represents a unique combination of parameters. While you may be tempted to reveal all the numbers in one row or column, this would be unwise as it would limit the overall usefulness of your picks. LHS offers a framework for reducing the number of picks while maximizing their effectiveness. For instance, if you have selected a square from one row, it would favor other rows more, and the same logic applies to the columns and sub-squares.</p>
@@ -322,8 +316,8 @@ window.Quarto = {
 </div>
 <p>In conclusion, when choosing between hyperparameter tuning methods, it is essential to consider factors like computational resources, time constraints, and the complexity of the problem at hand. GridSearchCV offers exhaustive exploration but comes with higher computational costs, while RandomizedSearchCV provides flexibility and efficiency but may not find the absolute best combination of parameters. Latin Hypercube Sampling offers a balance between these two extremes by providing representative samples while being more computationally efficient than GridSearchCV for large search spaces.</p>
 </section>
-<section id="visual-representation" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="visual-representation"><span class="header-section-number">1.5</span> Visual Representation</h2>
+<section id="visual-representation" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="visual-representation"><span class="header-section-number">1.4</span> Visual Representation</h2>
 <p>To illustrate the distinction between the three sampling methods, let’s consider a hypothetical scenario in a two-dimensional space, ranging from 0 to 1 inclusively, and apply the following three sampling strategies: random, Latin Hypercube Sampling (LHS), and grid.</p>
 <div id="cell-8" class="cell" data-execution_count="31">
 <details open="" class="code-fold">
@@ -498,8 +492,8 @@ memory usage: 807.6 KB</code></pre>
 </ul>
 <p>We use 100 samples for each technique.</p>
 </section>
-<section id="grid-search-1" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="grid-search-1"><span class="header-section-number">2.3</span> Grid Search</h2>
+<section id="grid-search" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="grid-search"><span class="header-section-number">2.3</span> Grid Search</h2>
 <p>To adhere to the limitation of 100 samples, we use <span class="math inline">\(100^{1/4} \approx 3\)</span>, which results in <span class="math inline">\(3^{4}=81\)</span> samples.</p>
 <div id="cell-20" class="cell" data-execution_count="36">
 <details open="" class="code-fold">
