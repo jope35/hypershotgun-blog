@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/writing_tools/corrections.html</loc>
-    <lastmod>2024-04-05T19:09:51.203Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2024-04-05T19:09:51.179Z</lastmod>
-  </url>
-  <url>
     <loc>https://jope35.github.io/hypershotgun-blog/index.html</loc>
-    <lastmod>2024-04-05T19:09:51.163Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/whois.html</loc>
-    <lastmod>2024-04-05T19:09:51.203Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/stepcat/stepcat.html</loc>
-    <lastmod>2024-04-05T19:09:51.203Z</lastmod>
+    <lastmod>2024-04-23T15:08:47.323Z</lastmod>
   </url>
   <url>
     <loc>https://jope35.github.io/hypershotgun-blog/posts/DPD/dependency.html</loc>
-    <lastmod>2024-04-05T19:09:51.171Z</lastmod>
+    <lastmod>2024-04-23T15:08:47.331Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
+    <lastmod>2024-04-23T15:08:47.339Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/stepcat/stepcat.html</loc>
+    <lastmod>2024-04-23T15:08:47.363Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/writing_tools/corrections.html</loc>
+    <lastmod>2024-04-23T15:08:47.363Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/whois.html</loc>
+    <lastmod>2024-04-23T15:08:47.363Z</lastmod>
   </url>
 </urlset>
