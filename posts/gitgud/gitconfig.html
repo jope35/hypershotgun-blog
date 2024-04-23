@@ -9,7 +9,7 @@
 <meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2024-04-23">
 
-<title>hyper-shotgun - how to config Git</title>
+<title>hyper-shotgun - Multi-Git-Account-Mastery</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -155,7 +155,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">how to config Git</h1>
+      <h1 class="title">Multi-Git-Account-Mastery</h1>
+            <p class="subtitle lead">managing SSH Keys: A (Wacky) Solution for Multiple GitHub Accounts</p>
                       </div>
   </div>
     
@@ -179,6 +180,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       
     </div>
     
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      Streamline Your Git Workflow. Manage multiple GitHub accounts and SSH keys using custom <code>.gitconfig</code> files. Learn how to configure global Git settings, include specific configuration files, and remap hostnames in your SSH config file. Automate your git workflow and say farewell to fiddeling around with SSH and GPG keys.
+    </div>
+  </div>
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -190,20 +197,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#git" id="toc-git" class="nav-link active" data-scroll-target="#git"><span class="header-section-number">1</span> Git</a>
   <ul class="collapse">
-  <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure"><span class="header-section-number">1.1</span> structure</a>
+  <li><a href="#basic-structure" id="toc-basic-structure" class="nav-link" data-scroll-target="#basic-structure"><span class="header-section-number">1.1</span> Basic Structure</a>
   <ul class="collapse">
   <li><a href="#gitconfig" id="toc-gitconfig" class="nav-link" data-scroll-target="#gitconfig"><span class="header-section-number">1.1.1</span> <code>.gitconfig</code></a></li>
   <li><a href="#gitconfig_github_personal" id="toc-gitconfig_github_personal" class="nav-link" data-scroll-target="#gitconfig_github_personal"><span class="header-section-number">1.1.2</span> <code>.gitconfig_github_personal</code></a></li>
-  <li><a href="#sshconfig" id="toc-sshconfig" class="nav-link" data-scroll-target="#sshconfig"><span class="header-section-number">1.1.3</span> <code>.ssh/config</code></a></li>
+  <li><a href="#sshconfig" id="toc-sshconfig" class="nav-link" data-scroll-target="#sshconfig"><span class="header-section-number">1.1.3</span> <code>~/.ssh/config</code></a></li>
   </ul></li>
-  <li><a href="#structure-1" id="toc-structure-1" class="nav-link" data-scroll-target="#structure-1"><span class="header-section-number">1.2</span> structure</a>
+  <li><a href="#extending-the-structure" id="toc-extending-the-structure" class="nav-link" data-scroll-target="#extending-the-structure"><span class="header-section-number">1.2</span> Extending the Structure</a>
   <ul class="collapse">
   <li><a href="#gitconfig-1" id="toc-gitconfig-1" class="nav-link" data-scroll-target="#gitconfig-1"><span class="header-section-number">1.2.1</span> <code>.gitconfig</code></a></li>
-  <li><a href="#gitconfig_github_personal-1" id="toc-gitconfig_github_personal-1" class="nav-link" data-scroll-target="#gitconfig_github_personal-1"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_personal</code></a></li>
-  <li><a href="#gitconfig_github_work" id="toc-gitconfig_github_work" class="nav-link" data-scroll-target="#gitconfig_github_work"><span class="header-section-number">1.2.3</span> <code>.gitconfig_github_work</code></a></li>
-  <li><a href="#sshconfig-1" id="toc-sshconfig-1" class="nav-link" data-scroll-target="#sshconfig-1"><span class="header-section-number">1.2.4</span> <code>.ssh/config</code></a></li>
+  <li><a href="#gitconfig_github_work" id="toc-gitconfig_github_work" class="nav-link" data-scroll-target="#gitconfig_github_work"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_work</code></a></li>
+  <li><a href="#sshconfig-1" id="toc-sshconfig-1" class="nav-link" data-scroll-target="#sshconfig-1"><span class="header-section-number">1.2.3</span> <code>.ssh/config</code></a></li>
   </ul></li>
-  <li><a href="#bonus-gpg-signing" id="toc-bonus-gpg-signing" class="nav-link" data-scroll-target="#bonus-gpg-signing"><span class="header-section-number">1.3</span> bonus GPG signing</a></li>
+  <li><a href="#bonus-gpg-signing" id="toc-bonus-gpg-signing" class="nav-link" data-scroll-target="#bonus-gpg-signing"><span class="header-section-number">1.3</span> Bonus GPG Signing</a>
+  <ul class="collapse">
+  <li><a href="#gitconfig-2" id="toc-gitconfig-2" class="nav-link" data-scroll-target="#gitconfig-2"><span class="header-section-number">1.3.1</span> <code>.gitconfig</code></a></li>
+  <li><a href="#gitconfig_github_work-1" id="toc-gitconfig_github_work-1" class="nav-link" data-scroll-target="#gitconfig_github_work-1"><span class="header-section-number">1.3.2</span> <code>gitconfig_github_work</code></a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -217,42 +227,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="git" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Git</h1>
-<p>Git <a href="https://survey.stackoverflow.co/2022#section-version-control-version-control-systems">everybodys</a> favorite version control that was released (checks notes) <a href="https://en.wikipedia.org/wiki/Git">19 years ago</a> in 7 april 2005. that is some time ago. currently every developer is using git for one or more projects and/or organizations. in the modern days each and every own of those has some form of authentication or other requirements in order to work with it. i have seen some pretty wacky setup to control how git is being configured in order to streamline developer productivity and security. <br> and now i will introduce my wacky solution 😜</p>
-<section id="structure" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="structure"><span class="header-section-number">1.1</span> structure</h2>
-<p>the structure that i use has the following files:</p>
+<p>Git, <a href="https://survey.stackoverflow.co/2022#section-version-control-version-control-systems">everyone’s favorite version control system</a>, was released (checks notes) <a href="https://en.wikipedia.org/wiki/Git">19 years ago</a> on April 7th, 2005. That is some time ago.</p>
+<p>Currently, every developer uses Git for one or more projects and/or organizations. In modern days, each and every repo/organization has some form of authentication or other requirements to work with it. I have seen some pretty wacky setups to control how Git is being configured in order to streamline developer productivity and security.</p>
+<p><br> And now, I will introduce my wacky solution 😜 for handeling ssh keys for multiple github accounts.</p>
+<section id="basic-structure" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="basic-structure"><span class="header-section-number">1.1</span> Basic Structure</h2>
+<p>The structure I use has the following files:</p>
 <ul>
 <li><code>.gitconfig</code></li>
 <li><code>.gitconfig_github_personal</code></li>
-<li><code>.gitconfig_github_work</code></li>
-<li><code>.ssh/config</code></li>
+<li><code>~/.ssh/config</code></li>
 </ul>
 <section id="gitconfig" class="level3" data-number="1.1.1">
 <h3 data-number="1.1.1" class="anchored" data-anchor-id="gitconfig"><span class="header-section-number">1.1.1</span> <code>.gitconfig</code></h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb1-1"><a href="#cb1-1"></a>[user]</span>
-<span id="cb1-2"><a href="#cb1-2"></a>    useConfigOnly = true</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">[user]</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">useConfigOnly</span> = true</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a>[includeIf "gitdir:~/Developer/github_personal/"]</span>
-<span id="cb1-5"><a href="#cb1-5"></a>    path =~/.gitconfig_github_personal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="ex">path</span> = ~/.gitconfig_github_personal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="gitconfig_github_personal" class="level3" data-number="1.1.2">
 <h3 data-number="1.1.2" class="anchored" data-anchor-id="gitconfig_github_personal"><span class="header-section-number">1.1.2</span> <code>.gitconfig_github_personal</code></h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb2-1"><a href="#cb2-1"></a>[user]</span>
-<span id="cb2-2"><a href="#cb2-2"></a>    name=personal_name</span>
-<span id="cb2-3"><a href="#cb2-3"></a>    email= personal_email@example.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">[user]</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="ex">name</span> = personal_name</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="ex">email</span> = personal_email@example.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="sshconfig" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="sshconfig"><span class="header-section-number">1.1.3</span> <code>.ssh/config</code></h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb3-1"><a href="#cb3-1"></a>Host github.com</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  Hostname github.com</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  User personal_name</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  IdentityFile ~/.ssh/personal_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>so far not to whack right? git uses the <code>.gitconfig</code> file to configure git and then only the actions in the folder <code>~/Developer/github_personal/</code> will use the <code>.gitconfig_github_personal</code> file, the ssh key is defined in the ssh config</p>
+<h3 data-number="1.1.3" class="anchored" data-anchor-id="sshconfig"><span class="header-section-number">1.1.3</span> <code>~/.ssh/config</code></h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">Host</span> github.com</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="ex">HostName</span> github.com</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="ex">User</span> personal_name</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="ex">IdentityFile</span> ~/.ssh/personal_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>So far, not too whacky, right? Git uses the <code>.gitconfig</code> file to configure Git globally, and then only the actions performed in the folder <code>~/Developer/github_personal/</code> will use the <code>.gitconfig_github_personal</code> file. The SSH key is defined in the SSH config and is used solely for GitHub connections.</p>
+<p>Now, if you make a commit, the name and email from the <code>.gitconfig_github_personal</code> are attached to that commit. This is all fun and games, but what if another project requires a Bitbucket or GitLab account? You can create a <code>.gitconfig</code> file for each service and add the right key settings to the SSH file.</p>
+<p>The “fun” starts when there’s a second instance of a GitHub account; now, all of a sudden, you have a collision in the way you handle your SSH keys - they have the same hostname. 😩</p>
 </section>
 </section>
-<section id="structure-1" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="structure-1"><span class="header-section-number">1.2</span> structure</h2>
-<p>the structure that i use has the following files:</p>
+<section id="extending-the-structure" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="extending-the-structure"><span class="header-section-number">1.2</span> Extending the Structure</h2>
+<p>lets add a additional <code>gitconfig</code> for the work github</p>
 <ul>
 <li><code>.gitconfig</code></li>
 <li><code>.gitconfig_github_personal</code></li>
@@ -261,50 +274,80 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="gitconfig-1" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="gitconfig-1"><span class="header-section-number">1.2.1</span> <code>.gitconfig</code></h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a href="#cb4-1"></a>[user]</span>
-<span id="cb4-2"><a href="#cb4-2"></a>    useConfigOnly = true</span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">[user]</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>    <span class="ex">useConfigOnly</span> = true</span>
 <span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>[includeIf "gitdir:~/Developer/github_personal/"]</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    path =~/.gitconfig_github_personal</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="ex">path</span> = ~/.gitconfig_github_personal</span>
 <span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a>[includeIf "gitdir:~/Developer/github_work/"]</span>
-<span id="cb4-8"><a href="#cb4-8"></a>    path =~/.gitconfig_github_work</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_work/"</span>]</span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="ex">path</span> = ~/.gitconfig_github_work</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>adding one line for the new work directory, this is linked to the new work gitconfig file.</p>
 </section>
-<section id="gitconfig_github_personal-1" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="gitconfig_github_personal-1"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_personal</code></h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb5-1"><a href="#cb5-1"></a>[user]</span>
-<span id="cb5-2"><a href="#cb5-2"></a>    name=personal_name</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    email= personal_email@example.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="gitconfig_github_work" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="gitconfig_github_work"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_work</code></h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">[user]</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="va">name</span><span class="op">=</span>work_name</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="va">email</span><span class="op">=</span> <span class="ex">work@example.com</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="ex">[url</span> <span class="st">"git@github.com-work"</span>]</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="ex">insteadOf</span> = git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>this is where the magic happens, we instruct git to modify the URL it uses to connect to GitHub, and in the SSH config file, we remap this to the correct hostname. The result is that we can clone repositories as normal, and the folder location determines which SSH keys are used. This means that once set up, we can get on with our work instead of fiddling around with SSH keys. Automation wins!</p>
 </section>
-<section id="gitconfig_github_work" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="gitconfig_github_work"><span class="header-section-number">1.2.3</span> <code>.gitconfig_github_work</code></h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb6-1"><a href="#cb6-1"></a>[user]</span>
-<span id="cb6-2"><a href="#cb6-2"></a>    name=work_name</span>
-<span id="cb6-3"><a href="#cb6-3"></a>    email= work@example.com</span>
-<span id="cb6-4"><a href="#cb6-4"></a></span>
-<span id="cb6-5"><a href="#cb6-5"></a>[url "git@github.com-work"]</span>
-<span id="cb6-6"><a href="#cb6-6"></a>    insteadOf = git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="sshconfig-1" class="level3" data-number="1.2.4">
-<h3 data-number="1.2.4" class="anchored" data-anchor-id="sshconfig-1"><span class="header-section-number">1.2.4</span> <code>.ssh/config</code></h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource properties number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a href="#cb7-1"></a>Host github.com</span>
-<span id="cb7-2"><a href="#cb7-2"></a>  Hostname github.com</span>
-<span id="cb7-3"><a href="#cb7-3"></a>  User personal_name</span>
-<span id="cb7-4"><a href="#cb7-4"></a>  IdentityFile ~/.ssh/personal_key</span>
-<span id="cb7-5"><a href="#cb7-5"></a></span>
-<span id="cb7-6"><a href="#cb7-6"></a>Host github.com-work</span>
-<span id="cb7-7"><a href="#cb7-7"></a>  Hostname github.com</span>
-<span id="cb7-8"><a href="#cb7-8"></a>  User work_name</span>
-<span id="cb7-9"><a href="#cb7-9"></a>  IdentityFile ~/.ssh/work_key</span>
-<span id="cb7-10"><a href="#cb7-10"></a>  AddKeysToAgent yes</span>
-<span id="cb7-11"><a href="#cb7-11"></a>  UseKeychain yes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="sshconfig-1" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="sshconfig-1"><span class="header-section-number">1.2.3</span> <code>.ssh/config</code></h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">Host</span> github.com</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="ex">Hostname</span> github.com</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="ex">User</span> personal_name</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="ex">IdentityFile</span> ~/.ssh/personal_key</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="ex">Host</span> github.com-work</span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="ex">Hostname</span> github.com</span>
+<span id="cb6-8"><a href="#cb6-8"></a>  <span class="ex">User</span> work_name</span>
+<span id="cb6-9"><a href="#cb6-9"></a>  <span class="ex">IdentityFile</span> ~/.ssh/work_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="bonus-gpg-signing" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="bonus-gpg-signing"><span class="header-section-number">1.3</span> bonus GPG signing</h2>
-<p>how to gpg sign</p>
+<h2 data-number="1.3" class="anchored" data-anchor-id="bonus-gpg-signing"><span class="header-section-number">1.3</span> Bonus GPG Signing</h2>
+<p>If you want to be able to <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">sign commits</a> (and get a green checkmark next to your commits) you can extend the above structure to utilize the SSH key for Git commit signing.</p>
+<section id="gitconfig-2" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="gitconfig-2"><span class="header-section-number">1.3.1</span> <code>.gitconfig</code></h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">[user]</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="ex">useConfigOnly</span> = true</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="ex">[gpg]</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="ex">format</span> = ssh</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="ex">path</span> = ~/.gitconfig_github_personal</span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_work/"</span>]</span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="ex">path</span> = ~/.gitconfig_github_work</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We start with the global Git config and define the GPG format to be SSH.</p>
+</section>
+<section id="gitconfig_github_work-1" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="gitconfig_github_work-1"><span class="header-section-number">1.3.2</span> <code>gitconfig_github_work</code></h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">[user]</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="ex">name</span> = work_name</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="ex">email</span> = work@example.com</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="ex">signingkey</span> = <span class="op">&lt;</span>your ssh key<span class="op">&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="ex">[commit]</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="ex">gpgsign</span> = true</span>
+<span id="cb8-8"><a href="#cb8-8"></a></span>
+<span id="cb8-9"><a href="#cb8-9"></a><span class="ex">[url</span> <span class="st">"git@github.com/work"</span>]</span>
+<span id="cb8-10"><a href="#cb8-10"></a>  <span class="ex">insteadOf</span> = git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here, I have added the <code>signingkey</code> option for the user and set the <code>gpgsign</code> indicator to <code>true</code>. The next time you commit, it is signed with your SSH key 100% automatically and pain-free – how cool is that!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://docs.github.com/assets/cb-17614/mw-14/40/images/help/commits/verified-commit.webp" class="img-fluid figure-img"></p>
+<figcaption>Signed Commit</figcaption>
+</figure>
+</div>
+<p>P.S. You can also attend a <a href="https://danielpecos.com/2024/01/23/attending-a-pgp-gnupg-signing-party/">GPG signing party</a> but that’s a topic for another time.</p>
 
 
+</section>
 </section>
 </section>
 
