@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Joost de Theije + LLM">
-<meta name="dcterms.date" content="2024-04-23">
+<meta name="dcterms.date" content="2024-04-24">
 
-<title>hyper-shotgun - Multi-Git-Account-Mastery</title>
+<title>hyper-shotgun - parameter grid</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -155,8 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Multi-Git-Account-Mastery</h1>
-            <p class="subtitle lead">managing SSH Keys: A (Wacky) Solution for Multiple GitHub Accounts</p>
+      <h1 class="title">parameter grid</h1>
                       </div>
   </div>
     
@@ -173,19 +172,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 23, 2024</p>
+        <p class="date">April 24, 2024</p>
       </div>
     </div>
     
       
     </div>
     
-  <div>
-    <div class="abstract">
-      <div class="block-title">Abstract</div>
-      Streamline Your Git Workflow. Manage multiple GitHub accounts and SSH keys using custom <code>.gitconfig</code> files. Learn how to configure global Git settings, include specific configuration files, and remap hostnames in your SSH config file. Automate your git workflow and say farewell to fiddeling around with SSH and GPG keys.
-    </div>
-  </div>
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -195,26 +188,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#git" id="toc-git" class="nav-link active" data-scroll-target="#git"><span class="header-section-number">1</span> Git</a>
-  <ul class="collapse">
-  <li><a href="#basic-structure" id="toc-basic-structure" class="nav-link" data-scroll-target="#basic-structure"><span class="header-section-number">1.1</span> Basic Structure</a>
-  <ul class="collapse">
-  <li><a href="#gitconfig" id="toc-gitconfig" class="nav-link" data-scroll-target="#gitconfig"><span class="header-section-number">1.1.1</span> <code>.gitconfig</code></a></li>
-  <li><a href="#gitconfig_github_personal" id="toc-gitconfig_github_personal" class="nav-link" data-scroll-target="#gitconfig_github_personal"><span class="header-section-number">1.1.2</span> <code>.gitconfig_github_personal</code></a></li>
-  <li><a href="#sshconfig" id="toc-sshconfig" class="nav-link" data-scroll-target="#sshconfig"><span class="header-section-number">1.1.3</span> <code>~/.ssh/config</code></a></li>
-  </ul></li>
-  <li><a href="#extending-the-structure" id="toc-extending-the-structure" class="nav-link" data-scroll-target="#extending-the-structure"><span class="header-section-number">1.2</span> Extending the Structure</a>
-  <ul class="collapse">
-  <li><a href="#gitconfig-1" id="toc-gitconfig-1" class="nav-link" data-scroll-target="#gitconfig-1"><span class="header-section-number">1.2.1</span> <code>.gitconfig</code></a></li>
-  <li><a href="#gitconfig_github_work" id="toc-gitconfig_github_work" class="nav-link" data-scroll-target="#gitconfig_github_work"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_work</code></a></li>
-  <li><a href="#sshconfig-1" id="toc-sshconfig-1" class="nav-link" data-scroll-target="#sshconfig-1"><span class="header-section-number">1.2.3</span> <code>.ssh/config</code></a></li>
-  </ul></li>
-  <li><a href="#bonus-gpg-signing" id="toc-bonus-gpg-signing" class="nav-link" data-scroll-target="#bonus-gpg-signing"><span class="header-section-number">1.3</span> Bonus GPG Signing</a>
-  <ul class="collapse">
-  <li><a href="#gitconfig-2" id="toc-gitconfig-2" class="nav-link" data-scroll-target="#gitconfig-2"><span class="header-section-number">1.3.1</span> <code>.gitconfig</code></a></li>
-  <li><a href="#gitconfig_github_work-1" id="toc-gitconfig_github_work-1" class="nav-link" data-scroll-target="#gitconfig_github_work-1"><span class="header-section-number">1.3.2</span> <code>gitconfig_github_work</code></a></li>
-  </ul></li>
-  </ul></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#dataset-penguin" id="toc-dataset-penguin" class="nav-link" data-scroll-target="#dataset-penguin"><span class="header-section-number">2</span> Dataset: Penguin</a></li>
+  <li><a href="#applying-umap" id="toc-applying-umap" class="nav-link" data-scroll-target="#applying-umap"><span class="header-section-number">3</span> Applying UMAP</a></li>
+  <li><a href="#umap-parameters" id="toc-umap-parameters" class="nav-link" data-scroll-target="#umap-parameters"><span class="header-section-number">4</span> Umap Parameters</a></li>
+  <li><a href="#bonus-interactive-parameter-grid" id="toc-bonus-interactive-parameter-grid" class="nav-link" data-scroll-target="#bonus-interactive-parameter-grid"><span class="header-section-number">5</span> Bonus: interactive parameter grid</a></li>
   </ul>
 </nav>
     </div>
@@ -225,132 +203,197 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="git" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Git</h1>
-<p>Git, <a href="https://survey.stackoverflow.co/2022#section-version-control-version-control-systems">everyone’s favorite version control system</a>, was released (checks notes) <a href="https://en.wikipedia.org/wiki/Git">19 years ago</a> on April 7th, 2005. That is some time ago.</p>
-<p>Currently, every developer uses Git for one or more projects and/or organizations. In modern days, each and every repo/organization has some form of authentication or other requirements to work with it. I have seen some pretty wacky setups to control how Git is being configured in order to streamline developer productivity and security.</p>
-<p><br> And now, I will introduce my wacky solution 😜 for handeling ssh keys for multiple github accounts.</p>
-<section id="basic-structure" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="basic-structure"><span class="header-section-number">1.1</span> Basic Structure</h2>
-<p>The structure I use has the following files:</p>
-<ul>
-<li><code>.gitconfig</code></li>
-<li><code>.gitconfig_github_personal</code></li>
-<li><code>~/.ssh/config</code></li>
-</ul>
-<section id="gitconfig" class="level3" data-number="1.1.1">
-<h3 data-number="1.1.1" class="anchored" data-anchor-id="gitconfig"><span class="header-section-number">1.1.1</span> <code>.gitconfig</code></h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">[user]</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">useConfigOnly</span> = true</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="ex">path</span> = ~/.gitconfig_github_personal</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Unsupervised learning techniques like UMAP and T-SNE are powerful tools for handling high-dimensional data.</p>
+<p>However, their performance and usefulness rely on the parameters that the user inputs; the choice of parameters can make a huge difference in the output of the model. To get a better grasp on the outcome of the model, we can use parameter grids. This provides a clearer understanding of how the model behaves with different parameters.</p>
+<p>In this post, I will show you how I use these grids and hope that you can apply them to your projects as well.</p>
+<div id="cell-2" class="cell" data-execution_count="54">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> warnings</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="im">from</span> functools <span class="im">import</span> lru_cache</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="im">from</span> typing <span class="im">import</span> Union</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="im">import</span> umap</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="im">from</span> matplotlib_inline.backend_inline <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler, minmax_scale</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-3" class="cell" data-execution_count="63">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>set_matplotlib_formats(<span class="st">"svg"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>sns.set_style(<span class="st">"darkgrid"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>sns.set_context(context<span class="op">=</span><span class="st">"notebook"</span>, font_scale<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">FutureWarning</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">UserWarning</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a>FIGSIZE <span class="op">=</span> (<span class="dv">12</span>, <span class="dv">6</span>)</span>
+<span id="cb2-10"><a href="#cb2-10"></a>N_SAMPLES <span class="op">=</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
-<section id="gitconfig_github_personal" class="level3" data-number="1.1.2">
-<h3 data-number="1.1.2" class="anchored" data-anchor-id="gitconfig_github_personal"><span class="header-section-number">1.1.2</span> <code>.gitconfig_github_personal</code></h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="ex">[user]</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="ex">name</span> = personal_name</span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="ex">email</span> = personal_email@example.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="dataset-penguin" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Dataset: Penguin</h1>
+<p>For this notebook, I have taken inspiration from the <a href="https://umap-learn.readthedocs.io/en/latest/basic_usage.html#penguin-data">UMAP docs</a> and loaded the penguin dataset. The dataset contains measurements for 344 penguins. There are three different species of penguins in this dataset. Some preprocessing is applied to the dataset to make it suitable for the UMAP model. We retain the numerical columns and drop everything that contains a NaN value; afterwards, we apply a standard scaler to the data, ensuring that all numerical values are more or less on the same scale.</p>
+<p><img src="https://raw.githubusercontent.com/allisonhorst/palmerpenguins/c19a904462482430170bfe2c718775ddb7dbb885/man/figures/lter_penguins.png" class="img-fluid" alt="penguins"> “Artwork by <span class="citation" data-cites="allison_horst">@allison_horst</span>”</p>
+<div id="cell-6" class="cell" data-execution_count="64">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># load penguin data</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>penguins <span class="op">=</span> pd.read_csv(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="st">"https://raw.githubusercontent.com/allisonhorst/palmerpenguins/c19a904462482430170bfe2c718775ddb7dbb885/inst/extdata/penguins.csv"</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># select numeric columns</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>penguin_data <span class="op">=</span> penguins[</span>
+<span id="cb3-8"><a href="#cb3-8"></a>    [</span>
+<span id="cb3-9"><a href="#cb3-9"></a>        <span class="st">"bill_length_mm"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10"></a>        <span class="st">"bill_depth_mm"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11"></a>        <span class="st">"flipper_length_mm"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>        <span class="st">"body_mass_g"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13"></a>    ]</span>
+<span id="cb3-14"><a href="#cb3-14"></a>]</span>
+<span id="cb3-15"><a href="#cb3-15"></a></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="co"># drop rows with missing values, umap doens't handle them</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co"># apply standard scaling, to get numeric values on the same scale</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>penguin_data <span class="op">=</span> penguin_data.dropna()</span>
+<span id="cb3-19"><a href="#cb3-19"></a>scaled_penguin_data <span class="op">=</span> StandardScaler().fit_transform(penguin_data.to_numpy())</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a></span>
+<span id="cb3-22"><a href="#cb3-22"></a>colors <span class="op">=</span> penguins.loc[penguin_data.index, <span class="st">"species"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
-<section id="sshconfig" class="level3" data-number="1.1.3">
-<h3 data-number="1.1.3" class="anchored" data-anchor-id="sshconfig"><span class="header-section-number">1.1.3</span> <code>~/.ssh/config</code></h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="ex">Host</span> github.com</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="ex">HostName</span> github.com</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="ex">User</span> personal_name</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="ex">IdentityFile</span> ~/.ssh/personal_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>So far, not too whacky, right? Git uses the <code>.gitconfig</code> file to configure Git globally, and then only the actions performed in the folder <code>~/Developer/github_personal/</code> will use the <code>.gitconfig_github_personal</code> file. The SSH key is defined in the SSH config and is used solely for GitHub connections.</p>
-<p>Now, if you make a commit, the name and email from the <code>.gitconfig_github_personal</code> are attached to that commit. This is all fun and games, but what if another project requires a Bitbucket or GitLab account? You can create a <code>.gitconfig</code> file for each service and add the right key settings to the SSH file.</p>
-<p>The “fun” starts when there’s a second instance of a GitHub account; now, all of a sudden, you have a collision in the way you handle your SSH keys - they have the same hostname. 😩</p>
+<section id="applying-umap" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Applying UMAP</h1>
+<p>UMAP is a general-purpose manifold learning and dimension reduction algorithm. It takes a high-dimensional dataset and reduces it to a lower-dimensional space, most of the time to two dimensions, which enables easy plotting. However, it can be set to any number of dimensions. The strength of UMAP lies in its ability to capture the structure of the data in a way that allows for meaningful interpretation about the data. also umap scales better with large datasets compared to t-sne, another popular dimensionality reduction technique.</p>
+<div id="cell-8" class="cell" data-execution_count="67">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="at">@lru_cache</span>(maxsize<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">def</span> create_embedding_from_params(</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    n_neighbors: <span class="bu">int</span> <span class="op">=</span> <span class="dv">15</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    min_dist: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>) <span class="op">-&gt;</span> np.ndarray:</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="co">"""create penguin embeddings using umap</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="co">    takes the input parameters and creates a umap embedding</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">    Parameters</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">    ----------</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">    n_neighbors : int, optional</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">        The size of local neighborhood used for manifold approximation, by default 15</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">    min_dist : float, optional</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">        The effective minimum distance between embedded points, by default 0.1</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">    Returns</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co">    -------</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="co">    np.ndarray</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co">        emdedding of the penguin data</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="co">    """</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>    reducer <span class="op">=</span> umap.UMAP(</span>
+<span id="cb4-23"><a href="#cb4-23"></a>        n_neighbors<span class="op">=</span>n_neighbors,</span>
+<span id="cb4-24"><a href="#cb4-24"></a>        min_dist<span class="op">=</span>min_dist,</span>
+<span id="cb4-25"><a href="#cb4-25"></a>        n_components<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb4-26"><a href="#cb4-26"></a>        n_jobs<span class="op">=-</span><span class="dv">1</span>,</span>
+<span id="cb4-27"><a href="#cb4-27"></a>        random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb4-28"><a href="#cb4-28"></a>    )</span>
+<span id="cb4-29"><a href="#cb4-29"></a>    <span class="cf">return</span> minmax_scale(reducer.fit_transform(scaled_penguin_data))</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a></span>
+<span id="cb4-32"><a href="#cb4-32"></a><span class="kw">def</span> plot_embedding(</span>
+<span id="cb4-33"><a href="#cb4-33"></a>    embedding: np.ndarray,</span>
+<span id="cb4-34"><a href="#cb4-34"></a>    n_neighbors: <span class="bu">int</span>,</span>
+<span id="cb4-35"><a href="#cb4-35"></a>    min_dist: <span class="bu">float</span>,</span>
+<span id="cb4-36"><a href="#cb4-36"></a>    ax: plt.Axes,</span>
+<span id="cb4-37"><a href="#cb4-37"></a>):</span>
+<span id="cb4-38"><a href="#cb4-38"></a>    <span class="co">"""create a scatter plot of the embedding</span></span>
+<span id="cb4-39"><a href="#cb4-39"></a></span>
+<span id="cb4-40"><a href="#cb4-40"></a><span class="co">    creates a scatter plot of the penguin dataset using the embedding and uses the input parameters as title</span></span>
+<span id="cb4-41"><a href="#cb4-41"></a></span>
+<span id="cb4-42"><a href="#cb4-42"></a><span class="co">    Parameters</span></span>
+<span id="cb4-43"><a href="#cb4-43"></a><span class="co">    ----------</span></span>
+<span id="cb4-44"><a href="#cb4-44"></a><span class="co">    embedding : np.ndarray</span></span>
+<span id="cb4-45"><a href="#cb4-45"></a><span class="co">        umap embeddings of the penguin data</span></span>
+<span id="cb4-46"><a href="#cb4-46"></a><span class="co">    n_neighbors : int</span></span>
+<span id="cb4-47"><a href="#cb4-47"></a><span class="co">        number of neighbors used for the umap embedding</span></span>
+<span id="cb4-48"><a href="#cb4-48"></a><span class="co">    min_dist : float</span></span>
+<span id="cb4-49"><a href="#cb4-49"></a><span class="co">        minimum distance between points in the embedding</span></span>
+<span id="cb4-50"><a href="#cb4-50"></a><span class="co">    ax : plt.Axes</span></span>
+<span id="cb4-51"><a href="#cb4-51"></a><span class="co">        axes object to plot on</span></span>
+<span id="cb4-52"><a href="#cb4-52"></a><span class="co">    """</span></span>
+<span id="cb4-53"><a href="#cb4-53"></a>    sns.scatterplot(</span>
+<span id="cb4-54"><a href="#cb4-54"></a>        x<span class="op">=</span>embedding[:, <span class="dv">0</span>],</span>
+<span id="cb4-55"><a href="#cb4-55"></a>        y<span class="op">=</span>embedding[:, <span class="dv">1</span>],</span>
+<span id="cb4-56"><a href="#cb4-56"></a>        hue<span class="op">=</span>colors,</span>
+<span id="cb4-57"><a href="#cb4-57"></a>        ax<span class="op">=</span>ax,</span>
+<span id="cb4-58"><a href="#cb4-58"></a>        s<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb4-59"><a href="#cb4-59"></a>        legend<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb4-60"><a href="#cb4-60"></a>    )</span>
+<span id="cb4-61"><a href="#cb4-61"></a>    ax.set_title(<span class="ss">f" </span><span class="sc">{</span>n_neighbors<span class="op">=</span><span class="sc">}</span><span class="ss"> and </span><span class="sc">{</span>min_dist<span class="op">=</span><span class="sc">}</span><span class="ss"> "</span>)</span>
+<span id="cb4-62"><a href="#cb4-62"></a>    ax.set_xticks(np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">6</span>))</span>
+<span id="cb4-63"><a href="#cb4-63"></a>    ax.set_yticks(np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">6</span>))</span>
+<span id="cb4-64"><a href="#cb4-64"></a>    ax.set_xticklabels([])</span>
+<span id="cb4-65"><a href="#cb4-65"></a>    ax.set_yticklabels([])</span>
+<span id="cb4-66"><a href="#cb4-66"></a></span>
+<span id="cb4-67"><a href="#cb4-67"></a></span>
+<span id="cb4-68"><a href="#cb4-68"></a><span class="kw">def</span> create_param_grid(n_neighbors_vals, min_dist_vals):</span>
+<span id="cb4-69"><a href="#cb4-69"></a>    fig, ax <span class="op">=</span> plt.subplots(</span>
+<span id="cb4-70"><a href="#cb4-70"></a>        <span class="bu">len</span>(n_neighbors_vals),</span>
+<span id="cb4-71"><a href="#cb4-71"></a>        <span class="bu">len</span>(min_dist_vals),</span>
+<span id="cb4-72"><a href="#cb4-72"></a>        figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">10</span>),</span>
+<span id="cb4-73"><a href="#cb4-73"></a>    )</span>
+<span id="cb4-74"><a href="#cb4-74"></a></span>
+<span id="cb4-75"><a href="#cb4-75"></a>    <span class="co"># look over all parameter combinations</span></span>
+<span id="cb4-76"><a href="#cb4-76"></a>    <span class="cf">for</span> i, n_neighbors <span class="kw">in</span> <span class="bu">enumerate</span>(n_neighbors_vals):</span>
+<span id="cb4-77"><a href="#cb4-77"></a>        <span class="cf">for</span> j, min_dist <span class="kw">in</span> <span class="bu">enumerate</span>(min_dist_vals):</span>
+<span id="cb4-78"><a href="#cb4-78"></a>            embedding <span class="op">=</span> create_embedding_from_params(n_neighbors, min_dist)</span>
+<span id="cb4-79"><a href="#cb4-79"></a>            plot_embedding(embedding, n_neighbors, min_dist, ax<span class="op">=</span>ax[i, j])</span>
+<span id="cb4-80"><a href="#cb4-80"></a></span>
+<span id="cb4-81"><a href="#cb4-81"></a>    <span class="co"># final cleanup</span></span>
+<span id="cb4-82"><a href="#cb4-82"></a>    fig.suptitle(<span class="st">"UMAP embeddings with different n_neighbors and min_dist"</span>)</span>
+<span id="cb4-83"><a href="#cb4-83"></a>    fig.supxlabel(<span class="st">"min_dist -&gt;"</span>)</span>
+<span id="cb4-84"><a href="#cb4-84"></a>    fig.supylabel(<span class="st">"n_neighbors -&gt;"</span>)</span>
+<span id="cb4-85"><a href="#cb4-85"></a>    plt.tight_layout()</span>
+<span id="cb4-86"><a href="#cb4-86"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Two helper functions are defined to create the parameter grids. the first function, <code>create_embedding_from_params</code> takes the two parameters as inputs and returns the umap embedding of the dataset. The second function, <code>plot_embedding</code> takes the embedding and the parameters and an matplotlib axes object and plots the embedding on the axes object. the last functions marries all together and creates a grid of plots for the different parameters.</p>
 </section>
-</section>
-<section id="extending-the-structure" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="extending-the-structure"><span class="header-section-number">1.2</span> Extending the Structure</h2>
-<p>lets add a additional <code>gitconfig</code> for the work github</p>
-<ul>
-<li><code>.gitconfig</code></li>
-<li><code>.gitconfig_github_personal</code></li>
-<li><code>.gitconfig_github_work</code></li>
-<li><code>.ssh/config</code></li>
-</ul>
-<section id="gitconfig-1" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="gitconfig-1"><span class="header-section-number">1.2.1</span> <code>.gitconfig</code></h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">[user]</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>    <span class="ex">useConfigOnly</span> = true</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
-<span id="cb4-5"><a href="#cb4-5"></a>    <span class="ex">path</span> = ~/.gitconfig_github_personal</span>
-<span id="cb4-6"><a href="#cb4-6"></a></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_work/"</span>]</span>
-<span id="cb4-8"><a href="#cb4-8"></a>    <span class="ex">path</span> = ~/.gitconfig_github_work</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>adding one line for the new work directory, this is linked to the new work gitconfig file.</p>
-</section>
-<section id="gitconfig_github_work" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="gitconfig_github_work"><span class="header-section-number">1.2.2</span> <code>.gitconfig_github_work</code></h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="ex">[user]</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>    <span class="va">name</span><span class="op">=</span>work_name</span>
-<span id="cb5-3"><a href="#cb5-3"></a>    <span class="va">email</span><span class="op">=</span> <span class="ex">work@example.com</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="ex">[url</span> <span class="st">"git@github.com-work"</span>]</span>
-<span id="cb5-6"><a href="#cb5-6"></a>    <span class="ex">insteadOf</span> = git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>this is where the magic happens, we instruct git to modify the URL it uses to connect to GitHub, and in the SSH config file, we remap this to the correct hostname. The result is that we can clone repositories as normal, and the folder location determines which SSH keys are used. This means that once set up, we can get on with our work instead of fiddling around with SSH keys. Automation wins!</p>
-</section>
-<section id="sshconfig-1" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="sshconfig-1"><span class="header-section-number">1.2.3</span> <code>.ssh/config</code></h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">Host</span> github.com</span>
-<span id="cb6-2"><a href="#cb6-2"></a>  <span class="ex">Hostname</span> github.com</span>
-<span id="cb6-3"><a href="#cb6-3"></a>  <span class="ex">User</span> personal_name</span>
-<span id="cb6-4"><a href="#cb6-4"></a>  <span class="ex">IdentityFile</span> ~/.ssh/personal_key</span>
-<span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="ex">Host</span> github.com-work</span>
-<span id="cb6-7"><a href="#cb6-7"></a>  <span class="ex">Hostname</span> github.com</span>
-<span id="cb6-8"><a href="#cb6-8"></a>  <span class="ex">User</span> work_name</span>
-<span id="cb6-9"><a href="#cb6-9"></a>  <span class="ex">IdentityFile</span> ~/.ssh/work_key</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-</section>
-<section id="bonus-gpg-signing" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="bonus-gpg-signing"><span class="header-section-number">1.3</span> Bonus GPG Signing</h2>
-<p>If you want to be able to <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits">sign commits</a> (and get a green checkmark next to your commits) you can extend the above structure to utilize the SSH key for Git commit signing.</p>
-<section id="gitconfig-2" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="gitconfig-2"><span class="header-section-number">1.3.1</span> <code>.gitconfig</code></h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="ex">[user]</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="ex">useConfigOnly</span> = true</span>
-<span id="cb7-3"><a href="#cb7-3"></a></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="ex">[gpg]</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="ex">format</span> = ssh</span>
-<span id="cb7-6"><a href="#cb7-6"></a></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_personal/"</span>]</span>
-<span id="cb7-8"><a href="#cb7-8"></a>  <span class="ex">path</span> = ~/.gitconfig_github_personal</span>
-<span id="cb7-9"><a href="#cb7-9"></a></span>
-<span id="cb7-10"><a href="#cb7-10"></a><span class="ex">[includeIf</span> <span class="st">"gitdir:~/Developer/github_work/"</span>]</span>
-<span id="cb7-11"><a href="#cb7-11"></a>  <span class="ex">path</span> = ~/.gitconfig_github_work</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We start with the global Git config and define the GPG format to be SSH.</p>
-</section>
-<section id="gitconfig_github_work-1" class="level3" data-number="1.3.2">
-<h3 data-number="1.3.2" class="anchored" data-anchor-id="gitconfig_github_work-1"><span class="header-section-number">1.3.2</span> <code>gitconfig_github_work</code></h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">[user]</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a>  <span class="ex">name</span> = work_name</span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="ex">email</span> = work@example.com</span>
-<span id="cb8-4"><a href="#cb8-4"></a>  <span class="ex">signingkey</span> = <span class="op">&lt;</span>your ssh key<span class="op">&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="ex">[commit]</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a>  <span class="ex">gpgsign</span> = true</span>
-<span id="cb8-8"><a href="#cb8-8"></a></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="ex">[url</span> <span class="st">"git@github.com/work"</span>]</span>
-<span id="cb8-10"><a href="#cb8-10"></a>  <span class="ex">insteadOf</span> = git@github.com</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Here, I have added the <code>signingkey</code> option for the user and set the <code>gpgsign</code> indicator to <code>true</code>.</p>
-<p>Now also <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account">add your ssh key as a signing key!</a></p>
-<p>The next time you commit, it is signed with your SSH key 100% automatically and pain-free – how cool is that!</p>
-<div class="quarto-figure quarto-figure-center">
+<section id="umap-parameters" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Umap Parameters</h1>
+<p>to keep things simple we are going to use a parameter grid with two parameters: <code>n_neighbors</code> and <code>min_dist</code>. <code>n_neighbors</code> is the number of neighbors used to construct the fuzzy topological representation of the data. <code>min_dist</code> is the minimum distance between points in the low-dimensional representation. The higher the value of <code>n_neighbors</code>, the more global the structure will be. The higher the value of <code>min_dist</code>, the more separated the clusters will be. lets see if this also happens in practise.</p>
+<div id="cell-11" class="cell" data-execution_count="69">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># define the pramgrid</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>n_neighbors_vals <span class="op">=</span> (<span class="dv">3</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">300</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>min_dist_vals <span class="op">=</span> (<span class="fl">0.0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.99</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>create_param_grid(n_neighbors_vals, min_dist_vals)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
 <figure class="figure">
-<p><img src="https://docs.github.com/assets/cb-17614/mw-1440/images/help/commits/verified-commit.webp" class="img-fluid figure-img"></p>
-<figcaption>Signed Commit</figcaption>
+<p><img src="paramgrid_files/figure-html/cell-6-output-1.svg" class="img-fluid figure-img"></p>
 </figure>
 </div>
-<p>P.S. You can also attend a <a href="https://danielpecos.com/2024/01/23/attending-a-pgp-gnupg-signing-party/">GPG signing party</a> but that’s a topic for another time.</p>
+</div>
+</div>
+<p>it the plot above we have two axis: the x axes represents the <code>min_dist</code> parameter with on the left the small values and on the right to larger values</p>
+</section>
+<section id="bonus-interactive-parameter-grid" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Bonus: interactive parameter grid</h1>
 
 
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->
