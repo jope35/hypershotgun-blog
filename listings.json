@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/pyspark_style/pyspark_test.html",
+      "/posts/pyspark_style/pyspark_style.html",
       "/posts/gitgud/gitconfig.html",
       "/posts/stepcat/stepcat.html",
       "/posts/DPD/dependency.html",

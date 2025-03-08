@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>hyper-shotgun</title>
+<title>pyspark_test – hyper-shotgun</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,30 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicons/hyper_favi.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-65186549de95cd2ff331b98fa30c8ceb.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-452e721b62d9123c4b614c43ab971082.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c49d385b090d22846363425bc58f6809.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-3a168564333137508c75f12822f0da06.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-65186549de95cd2ff331b98fa30c8ceb.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-452e721b62d9123c4b614c43ab971082.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c49d385b090d22846363425bc58f6809.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-3a168564333137508c75f12822f0da06.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,67 +102,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
 
-    const options = {
-      valueNames: ['listing-image','listing-description','listing-date','listing-title','listing-author','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -140,10 +114,10 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./apple-touch-icon.png" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">hyper-shotgun</span>
     </a>
   </div>
@@ -154,7 +128,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./whois.html"> 
+    <a class="nav-link" href="../../whois.html"> 
 <span class="menu-text">whois 🤖</span></a>
   </li>  
   <li class="nav-item">
@@ -176,228 +150,94 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
-      <h1 class="title">hyper-shotgun</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta column-page">
-
-      
-    
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
         
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
-
-
-
-
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1741429691786">
-<div class="thumbnail">
-<p><a href="./posts/pyspark_style/pyspark_test.html" class="no-external"></a></p><a href="./posts/pyspark_style/pyspark_test.html" class="no-external">
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-</a><p><a href="./posts/pyspark_style/pyspark_test.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pyspark_style/pyspark_test.html" class="no-external"></a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pyspark_style/pyspark_test.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pyspark_style/pyspark_test.html" class="no-external">
+<div id="cell-0" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im">import</span> os</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> os</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-</a>
+</div>
+<div id="cell-1" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a>os.environ.get(<span class="st">"JAVA_HOME"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># os.environ.get("SPARK_HOME")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>'/opt/homebrew/opt/openjdk@11/'</code></pre>
 </div>
 </div>
-<div class="metadata">
-<p><a href="./posts/pyspark_style/pyspark_test.html" class="no-external"></a></p><a href="./posts/pyspark_style/pyspark_test.html" class="no-external">
-</a>
+<div id="cell-2" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># !export JAVA_HOME=/opt/homebrew/opt/openjdk@11</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-3" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># !export SPARK_HOME=~/Developer/personal/hypershotgun-blog/.venv/lib/python3.11/site-packages/pyspark</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="cell-4" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame <span class="im">as</span> df, functions <span class="im">as</span> F, types <span class="im">as</span> T, Window <span class="im">as</span> W  <span class="co"># noqa</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> SparkSession</span>
+<span id="cb6-5"><a href="#cb6-5"></a></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co"># Create SparkSession (recommended in newer Spark versions)</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>spark <span class="op">=</span> SparkSession.builder.appName(<span class="st">"MyApp"</span>).getOrCreate()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>25/01/29 08:53:54 WARN Utils: Your hostname, Joosts-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.180.159 instead (on interface en0)
+25/01/29 08:53:54 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+25/01/29 08:53:54 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</code></pre>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1737763200000" data-listing-file-modified-sort="1741429691786" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21" data-listing-word-count-sort="4048">
-<div class="thumbnail">
-<p><a href="./posts/pyspark_style/pyspark_style.html" class="no-external"></a></p><a href="./posts/pyspark_style/pyspark_style.html" class="no-external">
-<p><img loading="lazy" src="./posts/pyspark_style/artifacts/splash.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/pyspark_style/pyspark_style.html" class="no-external"></a></p>
+<div id="cell-5" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a>df_nulls <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb8-2"><a href="#cb8-2"></a>    [(<span class="st">"a"</span>, <span class="va">None</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="va">None</span>)],</span>
+<span id="cb8-3"><a href="#cb8-3"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
+<span id="cb8-4"><a href="#cb8-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pyspark_style/pyspark_style.html" class="no-external">Pyspark ⚡️ style guide</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pyspark_style/pyspark_style.html" class="no-external">appear in style and sparkly </a>
-</div>
-<div class="listing-description">
-<a href="./posts/pyspark_style/pyspark_style.html" class="no-external">PySpark is a wrapper language that allows users to interface with an Apache Spark backend to quickly process data. Spark can operate on massive datasets across a distributed network of servers, providing major performance and reliability benefits when utilized correctly. It presents challenges, even for experienced Python developers, as the PySpark syntax draws on the JVM heritage of Spark and therefore implements code patterns that may be unfamiliar. Adapted from <span>here</span> and <span>here</span></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pyspark_style/pyspark_style.html" class="no-external">
-<div class="listing-date">
-2025-01-25
-</div>
-<div class="listing-author">
-Joost de Theije + LLM
-</div>
-<div class="listing-reading-time">
-21 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1713830400000" data-listing-file-modified-sort="1741429691783" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="548">
-<div class="thumbnail">
-<p><a href="./posts/gitgud/gitconfig.html" class="no-external"></a></p><a href="./posts/gitgud/gitconfig.html" class="no-external">
-<p><img loading="lazy" src="./posts/gitgud/artifacts/github-mark.png" class="thumbnail-image"></p>
-</a><p><a href="./posts/gitgud/gitconfig.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/gitgud/gitconfig.html" class="no-external">Multi-Git-Account-Mastery</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/gitgud/gitconfig.html" class="no-external">managing SSH Keys: A (Wacky) Solution for Multiple GitHub Accounts</a>
-</div>
-<div class="listing-description">
-<a href="./posts/gitgud/gitconfig.html" class="no-external">Streamline Your Git Workflow. Manage multiple GitHub accounts and SSH keys using custom <code>.gitconfig</code> files. Learn how to configure global Git settings, include specific configuration files, and remap hostnames in your SSH config file. Automate your git workflow and say farewell to fiddeling around with SSH and GPG keys.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/gitgud/gitconfig.html" class="no-external">
-<div class="listing-date">
-2024-04-23
-</div>
-<div class="listing-author">
-Joost de Theije + LLM
-</div>
-<div class="listing-reading-time">
-3 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1710374400000" data-listing-file-modified-sort="1741429691789" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1523">
-<div class="thumbnail">
-<p><a href="./posts/stepcat/stepcat.html" class="no-external"></a></p><a href="./posts/stepcat/stepcat.html" class="no-external">
-<p><img loading="lazy" src="./posts/stepcat/artifacts/dots.gif" class="thumbnail-image"></p>
-</a><p><a href="./posts/stepcat/stepcat.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/stepcat/stepcat.html" class="no-external">Some points are more or less random than others</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/stepcat/stepcat.html" class="no-external">A Comparative Analysis of Sampling Strategies</a>
-</div>
-<div class="listing-description">
-<a href="./posts/stepcat/stepcat.html" class="no-external">This article delves into various techniques for hyperparameter optimization, comparing the efficiency and effectiveness of Grid Search, Random Search, and Latin Hypercube Sampling in the context of gradient boosting models.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/stepcat/stepcat.html" class="no-external">
-<div class="listing-date">
-2024-03-14
-</div>
-<div class="listing-author">
-Joost de Theije + LLM
-</div>
-<div class="listing-reading-time">
-8 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1707609600000" data-listing-file-modified-sort="1741429691760" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2185">
-<div class="thumbnail">
-<p><a href="./posts/DPD/dependency.html" class="no-external"></a></p><a href="./posts/DPD/dependency.html" class="no-external">
-<p><img loading="lazy" src="./posts/DPD/artifacts/ice_lines.gif" class="thumbnail-image"></p>
-</a><p><a href="./posts/DPD/dependency.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/DPD/dependency.html" class="no-external">Introduction to Partial Dependence Plots</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/DPD/dependency.html" class="no-external">Visualizing Model Relationships</a>
-</div>
-<div class="listing-description">
-<a href="./posts/DPD/dependency.html" class="no-external">This article provides an overview of Partial Dependence Plots (PDPs) and Individual Conditional Expectation (ICE) plots, powerful tools for visualizing the relationships between features and predictions in machine learning models. We’ll explore how these plots can help to interpret model behavior, revealing both average effects and individual data point responses.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/DPD/dependency.html" class="no-external">
-<div class="listing-date">
-2024-02-11
-</div>
-<div class="listing-author">
-Joost de Theije + LLM
-</div>
-<div class="listing-reading-time">
-11 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1677974400000" data-listing-file-modified-sort="1741429691765" data-listing-date-modified-sort="1713571200000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1392">
-<div class="thumbnail">
-<p><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external"></a></p><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">
-<p><img loading="lazy" src="./posts/boring_forecast/artifacts/ratio.gif" class="thumbnail-image"></p>
-</a><p><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">Boring linear forecast</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">Improving Performance by Adding Some Dummies</a>
-</div>
-<div class="listing-description">
-<a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">Discover how the simple addition of dummy variables can transform a linear forecast from mundane to insightful. This article explores the significant impact of encoding seasonality into your models and provides a step-by-step guide on improving forecast accuracy.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">
-<div class="listing-date">
-2023-03-5
-</div>
-<div class="listing-author">
-Joost de Theije + LLM
-</div>
-<div class="listing-reading-time">
-7 min
-</div>
-</a>
+<div id="cell-6" class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-error">
+<div class="ansi-escaped-output">
+<pre><span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[10], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> <span class="ansi-yellow-bg">display_html</span>(df_nulls)
+
+<span class="ansi-red-fg">NameError</span>: name 'display_html' is not defined</pre>
 </div>
 </div>
 </div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+
+
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

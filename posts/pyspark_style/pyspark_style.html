@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joost de Theije + LLM">
+<meta name="dcterms.date" content="2025-01-25">
+
+<title>Pyspark ⚡️ style guide – hyper-shotgun</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-65186549de95cd2ff331b98fa30c8ceb.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-452e721b62d9123c4b614c43ab971082.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c49d385b090d22846363425bc58f6809.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-3a168564333137508c75f12822f0da06.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">hyper-shotgun</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../whois.html"> 
+<span class="menu-text">whois 🤖</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text">LinkedIn</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jope35"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">Github</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Pyspark ⚡️ style guide</h1>
+            <p class="subtitle lead">appear in style and sparkly</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joost de Theije + LLM </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 25, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      PySpark is a wrapper language that allows users to interface with an Apache Spark backend to quickly process data. Spark can operate on massive datasets across a distributed network of servers, providing major performance and reliability benefits when utilized correctly. It presents challenges, even for experienced Python developers, as the PySpark syntax draws on the JVM heritage of Spark and therefore implements code patterns that may be unfamiliar. Adapted from <a href="https://github.com/palantir/pyspark-style-guide">here</a> and <a href="https://github.com/axelearning/pyspark-style-guide">here</a>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#standard-practices-for-efficient-coding" id="toc-standard-practices-for-efficient-coding" class="nav-link active" data-scroll-target="#standard-practices-for-efficient-coding"><span class="header-section-number">1</span> Standard practices for efficient coding 🧠</a>
+  <ul class="collapse">
+  <li><a href="#import-pyspark-modules-with-default-aliases" id="toc-import-pyspark-modules-with-default-aliases" class="nav-link" data-scroll-target="#import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark modules with default aliases</a></li>
+  <li><a href="#formatting" id="toc-formatting" class="nav-link" data-scroll-target="#formatting"><span class="header-section-number">1.2</span> Formatting</a></li>
+  </ul></li>
+  <li><a href="#implicit-column-selection-over-direct-access-except-to-avoid-disambiguation" id="toc-implicit-column-selection-over-direct-access-except-to-avoid-disambiguation" class="nav-link" data-scroll-target="#implicit-column-selection-over-direct-access-except-to-avoid-disambiguation"><span class="header-section-number">2</span> Implicit column selection over direct access, except to avoid disambiguation</a>
+  <ul class="collapse">
+  <li><a href="#caveats" id="toc-caveats" class="nav-link" data-scroll-target="#caveats"><span class="header-section-number">2.1</span> Caveats</a></li>
+  </ul></li>
+  <li><a href="#refactor-complex-logical-operations" id="toc-refactor-complex-logical-operations" class="nav-link" data-scroll-target="#refactor-complex-logical-operations"><span class="header-section-number">3</span> Refactor complex logical operations</a></li>
+  <li><a href="#use-select-statements-to-specify-a-schema-contract" id="toc-use-select-statements-to-specify-a-schema-contract" class="nav-link" data-scroll-target="#use-select-statements-to-specify-a-schema-contract"><span class="header-section-number">4</span> Use <code>select</code> statements to specify a schema contract</a></li>
+  <li><a href="#empty-columns" id="toc-empty-columns" class="nav-link" data-scroll-target="#empty-columns"><span class="header-section-number">5</span> Empty columns</a></li>
+  <li><a href="#using-comments" id="toc-using-comments" class="nav-link" data-scroll-target="#using-comments"><span class="header-section-number">6</span> Using comments</a></li>
+  <li><a href="#udfs-user-defined-functions" id="toc-udfs-user-defined-functions" class="nav-link" data-scroll-target="#udfs-user-defined-functions"><span class="header-section-number">7</span> UDFs (user defined functions)</a></li>
+  <li><a href="#joins" id="toc-joins" class="nav-link" data-scroll-target="#joins"><span class="header-section-number">8</span> Joins</a>
+  <ul class="collapse">
+  <li><a href="#dropduplicates-and-.distinct-to-clean-joins" id="toc-dropduplicates-and-.distinct-to-clean-joins" class="nav-link" data-scroll-target="#dropduplicates-and-.distinct-to-clean-joins"><span class="header-section-number">8.1</span> <code>.dropDuplicates()</code> and <code>.distinct()</code> to “clean” joins</a></li>
+  </ul></li>
+  <li><a href="#window-functions" id="toc-window-functions" class="nav-link" data-scroll-target="#window-functions"><span class="header-section-number">9</span> Window Functions</a>
+  <ul class="collapse">
+  <li><a href="#dealing-with-nulls" id="toc-dealing-with-nulls" class="nav-link" data-scroll-target="#dealing-with-nulls"><span class="header-section-number">9.1</span> Dealing with nulls</a></li>
+  <li><a href="#empty-partitionby" id="toc-empty-partitionby" class="nav-link" data-scroll-target="#empty-partitionby"><span class="header-section-number">9.2</span> Empty <code>partitionBy()</code></a></li>
+  </ul></li>
+  <li><a href="#micro-structure" id="toc-micro-structure" class="nav-link" data-scroll-target="#micro-structure"><span class="header-section-number">10</span> Micro structure</a>
+  <ul class="collapse">
+  <li><a href="#making-transformation-functions" id="toc-making-transformation-functions" class="nav-link" data-scroll-target="#making-transformation-functions"><span class="header-section-number">10.1</span> making transformation functions</a>
+  <ul class="collapse">
+  <li><a href="#wrapper-function" id="toc-wrapper-function" class="nav-link" data-scroll-target="#wrapper-function"><span class="header-section-number">10.1.1</span> wrapper function</a></li>
+  <li><a href="#lambda-function" id="toc-lambda-function" class="nav-link" data-scroll-target="#lambda-function"><span class="header-section-number">10.1.2</span> lambda function</a></li>
+  <li><a href="#partial-function" id="toc-partial-function" class="nav-link" data-scroll-target="#partial-function"><span class="header-section-number">10.1.3</span> partial function</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#avoid-procedural-approach-with-intermediate-dataframes" id="toc-avoid-procedural-approach-with-intermediate-dataframes" class="nav-link" data-scroll-target="#avoid-procedural-approach-with-intermediate-dataframes"><span class="header-section-number">11</span> Avoid: Procedural approach with intermediate DataFrames</a></li>
+  <li><a href="#other-considerations-and-recommendations" id="toc-other-considerations-and-recommendations" class="nav-link" data-scroll-target="#other-considerations-and-recommendations"><span class="header-section-number">12</span> Other Considerations and Recommendations</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="standard-practices-for-efficient-coding" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Standard practices for efficient coding 🧠</h1>
+<section id="import-pyspark-modules-with-default-aliases" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark modules with default aliases</h2>
+<p>Importing these will enable you to use the types and functions without importing each item separately, resulting in a speedy workflow. This will also eliminate the oopsie when you are applying the sum from the Python library instead of the PySpark library☹. Using the <code>F</code> prefix for all PySpark functions, <code>T</code> prefix for all PySpark types, and <code>W</code> for Windows. Adding the <code>#noqa</code> comment at the end of the line will disable linters (like flake8) from flagging the line as an error.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame <span class="im">as</span> df, functions <span class="im">as</span> F, types <span class="im">as</span> T, Window <span class="im">as</span> W <span class="co">#noqa</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>F.<span class="bu">sum</span>()</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">## Type annotaion and docstrings in functions</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>Type annotations <span class="kw">or</span> <span class="bu">type</span> hints so that you <span class="im">as</span> a developer can clearly indicate what your intended datatype <span class="kw">is</span>. Also this integrates nicely <span class="cf">with</span> editors <span class="kw">and</span> IDE. static <span class="bu">type</span> checkers such <span class="im">as</span> [mypy](https:<span class="op">//</span>www.mypy<span class="op">-</span>lang.org<span class="op">/</span>) utilize it to <span class="bu">help</span> you catch errors early.</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a>```python</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># bad</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="kw">def</span> calculate_daily_scoops(df, flavor_col, date_col):</span>
+<span id="cb1-14"><a href="#cb1-14"></a>    <span class="cf">return</span> df.groupBy(date_col, flavor_col).agg(F.<span class="bu">sum</span>(<span class="st">"scoops_sold"</span>).alias(<span class="st">"total_scoops"</span>))</span>
+<span id="cb1-15"><a href="#cb1-15"></a></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co"># good</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="kw">def</span> calculate_daily_scoops(df: DataFrame, flavor_col: <span class="bu">str</span>, date_col: <span class="bu">str</span>) <span class="op">-&gt;</span> DataFrame:</span>
+<span id="cb1-18"><a href="#cb1-18"></a>    <span class="co">"""Calculate total scoops sold per day and flavor.</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">    Groups the input DataFrame by date and flavor, aggregating the total number</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">    of scoops sold for each unique combination.</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">    Parameters</span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">    ----------</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="co">    df : DataFrame</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co">        Input DataFrame containing sales data.</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co">    flavor_col : str</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">        Name of the column containing ice cream flavor information.</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="co">    date_col : str</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co">        Name of the column containing date information.</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a></span>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="co">    Returns</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co">    -------</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co">    DataFrame</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co">        DataFrame with total scoops sold, grouped by date and flavor.</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">        Contains columns for date, flavor, and total scoops.</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="co">    Examples</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a><span class="co">    --------</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="co">    &gt;&gt;&gt; import pyspark.sql.functions as F</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co">    &gt;&gt;&gt; sales_df = spark.createDataFrame(...)</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a><span class="co">    &gt;&gt;&gt; daily_scoops = calculate_daily_scoops(sales_df, 'flavor', 'sale_date')</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="co">    &gt;&gt;&gt; daily_scoops.show()</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co">    """</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>    <span class="cf">return</span> df.groupBy(date_col, flavor_col).agg(</span>
+<span id="cb1-46"><a href="#cb1-46"></a>        F.<span class="bu">sum</span>(<span class="st">"scoops_sold"</span>).alias(<span class="st">"total_scoops"</span>)</span>
+<span id="cb1-47"><a href="#cb1-47"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="formatting" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="formatting"><span class="header-section-number">1.2</span> Formatting</h2>
+<p><a href="https://github.com/psf/black">black</a>, just use black.</p>
+<!-- ::: {.callout-note title="Tip with Title" callout-appearance="simple" icon=false collapse="true"}
+Note that there are five types of callouts, including:
+`note`, `warning`, `important`, `tip`, and `caution`.
+::: -->
+</section>
+</section>
+<section id="implicit-column-selection-over-direct-access-except-to-avoid-disambiguation" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Implicit column selection over direct access, except to avoid disambiguation</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># bad</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>df <span class="op">=</span> df.select(F.lower(df1.colA), F.upper(df2.colB))</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># good</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>df <span class="op">=</span> df.select(F.lower(F.col(<span class="st">'colA'</span>)), F.upper(F.col(<span class="st">'colB'</span>)))</span>
+<span id="cb2-6"><a href="#cb2-6"></a></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># better - since Spark 3.0</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>df <span class="op">=</span> df.select(F.lower(<span class="st">'colA'</span>), F.upper(<span class="st">'colB'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Most situations favor avoiding the first and second styles in favor of referencing columns by name using strings, as shown in the third example. Spark 3.0 <a href="https://issues.apache.org/jira/browse/SPARK-26979">greatly expanded</a> the scenarios where this approach works. However, when string references aren’t feasible, a more verbose method is necessary.</p>
+<p>While the first style may appear simpler and less cluttered in some cases, it has notable drawbacks:</p>
+<ul>
+<li>Long dataframe variable names lead to cumbersome expressions.</li>
+<li>Column names with spaces or special characters require bracket notation, which isn’t consistent with other methods. -&gt; <code>df1['colA']</code> is just as difficult to write as <code>F.col('colA')</code></li>
+<li>Expressions involving dataframes names are not reusable and can not define abstract functions.</li>
+<li>Renaming a dataframe variable demands updating all column references, increasing the risk of errors.</li>
+</ul>
+<p>Additionally, the dot syntax encourages the use of short and non-descriptive variable names for dataframes, which harms maintainability. Descriptive names help establish clear expectations about the data contained within dataframes.</p>
+<p>In contrast, <code>F.col('colA')</code> consistently references a column named <code>colA</code> in the supplied dataframe (<code>df</code>). This method eliminates the need to track other dataframes’ states, making code more localized and less prone to “spooky interaction at a distance,” a common source of debugging challenges.</p>
+<section id="caveats" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="caveats"><span class="header-section-number">2.1</span> Caveats</h2>
+<p>In some contexts there may be access to columns from more than one dataframe, and there may be an overlap in names. A common example is in matching expressions like <code>df.join(df2, on=(df.key == df2.key), how='left')</code>. In such cases it is fine to reference columns by their dataframe directly. You can also disambiguate joins using dataframe aliases (see more in the <a href="#joins">Joins</a> section in this guide).</p>
+</section>
+</section>
+<section id="refactor-complex-logical-operations" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Refactor complex logical operations</h1>
+<p>Logical operations, which often reside inside <code>.filter()</code> or <code>F.when()</code>, need to be readable. Keep logic expressions inside the same code block to <strong>three (3) expressions at most</strong>. If they grow longer, it is often a sign that the code can and should be simplified or extracted out. Extracting out complex logical operations into variables makes the code easier to read and reason about, which also reduces bugs.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># bad</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>F.when( (F.col(<span class="st">'prod_status'</span>) <span class="op">==</span> <span class="st">'Delivered'</span>) <span class="op">|</span> (((F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> ((F.col(<span class="st">'currentRegistration'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> ((F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> ((F.col(<span class="st">'originalOperator'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> (F.col(<span class="st">'currentOperator'</span>) <span class="op">!=</span> <span class="st">''</span>)))))), <span class="st">'In Service'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The code above can be simplified in different ways. To start, focus on grouping the logic steps in named variables. PySpark requires that expressions are wrapped with parentheses. This, mixed with actual parenthesis to group logical operations, can hurt readability. For example the code above has a redundant <code>(F.datediff(df.deliveryDate_actual, df.current_date) &lt; 0)</code> that it very hard to spot.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># better</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>has_operator <span class="op">=</span> ((F.col(<span class="st">'originalOperator'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> (F.col(<span class="st">'currentOperator'</span>) <span class="op">!=</span> <span class="st">''</span>))</span>
+<span id="cb4-3"><a href="#cb4-3"></a>delivery_date_passed <span class="op">=</span> (F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>)</span>
+<span id="cb4-4"><a href="#cb4-4"></a>has_registration <span class="op">=</span> (F.col(<span class="st">'currentRegistration'</span>).rlike(<span class="st">'.+'</span>))</span>
+<span id="cb4-5"><a href="#cb4-5"></a>is_delivered <span class="op">=</span> (F.col(<span class="st">'prod_status'</span>) <span class="op">==</span> <span class="st">'Delivered'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a></span>
+<span id="cb4-7"><a href="#cb4-7"></a>F.when(is_delivered <span class="op">|</span> (delivery_date_passed <span class="op">&amp;</span> (has_registration <span class="op">|</span> has_operator)), <span class="st">'In Service'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The above example drops the redundant expression and is easier to read. We can improve it further by reducing the number of operations.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># good</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>has_operator <span class="op">=</span> (F.col(<span class="st">"originalOperator"</span>) <span class="op">!=</span> <span class="st">""</span>) <span class="op">|</span> (F.col(<span class="st">"currentOperator"</span>) <span class="op">!=</span> <span class="st">""</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>delivery_date_passed <span class="op">=</span> F.datediff(<span class="st">"deliveryDate_actual"</span>, <span class="st">"current_date"</span>) <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>has_registration <span class="op">=</span> F.col(<span class="st">"currentRegistration"</span>).rlike(<span class="st">".+"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>is_delivered <span class="op">=</span> F.col(<span class="st">"prod_status"</span>) <span class="op">==</span> <span class="st">"Delivered"</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>is_active <span class="op">=</span> has_registration <span class="op">|</span> has_operator</span>
+<span id="cb5-7"><a href="#cb5-7"></a></span>
+<span id="cb5-8"><a href="#cb5-8"></a>F.when(is_delivered <span class="op">|</span> (delivery_date_passed <span class="op">&amp;</span> is_active), <span class="st">"In Service"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note how the <code>F.when</code> expression is now concise and readable and the desired behavior is clear to anyone reviewing this code. The reader only needs to visit the individual expressions if they suspect there is an error. It also makes each chunk of logic easy to test if you have unit tests in your code, and want to abstract them as functions.</p>
+</section>
+<section id="use-select-statements-to-specify-a-schema-contract" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Use <code>select</code> statements to specify a schema contract</h1>
+<p>Doing a select at the beginning of a PySpark transform, or before returning, specifies the contract with both the reader and the code about the expected dataframe schema for inputs and outputs.</p>
+<p>Keep select statements as simple as possible. Apply only <em>one</em> function from <code>spark.sql.function</code> to be used per selected column, plus an optional <code>.alias()</code> to give it a meaningful name.</p>
+<p>Expressions involving more than one dataframe, or conditional operations like <code>.when()</code> are discouraged to be used in a select, unless required for performance reasons.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># bad</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>aircraft <span class="op">=</span> aircraft.select(</span>
+<span id="cb6-3"><a href="#cb6-3"></a>    <span class="st">'aircraft_id'</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="st">'aircraft_msn'</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    F.col(<span class="st">'aircraft_registration'</span>).alias(<span class="st">'registration'</span>),</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="st">'aircraft_type'</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    F.avg(<span class="st">'staleness'</span>).alias(<span class="st">'avg_staleness'</span>),</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    F.col(<span class="st">'number_of_economy_seats'</span>).cast(<span class="st">'long'</span>),</span>
+<span id="cb6-9"><a href="#cb6-9"></a>    F.avg(<span class="st">'flight_hours'</span>).alias(<span class="st">'avg_flight_hours'</span>),</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="st">'operator_code'</span>,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>    F.col(<span class="st">'number_of_business_seats'</span>).cast(<span class="st">'long'</span>),</span>
+<span id="cb6-12"><a href="#cb6-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Unless order matters to you, try to cluster together operations of the same type, reducing the cognitve load on the reader of the code.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># good</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>aircraft <span class="op">=</span> aircraft.select(</span>
+<span id="cb7-3"><a href="#cb7-3"></a>    <span class="st">"aircraft_id"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4"></a>    <span class="st">"aircraft_msn"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5"></a>    <span class="st">"aircraft_type"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="st">"operator_code"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7"></a>    F.col(<span class="st">"aircraft_registration"</span>).alias(<span class="st">"registration"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    F.col(<span class="st">"number_of_economy_seats"</span>).cast(<span class="st">"long"</span>),</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    F.col(<span class="st">"number_of_business_seats"</span>).cast(<span class="st">"long"</span>),</span>
+<span id="cb7-10"><a href="#cb7-10"></a>    F.avg(<span class="st">"staleness"</span>).alias(<span class="st">"avg_staleness"</span>),</span>
+<span id="cb7-11"><a href="#cb7-11"></a>    F.avg(<span class="st">"flight_hours"</span>).alias(<span class="st">"avg_flight_hours"</span>),</span>
+<span id="cb7-12"><a href="#cb7-12"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>select()</code> statement redefines the schema of a dataframe, so it naturally supports the inclusion or exclusion of columns, old and new, as well as the redefinition of pre-existing ones. By centralising all such operations in a single statement, it becomes much easier to identify the final schema, which makes code more readable. It also makes code more concise.</p>
+<p>Instead of calling <code>withColumnRenamed()</code>, use aliases:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">#bad</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>df.select(<span class="st">'key'</span>, <span class="st">'comments'</span>).withColumnRenamed(<span class="st">'comments'</span>, <span class="st">'num_comments'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># good</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>df.select(<span class="st">"key"</span>, F.col(<span class="st">"comments"</span>).alias(<span class="st">"num_comments"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Instead of using <code>withColumn()</code> to redefine type, cast in the select:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># bad</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>df.select(<span class="st">'comments'</span>).withColumn(<span class="st">'comments'</span>, F.col(<span class="st">'comments'</span>).cast(<span class="st">'double'</span>))</span>
+<span id="cb9-3"><a href="#cb9-3"></a></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># good</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>df.select(F.col(<span class="st">"comments"</span>).cast(<span class="st">"double"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>But keep it simple:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># bad</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>df.select(</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    ((F.coalesce(F.unix_timestamp(<span class="st">'closed_at'</span>), F.unix_timestamp())</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    <span class="op">-</span> F.unix_timestamp(<span class="st">'created_at'</span>)) <span class="op">/</span> <span class="dv">86400</span>).alias(<span class="st">'days_open'</span>)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="co"># good</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a>df.withColumn(</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    <span class="st">"days_open"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>    (</span>
+<span id="cb10-11"><a href="#cb10-11"></a>        F.coalesce(F.unix_timestamp(<span class="st">"closed_at"</span>), F.unix_timestamp())</span>
+<span id="cb10-12"><a href="#cb10-12"></a>        <span class="op">-</span> F.unix_timestamp(<span class="st">"created_at"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13"></a>    )</span>
+<span id="cb10-14"><a href="#cb10-14"></a>    <span class="op">/</span> <span class="dv">86400</span>,</span>
+<span id="cb10-15"><a href="#cb10-15"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Avoid including columns in the select statement if they are going to remain unused and choose instead an explicit set of columns - this is a preferred alternative to using <code>.drop()</code> since it guarantees that schema mutations won’t cause unexpected columns to bloat your dataframe. However, dropping columns isn’t inherently discouraged in all cases; for instance, it is commonly appropriate to drop columns after joins since it is common for joins to introduce redundant columns.</p>
+<p>Finally, instead of adding new columns via the select statement, using <code>.withColumn()</code> is recommended instead for single columns. When adding or manipulating tens or hundreds of columns, use a single <code>.select()</code> for performance reasons.</p>
+</section>
+<section id="empty-columns" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Empty columns</h1>
+<p>If you need to add an empty column to satisfy a schema, <strong>always</strong> use <code>F.lit(None)</code> for populating that column. Never use an empty string or some other string signalling an empty value (such as <code>NA</code>, this can be interpeted as ‘North America’).</p>
+<p>Beyond being semantically correct, one practical reason for using <code>F.lit(None)</code> is preserving the ability to use utilities like <code>isNull</code>, instead of having to verify empty strings, nulls, and <code>'NA'</code>, etc.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># bad</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>df <span class="op">=</span> df.withColumn(<span class="st">'foo'</span>, F.lit(<span class="st">''</span>))</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># also bad</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>df <span class="op">=</span> df.withColumn(<span class="st">'foo'</span>, F.lit(<span class="st">'NA'</span>))</span>
+<span id="cb11-6"><a href="#cb11-6"></a></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co"># good</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a>df <span class="op">=</span> df.withColumn(<span class="st">"foo"</span>, F.lit(<span class="va">None</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="using-comments" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Using comments</h1>
+<p>While comments can provide useful insight into code, it is often more valuable to refactor the code to improve its readability and only use comments to explain the why or provide more context.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># bad</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># Cast the timestamp columns</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>cols <span class="op">=</span> [<span class="st">'start_date'</span>, <span class="st">'delivery_date'</span>]</span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
+<span id="cb12-6"><a href="#cb12-6"></a>    df <span class="op">=</span> df.withColumn(c, F.from_unixtime(F.col(c) <span class="op">/</span> <span class="dv">1000</span>).cast(T.TimestampType()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In the example above, we can see that those columns are getting cast to Timestamp. The comment doesn’t add much value. Moreover, a more verbose comment might still be unhelpful if it only provides information that already exists in the code. For example:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># bad</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="co"># Go through each column, divide by 1000 because millis and cast to timestamp</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>cols <span class="op">=</span> [<span class="st">'start_date'</span>, <span class="st">'delivery_date'</span>]</span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
+<span id="cb13-6"><a href="#cb13-6"></a>    df <span class="op">=</span> df.withColumn(c, F.from_unixtime(F.col(c) <span class="op">/</span> <span class="dv">1000</span>).cast(T.TimestampType()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Instead of leaving comments that only describe the logic you wrote, aim to leave comments that give context, that explain the <strong>why</strong> of decisions you made when writing the code. This is particularly important for PySpark, since the reader can understand your code, but often doesn’t have context on the data that feeds into your PySpark transform. Small pieces of logic might have involved hours of digging👷 through data to understand the correct behavior, in which case comments explaining the rationale are especially valuable.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># good</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="co"># The consumer of this dataset expects a timestamp instead of a date, and we need</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co"># to adjust the time by 1000 because the original datasource is storing these as millis</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co"># even though the documentation says it's actually a date.</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a>cols <span class="op">=</span> [<span class="st">"start_date"</span>, <span class="st">"delivery_date"</span>]</span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
+<span id="cb14-8"><a href="#cb14-8"></a>    df <span class="op">=</span> df.withColumn(c, F.from_unixtime(F.col(c) <span class="op">/</span> <span class="dv">1000</span>).cast(T.TimestampType()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="udfs-user-defined-functions" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> UDFs (user defined functions)</h1>
+<p>It is highly recommended to avoid UDFs in all situations, as they are dramatically less performant than native PySpark. In most situations, logic that seems to necessitate a UDF can be refactored to use only native PySpark functions.</p>
+<p>#TODO add a topic about pandas udf and how to structure</p>
+<p>If you are in the position that you would need to create a udf use the <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.pandas_udf.html"><code>pandas_udf()</code></a> as they tend to be more performant than the vanilla <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.functions.udf.html"><code>udf()</code></a> variant.</p>
+<p>Pandas UDFs infer the Pandas UDF type from the given Python type hints at the Python function. There are currently four supported cases of the Python type hints in Pandas UDFs:</p>
+<ul>
+<li>Series to Series</li>
+<li>Iterator of Series to Iterator of Series</li>
+<li>Iterator of Multiple Series to Iterator of Series</li>
+<li>Series to Scalar (a single value)</li>
+</ul>
+<p>Before we do a deep dive into each case, let’s look at three key points about working with the new Pandas UDFs.</p>
+<ul>
+<li>Although Python type hints are optional in Python, you must specify Python type hints for the input and output in order to use the new Pandas UDFs.</li>
+<li>The type hint should use pandas.Series in all cases. However, there is one variant in which pandas.DataFrame should be used for its input or output type hint instead: when the input or output column is of StructType.Take a look at the example below:</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">#bad</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>F.udf()</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">def</span> bad_udf(x):</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="cf">return</span> x <span class="op">*</span> <span class="dv">2</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>df <span class="op">=</span> df.withColumn(<span class="st">"times_2"</span>, F.udf(bad_udf, IntegerType()) )</span>
+<span id="cb15-6"><a href="#cb15-6"></a></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="co"># good</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="co"># create and register a panadsUDF</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="at">@F.pandas_udf</span>(T.IntegerType())</span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="kw">def</span> slen(s: pd.Series) <span class="op">-&gt;</span> pd.Series:</span>
+<span id="cb15-11"><a href="#cb15-11"></a>    <span class="cf">return</span> s.<span class="bu">str</span>.<span class="bu">len</span>() </span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="co"># apply the pandasUDF to a DataFrame column</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>df <span class="op">=</span> df.withColumn(<span class="st">"length"</span>, slen(df.text))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="joins" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Joins</h1>
+<p>Be careful with joins! If you perform a left join, and the right side has multiple matches for a key, that row will be duplicated as many times as there are matches. This is called a “join explosion” and can dramatically bloat the output of your transforms job. Always double check your assumptions to see that the key you are joining on is unique, unless you are expecting the multiplication.</p>
+<p>Bad joins are the source of many tricky-to-debug issues. <strong>Always</strong> pass the values by name, even if you are using the default values such as <code>(inner)</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># bad</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>flights <span class="op">=</span> flights.join(aircraft, <span class="st">'aircraft_id'</span>)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># also bad</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>flights <span class="op">=</span> flights.join(aircraft, <span class="st">'aircraft_id'</span>, <span class="st">'inner'</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># good</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>flights <span class="op">=</span> flights.join(other<span class="op">=</span>aircraft, on<span class="op">=</span><span class="st">"aircraft_id"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Avoid <code>right</code> joins. If you are about to use a <code>right</code> join, switch the order of your dataframes and use a <code>left</code> join instead. It is more intuitive since the dataframe you are doing the operation on is the one that you are centering your join around.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># bad</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>flights <span class="op">=</span> aircraft.join(flights, <span class="st">'aircraft_id'</span>, how<span class="op">=</span><span class="st">'right'</span>)</span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="co"># good</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>flights <span class="op">=</span> flights.join(other<span class="op">=</span>aircraft, on<span class="op">=</span><span class="st">"aircraft_id"</span>, how<span class="op">=</span><span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Avoid renaming all columns to avoid collisions. Instead, give an alias to the whole dataframe, and use that alias to select which columns you want in the end.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># bad</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>columns <span class="op">=</span> [<span class="st">'start_time'</span>, <span class="st">'end_time'</span>, <span class="st">'idle_time'</span>, <span class="st">'total_time'</span>]</span>
+<span id="cb18-3"><a href="#cb18-3"></a><span class="cf">for</span> col <span class="kw">in</span> columns:</span>
+<span id="cb18-4"><a href="#cb18-4"></a>    flights <span class="op">=</span> flights.withColumnRenamed(col, <span class="st">'flights_'</span> <span class="op">+</span> col)</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    parking <span class="op">=</span> parking.withColumnRenamed(col, <span class="st">'parking_'</span> <span class="op">+</span> col)</span>
+<span id="cb18-6"><a href="#cb18-6"></a></span>
+<span id="cb18-7"><a href="#cb18-7"></a>flights <span class="op">=</span> flights.join(parking, on<span class="op">=</span><span class="st">'flight_code'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb18-8"><a href="#cb18-8"></a></span>
+<span id="cb18-9"><a href="#cb18-9"></a>flights <span class="op">=</span> flights.select(</span>
+<span id="cb18-10"><a href="#cb18-10"></a>    F.col(<span class="st">'flights_start_time'</span>).alias(<span class="st">'flight_start_time'</span>),</span>
+<span id="cb18-11"><a href="#cb18-11"></a>    F.col(<span class="st">'flights_end_time'</span>).alias(<span class="st">'flight_end_time'</span>),</span>
+<span id="cb18-12"><a href="#cb18-12"></a>    F.col(<span class="st">'parking_total_time'</span>).alias(<span class="st">'client_parking_total_time'</span>)</span>
+<span id="cb18-13"><a href="#cb18-13"></a>)</span>
+<span id="cb18-14"><a href="#cb18-14"></a></span>
+<span id="cb18-15"><a href="#cb18-15"></a><span class="co"># good</span></span>
+<span id="cb18-16"><a href="#cb18-16"></a>flights <span class="op">=</span> flights.alias(<span class="st">"flights"</span>)</span>
+<span id="cb18-17"><a href="#cb18-17"></a>parking <span class="op">=</span> parking.alias(<span class="st">"parking"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18"></a></span>
+<span id="cb18-19"><a href="#cb18-19"></a>flights <span class="op">=</span> flights.join(other<span class="op">=</span>parking, on<span class="op">=</span><span class="st">"flight_code"</span>, how<span class="op">=</span><span class="st">"left"</span>)</span>
+<span id="cb18-20"><a href="#cb18-20"></a></span>
+<span id="cb18-21"><a href="#cb18-21"></a>flights <span class="op">=</span> flights.select(</span>
+<span id="cb18-22"><a href="#cb18-22"></a>    F.col(<span class="st">"flights.start_time"</span>).alias(<span class="st">"flight_start_time"</span>),</span>
+<span id="cb18-23"><a href="#cb18-23"></a>    F.col(<span class="st">"flights.end_time"</span>).alias(<span class="st">"flight_end_time"</span>),</span>
+<span id="cb18-24"><a href="#cb18-24"></a>    F.col(<span class="st">"parking.total_time"</span>).alias(<span class="st">"client_parking_total_time"</span>),</span>
+<span id="cb18-25"><a href="#cb18-25"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In such cases, keep in mind:</p>
+<ul>
+<li>It is a better idea to drop overlapping columns <em>before</em> joining if you don’t need both</li>
+<li>In case you do need both, it might be best to rename one of them prior to joining, signaling the difference between the two cols.</li>
+<li>You should always resolve ambiguous columns before outputting a dataset. After the transform is finished running you can no longer distinguish them.</li>
+</ul>
+<section id="dropduplicates-and-.distinct-to-clean-joins" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="dropduplicates-and-.distinct-to-clean-joins"><span class="header-section-number">8.1</span> <code>.dropDuplicates()</code> and <code>.distinct()</code> to “clean” joins</h2>
+<p>don’t think about using <code>.dropDuplicates()</code> or <code>.distinct()</code> as a quick fix. If unexpected duplicate rows are in your dataframe, there is always an underlying reason for why those duplicate rows appear. Adding <code>.dropDuplicates()</code> only masks this problem and adds unneccesary cpu cycles.</p>
+</section>
+</section>
+<section id="window-functions" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Window Functions</h1>
+<p>Always explicitly define three things when working with window functions:</p>
+<ul>
+<li><code>partitionBy</code>: The partitions or groups over which the window function will be applied.</li>
+<li><code>orderBy</code>: The ordering of rows within the partition, which can be based on time or rank.</li>
+<li><a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Window.rowsBetween.html"><code>rowsBetween</code></a> or <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.Window.rangeBetween.html#pyspark.sql.Window.rangeBetween"><code>rangeBetween</code></a>: Defines the scope in rows or ranges considered when applying a function over the ordered partition.</li>
+</ul>
+<p>By specifying these three components, you ensure that your windows are properly defined.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> functions <span class="im">as</span> F, Window <span class="im">as</span> W</span>
+<span id="cb19-2"><a href="#cb19-2"></a>df <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb19-3"><a href="#cb19-3"></a>    [(<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="dv">3</span>), (<span class="st">"a"</span>, <span class="dv">4</span>)],</span>
+<span id="cb19-4"><a href="#cb19-4"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
+<span id="cb19-5"><a href="#cb19-5"></a>)</span>
+<span id="cb19-6"><a href="#cb19-6"></a></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="co"># bad</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>w1 <span class="op">=</span> W.partitionBy(<span class="st">'key'</span>)</span>
+<span id="cb19-9"><a href="#cb19-9"></a>w2 <span class="op">=</span> W.partitionBy(<span class="st">'key'</span>).orderBy(<span class="st">'num'</span>)</span>
+<span id="cb19-10"><a href="#cb19-10"></a> </span>
+<span id="cb19-11"><a href="#cb19-11"></a>df.select(<span class="st">'key'</span>, F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w1).alias(<span class="st">'sum'</span>)).collect()</span>
+<span id="cb19-12"><a href="#cb19-12"></a><span class="co"># =&gt; [Row(key='a', sum=10), Row(key='a', sum=10), Row(key='a', sum=10), Row(key='a', sum=10)]</span></span>
+<span id="cb19-13"><a href="#cb19-13"></a></span>
+<span id="cb19-14"><a href="#cb19-14"></a>df.select(<span class="st">'key'</span>, F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w2).alias(<span class="st">'sum'</span>)).collect()</span>
+<span id="cb19-15"><a href="#cb19-15"></a><span class="co"># =&gt; [Row(key='a', sum=1), Row(key='a', sum=3), Row(key='a', sum=6), Row(key='a', sum=10)]</span></span>
+<span id="cb19-16"><a href="#cb19-16"></a></span>
+<span id="cb19-17"><a href="#cb19-17"></a>df.select(<span class="st">'key'</span>, F.first(<span class="st">'num'</span>).over(w2).alias(<span class="st">'first'</span>)).collect()</span>
+<span id="cb19-18"><a href="#cb19-18"></a><span class="co"># =&gt; [Row(key='a', first=1), Row(key='a', first=1), Row(key='a', first=1), Row(key='a', first=1)]</span></span>
+<span id="cb19-19"><a href="#cb19-19"></a></span>
+<span id="cb19-20"><a href="#cb19-20"></a>df.select(<span class="st">'key'</span>, F.last(<span class="st">'num'</span>).over(w2).alias(<span class="st">'last'</span>)).collect()</span>
+<span id="cb19-21"><a href="#cb19-21"></a><span class="co"># =&gt; [Row(key='a', last=1), Row(key='a', last=2), Row(key='a', last=3), Row(key='a', last=4)]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>It is much safer to always specify an explicit window with the three components:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># good</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>w3 <span class="op">=</span> (</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4"></a>    .orderBy(<span class="st">"num"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    .rowsBetween(</span>
+<span id="cb20-6"><a href="#cb20-6"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
+<span id="cb20-7"><a href="#cb20-7"></a>        end<span class="op">=</span><span class="dv">0</span>, <span class="co">#&lt;- zero means the current row, -1 is the row before the current</span></span>
+<span id="cb20-8"><a href="#cb20-8"></a>    )</span>
+<span id="cb20-9"><a href="#cb20-9"></a>)</span>
+<span id="cb20-10"><a href="#cb20-10"></a>w4 <span class="op">=</span> (</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb20-12"><a href="#cb20-12"></a>    .orderBy(<span class="st">"num"</span>)</span>
+<span id="cb20-13"><a href="#cb20-13"></a>    .rowsBetween(</span>
+<span id="cb20-14"><a href="#cb20-14"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
+<span id="cb20-15"><a href="#cb20-15"></a>        end<span class="op">=</span>W.unboundedFollowing,</span>
+<span id="cb20-16"><a href="#cb20-16"></a>    )</span>
+<span id="cb20-17"><a href="#cb20-17"></a>)</span>
+<span id="cb20-18"><a href="#cb20-18"></a></span>
+<span id="cb20-19"><a href="#cb20-19"></a>df.select(<span class="st">"key"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w3).alias(<span class="st">"sum"</span>)).collect()</span>
+<span id="cb20-20"><a href="#cb20-20"></a><span class="co"># [Row(key="a", sum=1),</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a><span class="co">#  Row(key="a", sum=3),</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a><span class="co">#  Row(key="a", sum=6),</span></span>
+<span id="cb20-23"><a href="#cb20-23"></a><span class="co">#  Row(key="a", sum=10),]</span></span>
+<span id="cb20-24"><a href="#cb20-24"></a></span>
+<span id="cb20-25"><a href="#cb20-25"></a></span>
+<span id="cb20-26"><a href="#cb20-26"></a>df.select(<span class="st">"key"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w4).alias(<span class="st">"sum"</span>)).collect()</span>
+<span id="cb20-27"><a href="#cb20-27"></a><span class="co"># [Row(key="a", sum=10),</span></span>
+<span id="cb20-28"><a href="#cb20-28"></a><span class="co">#  Row(key="a", sum=10),</span></span>
+<span id="cb20-29"><a href="#cb20-29"></a><span class="co">#  Row(key="a", sum=10),</span></span>
+<span id="cb20-30"><a href="#cb20-30"></a><span class="co">#  Row(key="a", sum=10),]</span></span>
+<span id="cb20-31"><a href="#cb20-31"></a></span>
+<span id="cb20-32"><a href="#cb20-32"></a></span>
+<span id="cb20-33"><a href="#cb20-33"></a>df.select(<span class="st">"key"</span>, F.first(<span class="st">"num"</span>).over(w4).alias(<span class="st">"first"</span>)).collect()</span>
+<span id="cb20-34"><a href="#cb20-34"></a><span class="co"># [Row(key="a", first=1),</span></span>
+<span id="cb20-35"><a href="#cb20-35"></a><span class="co">#  Row(key="a", first=1),</span></span>
+<span id="cb20-36"><a href="#cb20-36"></a><span class="co">#  Row(key="a", first=1),</span></span>
+<span id="cb20-37"><a href="#cb20-37"></a><span class="co">#  Row(key="a", first=1),]</span></span>
+<span id="cb20-38"><a href="#cb20-38"></a></span>
+<span id="cb20-39"><a href="#cb20-39"></a></span>
+<span id="cb20-40"><a href="#cb20-40"></a>df.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
+<span id="cb20-41"><a href="#cb20-41"></a><span class="co"># [Row(key="a", last=4),</span></span>
+<span id="cb20-42"><a href="#cb20-42"></a><span class="co">#  Row(key="a", last=4),</span></span>
+<span id="cb20-43"><a href="#cb20-43"></a><span class="co">#  Row(key="a", last=4),</span></span>
+<span id="cb20-44"><a href="#cb20-44"></a><span class="co">#  Row(key="a", last=4),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="dealing-with-nulls" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="dealing-with-nulls"><span class="header-section-number">9.1</span> Dealing with nulls</h2>
+<p>While nulls are ignored for aggregate functions (like <code>F.sum()</code> and <code>F.max()</code>), they will impact the result of analytic functions (like <code>F.first()/F.last()</code> and <code>F.lead()/F.lag()</code>)</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1"></a>df_nulls <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb21-2"><a href="#cb21-2"></a>    [(<span class="st">"a"</span>, <span class="va">None</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="va">None</span>)],</span>
+<span id="cb21-3"><a href="#cb21-3"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
+<span id="cb21-4"><a href="#cb21-4"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5"></a></span>
+<span id="cb21-6"><a href="#cb21-6"></a>df_nulls.select(<span class="st">"key"</span>, F.first(<span class="st">"num"</span>).over(w4).alias(<span class="st">"first"</span>)).collect()</span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="co"># [Row(key="a", first=None),</span></span>
+<span id="cb21-8"><a href="#cb21-8"></a><span class="co">#  Row(key="a", first=None),</span></span>
+<span id="cb21-9"><a href="#cb21-9"></a><span class="co">#  Row(key="a", first=None),</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a><span class="co">#  Row(key="a", first=None),]</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a></span>
+<span id="cb21-12"><a href="#cb21-12"></a></span>
+<span id="cb21-13"><a href="#cb21-13"></a>df_nulls.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
+<span id="cb21-14"><a href="#cb21-14"></a><span class="co"># [Row(key="a", last=None),</span></span>
+<span id="cb21-15"><a href="#cb21-15"></a><span class="co">#  Row(key="a", last=None),</span></span>
+<span id="cb21-16"><a href="#cb21-16"></a><span class="co">#  Row(key="a", last=None),</span></span>
+<span id="cb21-17"><a href="#cb21-17"></a><span class="co">#  Row(key="a", last=None),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Best to avoid this problem by enabling the <code>ignorenulls</code> flag:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1"></a>df_nulls.select(</span>
+<span id="cb22-2"><a href="#cb22-2"></a>    <span class="st">"key"</span>, F.first(<span class="st">"num"</span>, ignorenulls<span class="op">=</span><span class="va">True</span>).over(w4).alias(<span class="st">"first"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3"></a>).collect()</span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co"># [Row(key="a", first=1),</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="co">#  Row(key="a", first=1),</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="co">#  Row(key="a", first=1),</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="co">#  Row(key="a", first=1),]</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a></span>
+<span id="cb22-9"><a href="#cb22-9"></a></span>
+<span id="cb22-10"><a href="#cb22-10"></a>df_nulls.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>, ignorenulls<span class="op">=</span><span class="va">True</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
+<span id="cb22-11"><a href="#cb22-11"></a><span class="co"># [Row(key="a", last=2),</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a><span class="co">#  Row(key="a", last=2),</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a><span class="co">#  Row(key="a", last=2),</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a><span class="co">#  Row(key="a", last=2),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Also be mindful of explicit ordering of nulls to make sure the expected results are obtained:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1"></a>w5 <span class="op">=</span> (</span>
+<span id="cb23-2"><a href="#cb23-2"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3"></a>    .orderBy(F.asc_nulls_first(<span class="st">"num"</span>))</span>
+<span id="cb23-4"><a href="#cb23-4"></a>    .rowsBetween(W.currentRow, W.unboundedFollowing)</span>
+<span id="cb23-5"><a href="#cb23-5"></a>)</span>
+<span id="cb23-6"><a href="#cb23-6"></a>w6 <span class="op">=</span> (</span>
+<span id="cb23-7"><a href="#cb23-7"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb23-8"><a href="#cb23-8"></a>    .orderBy(F.asc_nulls_last(<span class="st">"num"</span>))</span>
+<span id="cb23-9"><a href="#cb23-9"></a>    .rowsBetween(W.currentRow, W.unboundedFollowing)</span>
+<span id="cb23-10"><a href="#cb23-10"></a>)</span>
+<span id="cb23-11"><a href="#cb23-11"></a></span>
+<span id="cb23-12"><a href="#cb23-12"></a>df_nulls.select(<span class="st">"key"</span>, F.lead(<span class="st">"num"</span>).over(w5).alias(<span class="st">"lead"</span>)).collect()</span>
+<span id="cb23-13"><a href="#cb23-13"></a><span class="co"># [ Row(key="a", lead=None),</span></span>
+<span id="cb23-14"><a href="#cb23-14"></a><span class="co">#   Row(key="a", lead=None),</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a><span class="co">#   Row(key="a", lead=1),</span></span>
+<span id="cb23-16"><a href="#cb23-16"></a><span class="co">#   Row(key="a", lead=2),]</span></span>
+<span id="cb23-17"><a href="#cb23-17"></a></span>
+<span id="cb23-18"><a href="#cb23-18"></a></span>
+<span id="cb23-19"><a href="#cb23-19"></a>df_nulls.select(<span class="st">"key"</span>, F.lead(<span class="st">"num"</span>).over(w6).alias(<span class="st">"lead"</span>)).collect()</span>
+<span id="cb23-20"><a href="#cb23-20"></a><span class="co"># [ Row(key="a", lead=1),</span></span>
+<span id="cb23-21"><a href="#cb23-21"></a><span class="co">#   Row(key="a", lead=2),</span></span>
+<span id="cb23-22"><a href="#cb23-22"></a><span class="co">#   Row(key="a", lead=None),</span></span>
+<span id="cb23-23"><a href="#cb23-23"></a><span class="co">#   Row(key="a", lead=None),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="empty-partitionby" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="empty-partitionby"><span class="header-section-number">9.2</span> Empty <code>partitionBy()</code></h2>
+<p>Spark window functions can be applied over all rows, using a global frame. This is accomplished by specifying zero columns in the partition by expression (i.e.&nbsp;<code>W.partitionBy()</code>).</p>
+<p>Code like this should be avoided, however, as it forces Spark to combine all data into a single partition, which can be extremely harmful for performance.</p>
+<p>Prefer to use aggregations whenever possible:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># bad</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>w <span class="op">=</span> W.partitionBy()</span>
+<span id="cb24-3"><a href="#cb24-3"></a>df <span class="op">=</span> df.select(F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w).alias(<span class="st">'sum'</span>))</span>
+<span id="cb24-4"><a href="#cb24-4"></a></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="co"># good</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a>df <span class="op">=</span> df.agg(F.<span class="bu">sum</span>(<span class="st">"num"</span>).alias(<span class="st">"sum"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="micro-structure" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Micro structure</h1>
+<p>This is a style guide with an opinion, and here are some recommendation on how to strucutre your scripts and what is the best way of applying transformations to your data.</p>
+<ol type="1">
+<li>start with loading the specific data that you want, by combining <code>select</code> and <code>where</code> -&gt; repeat for all data sources</li>
+<li>select a base table(this should be the largest table) and <strong>left</strong> join all other tables</li>
+<li>perform aggregations or window transformations</li>
+<li>post-processing transformations</li>
+</ol>
+<p>If you utilize a functional approach, then you can use <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.transform.html?highlight=transform#pyspark.sql.DataFrame.transform"><code>transform()</code></a> method to chain multiple operations together, keep in mind that the function supplied to <code>transform()</code> should accept and return a dataframe. this structure will force you to write function that are ready for unit testing.</p>
+<section id="making-transformation-functions" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="making-transformation-functions"><span class="header-section-number">10.1</span> making transformation functions</h2>
+<p>this can be achieved in three ways:</p>
+<section id="wrapper-function" class="level3" data-number="10.1.1">
+<h3 data-number="10.1.1" class="anchored" data-anchor-id="wrapper-function"><span class="header-section-number">10.1.1</span> wrapper function</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">def</span> transform_wrapper(df):</span>
+<span id="cb25-2"><a href="#cb25-2"></a>    <span class="cf">return</span> f(df, specific_arg1, specific_arg2)</span>
+<span id="cb25-3"><a href="#cb25-3"></a>df <span class="op">=</span> df.transform(transform_wrapper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="lambda-function" class="level3" data-number="10.1.2">
+<h3 data-number="10.1.2" class="anchored" data-anchor-id="lambda-function"><span class="header-section-number">10.1.2</span> lambda function</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1"></a>df <span class="op">=</span> df.transform(<span class="kw">lambda</span> df: f(df, specific_arg1, specific_arg2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="partial-function" class="level3" data-number="10.1.3">
+<h3 data-number="10.1.3" class="anchored" data-anchor-id="partial-function"><span class="header-section-number">10.1.3</span> partial function</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode numberSource py number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb27-2"><a href="#cb27-2"></a>f_par <span class="op">=</span> partial(f, arg1<span class="op">=</span>value1, arg2<span class="op">=</span>value2)</span>
+<span id="cb27-3"><a href="#cb27-3"></a>df <span class="op">=</span> df.transform(f_par)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Chaining expressions is a contentious topic, however, since this is an opinionated guide, we are opting to recommend some limits on the usage of chaining. See the conclusion of this section for a discussion of the rationale behind this recommendation.</p>
+<p>Avoid chaining of expressions into multi-line expressions with different types, particularly if they have different behaviours or contexts. For example- mixing column creation or joining with selecting and filtering.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># bad</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>df <span class="op">=</span> (</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    df</span>
+<span id="cb28-4"><a href="#cb28-4"></a>    .select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
+<span id="cb28-6"><a href="#cb28-6"></a>    .withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
+<span id="cb28-7"><a href="#cb28-7"></a>    .join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb28-8"><a href="#cb28-8"></a>    .join(df3, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb28-9"><a href="#cb28-9"></a>    .drop(<span class="st">'c'</span>)</span>
+<span id="cb28-10"><a href="#cb28-10"></a>)</span>
+<span id="cb28-11"><a href="#cb28-11"></a></span>
+<span id="cb28-12"><a href="#cb28-12"></a><span class="co"># better (seperating into steps)</span></span>
+<span id="cb28-13"><a href="#cb28-13"></a><span class="co"># first: we select and trim down the data that we need</span></span>
+<span id="cb28-14"><a href="#cb28-14"></a><span class="co"># second: we create the columns that we need to have</span></span>
+<span id="cb28-15"><a href="#cb28-15"></a><span class="co"># third: joining with other dataframes</span></span>
+<span id="cb28-16"><a href="#cb28-16"></a></span>
+<span id="cb28-17"><a href="#cb28-17"></a>df <span class="op">=</span> df.select(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"key"</span>).<span class="bu">filter</span>(F.col(<span class="st">"a"</span>) <span class="op">==</span> <span class="st">"truthiness"</span>)</span>
+<span id="cb28-18"><a href="#cb28-18"></a>df <span class="op">=</span> df.withColumn(<span class="st">"boverc"</span>, F.col(<span class="st">"b"</span>) <span class="op">/</span> F.col(<span class="st">"c"</span>))</span>
+<span id="cb28-19"><a href="#cb28-19"></a>df <span class="op">=</span> df.join(df2, <span class="st">"key"</span>, how<span class="op">=</span><span class="st">"inner"</span>).join(df3, <span class="st">"key"</span>, how<span class="op">=</span><span class="st">"left"</span>).drop(<span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Having each group of expressions isolated into its own logical code block improves legibility and makes it easier to find relevant logic. For example, a reader of the code below will probably jump to where they see dataframes being assigned <code>df = df...</code>.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># bad</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>df <span class="op">=</span> (</span>
+<span id="cb29-3"><a href="#cb29-3"></a>    df</span>
+<span id="cb29-4"><a href="#cb29-4"></a>    .select(<span class="st">'foo'</span>, <span class="st">'bar'</span>, <span class="st">'foobar'</span>, <span class="st">'abc'</span>)</span>
+<span id="cb29-5"><a href="#cb29-5"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'abc'</span>) <span class="op">==</span> <span class="dv">123</span>)</span>
+<span id="cb29-6"><a href="#cb29-6"></a>    .join(another_table, <span class="st">'some_field'</span>)</span>
+<span id="cb29-7"><a href="#cb29-7"></a>)</span>
+<span id="cb29-8"><a href="#cb29-8"></a></span>
+<span id="cb29-9"><a href="#cb29-9"></a><span class="co"># better</span></span>
+<span id="cb29-10"><a href="#cb29-10"></a>df <span class="op">=</span> df.select(<span class="st">"foo"</span>, <span class="st">"bar"</span>, <span class="st">"foobar"</span>, <span class="st">"abc"</span>).<span class="bu">filter</span>(F.col(<span class="st">"abc"</span>) <span class="op">==</span> <span class="dv">123</span>)</span>
+<span id="cb29-11"><a href="#cb29-11"></a>df <span class="op">=</span> df.join(other<span class="op">=</span>another_table, on<span class="op">=</span><span class="st">"some_field"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>There are legitimate reasons to chain expressions together. These commonly represent atomic logic steps, and are acceptable. Apply a rule with a maximum of number chained expressions in the same block to keep the code readable. We recommend chains of no longer than 3 statements.</p>
+<p>If you find you are making longer chains, or having trouble because of the size of your variables, consider extracting the logic into a separate function:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># bad</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a>customers_with_shipping_address <span class="op">=</span> (</span>
+<span id="cb30-3"><a href="#cb30-3"></a>    customers_with_shipping_address</span>
+<span id="cb30-4"><a href="#cb30-4"></a>    .select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
+<span id="cb30-5"><a href="#cb30-5"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
+<span id="cb30-6"><a href="#cb30-6"></a>    .withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
+<span id="cb30-7"><a href="#cb30-7"></a>    .join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb30-8"><a href="#cb30-8"></a>)</span>
+<span id="cb30-9"><a href="#cb30-9"></a></span>
+<span id="cb30-10"><a href="#cb30-10"></a><span class="co"># also bad</span></span>
+<span id="cb30-11"><a href="#cb30-11"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
+<span id="cb30-12"><a href="#cb30-12"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
+<span id="cb30-13"><a href="#cb30-13"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
+<span id="cb30-14"><a href="#cb30-14"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
+<span id="cb30-15"><a href="#cb30-15"></a></span>
+<span id="cb30-16"><a href="#cb30-16"></a><span class="co"># better</span></span>
+<span id="cb30-17"><a href="#cb30-17"></a><span class="kw">def</span> join_customers_with_shipping_address(customers, df_to_join):</span>
+<span id="cb30-18"><a href="#cb30-18"></a>    customers <span class="op">=</span> customers.select(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"key"</span>).<span class="bu">filter</span>(</span>
+<span id="cb30-19"><a href="#cb30-19"></a>        F.col(<span class="st">"a"</span>) <span class="op">==</span> <span class="st">"truthiness"</span></span>
+<span id="cb30-20"><a href="#cb30-20"></a>    )</span>
+<span id="cb30-21"><a href="#cb30-21"></a>    customers <span class="op">=</span> customers.withColumn(<span class="st">"boverc"</span>, F.col(<span class="st">"b"</span>) <span class="op">/</span> F.col(<span class="st">"c"</span>))</span>
+<span id="cb30-22"><a href="#cb30-22"></a>    <span class="cf">return</span> customers.join(other<span class="op">=</span>df_to_join, on<span class="op">=</span><span class="st">"key"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Chains of more than 3 statement are prime candidates to factor into separate, well-named functions since they are already encapsulated, isolated blocks of logic.</p>
+<p>The rationale for why we’ve set these limits on chaining:</p>
+<ul>
+<li>Differentiation between PySpark code and SQL code. Chaining is something that goes against most, if not all, other Python styling. You don’t chain in Python, you assign.</li>
+<li>Discourage the creation of large single code blocks. These would often make more sense extracted as a named function.</li>
+<li>It doesn’t need to be all or nothing, but a maximum of five lines of chaining balances practicality with legibility.</li>
+<li>If you are using an IDE, it makes it easier to use automatic extractions or do code movements</li>
+<li>Large chains are hard to read and maintain, particularly if chains are nested.</li>
+</ul>
+<p>##TODO # Good flavor_analysis = ( ice_cream_sales .transform(clean_sales_data) .transform(add_price_category) .transform(calculate_flavor_metrics) )</p>
+</section>
+</section>
+</section>
+<section id="avoid-procedural-approach-with-intermediate-dataframes" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Avoid: Procedural approach with intermediate DataFrames</h1>
+<p>clean_sales = clean_sales_data(ice_cream_sales) categorized_sales = add_price_category(clean_sales) flavor_analysis = calculate_flavor_metrics(categorized_sales)</p>
+</section>
+<section id="other-considerations-and-recommendations" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Other Considerations and Recommendations</h1>
+<ol type="1">
+<li>Be wary of functions that grow too large. As a general rule, a file should not be over 250 lines, and a function should not be over 70 lines.</li>
+<li>Try to keep your code in logical blocks. For example, if you have multiple lines referencing the same things, try to keep them together. Separating them reduces context and readability.</li>
+<li>Test your code! If you <em>can</em> run the local tests, do so and make sure that your new code is covered by the tests. If you can’t run the local tests, build the datasets on your branch and manually verify that the data looks as expected.</li>
+<li>Avoid <code>.otherwise(value)</code> as a general fallback. If you are mapping a list of keys to a list of values and a number of unknown keys appear, using <code>otherwise</code> will mask all of these into one value.</li>
+<li>Do not keep commented out code checked in the repository. This applies to single line of codes, functions, classes or modules. Rely on git and its capabilities of branching or looking at history instead.</li>
+<li>When encountering a large single transformation composed of integrating multiple different source tables, split it into the natural sub-steps and extract the logic to functions. This allows for easier higher level readability and allows for code re-usability and consistency between transforms.</li>
+<li>Try to be as explicit and descriptive as possible when naming functions or variables. Strive to capture what the function is actually doing as opposed to naming it based the objects used inside of it.</li>
+<li>Think twice about introducing new import aliases, unless there is a good reason to do so. Some of the established ones are <code>types</code> and <code>functions</code> from PySpark <code>from pyspark.sql import types as T, functions as F</code>.</li>
+<li>Avoid using literal strings or integers in filtering conditions, new values of columns etc. Instead, to capture their meaning, extract them into variables, constants, dicts or classes as suitable. This makes the code more readable and enforces consistency across the repository.</li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/jope35\.github\.io\/hypershotgun-blog\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // default icon
+          link.classList.add("external");
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
