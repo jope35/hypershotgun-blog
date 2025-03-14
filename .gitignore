@@ -5,3 +5,4 @@
 **/*prompt*
 posts/stepcat/openml_download*
 posts/stepcat/catboost_info/*
+.vscode/settings.json
