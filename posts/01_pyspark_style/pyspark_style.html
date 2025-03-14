@@ -224,17 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#dealing-with-nulls" id="toc-dealing-with-nulls" class="nav-link" data-scroll-target="#dealing-with-nulls"><span class="header-section-number">9.1</span> Dealing with nulls</a></li>
   <li><a href="#empty-partitionby" id="toc-empty-partitionby" class="nav-link" data-scroll-target="#empty-partitionby"><span class="header-section-number">9.2</span> Empty <code>partitionBy()</code></a></li>
   </ul></li>
-  <li><a href="#micro-structure" id="toc-micro-structure" class="nav-link" data-scroll-target="#micro-structure"><span class="header-section-number">10</span> Micro structure</a>
-  <ul class="collapse">
-  <li><a href="#making-transformation-functions" id="toc-making-transformation-functions" class="nav-link" data-scroll-target="#making-transformation-functions"><span class="header-section-number">10.1</span> making transformation functions</a>
-  <ul class="collapse">
-  <li><a href="#wrapper-function" id="toc-wrapper-function" class="nav-link" data-scroll-target="#wrapper-function"><span class="header-section-number">10.1.1</span> wrapper function</a></li>
-  <li><a href="#lambda-function" id="toc-lambda-function" class="nav-link" data-scroll-target="#lambda-function"><span class="header-section-number">10.1.2</span> lambda function</a></li>
-  <li><a href="#partial-function" id="toc-partial-function" class="nav-link" data-scroll-target="#partial-function"><span class="header-section-number">10.1.3</span> partial function</a></li>
-  </ul></li>
-  </ul></li>
-  <li><a href="#avoid-procedural-approach-with-intermediate-dataframes" id="toc-avoid-procedural-approach-with-intermediate-dataframes" class="nav-link" data-scroll-target="#avoid-procedural-approach-with-intermediate-dataframes"><span class="header-section-number">11</span> Avoid: Procedural approach with intermediate DataFrames</a></li>
-  <li><a href="#other-considerations-and-recommendations" id="toc-other-considerations-and-recommendations" class="nav-link" data-scroll-target="#other-considerations-and-recommendations"><span class="header-section-number">12</span> Other Considerations and Recommendations</a></li>
+  <li><a href="#other-considerations-and-recommendations" id="toc-other-considerations-and-recommendations" class="nav-link" data-scroll-target="#other-considerations-and-recommendations"><span class="header-section-number">10</span> Other Considerations and Recommendations</a></li>
   </ul>
 </nav>
     </div>
@@ -510,282 +500,183 @@ Note that there are five types of callouts, including:
 <p>By specifying these three components, you ensure that your windows are properly defined.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> functions <span class="im">as</span> F, Window <span class="im">as</span> W</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="dv">3</span>), (<span class="st">"a"</span>, <span class="dv">4</span>)],</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"a"</span>, <span class="dv">3</span>), (<span class="st">"a"</span>, <span class="dv">4</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>)],</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>], </span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>w1 <span class="op">=</span> W.partitionBy(<span class="st">'key'</span>)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>w2 <span class="op">=</span> W.partitionBy(<span class="st">'key'</span>).orderBy(<span class="st">'num'</span>)</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">'key'</span>, F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w1).alias(<span class="st">'sum'</span>)).show()</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|sum|</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a| 10|</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a| 10|</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a| 10|</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a| 10|</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">'key'</span>, F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w2).alias(<span class="st">'sum'</span>)).show()</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|sum|</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  6|</span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a| 10|</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">'key'</span>, F.first(<span class="st">'num'</span>).over(w2).alias(<span class="st">'first'</span>)).show()</span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+-----+</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|first|</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+-----+</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|    1|</span></span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|    1|</span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|    1|</span></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|    1|</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+-----+</span></span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">'key'</span>, F.last(<span class="st">'num'</span>).over(w2).alias(<span class="st">'last'</span>)).show()</span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+</span></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|last|</span></span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+</span></span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   1|</span></span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   2|</span></span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   3|</span></span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   4|</span></span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>It is much safer to always specify an explicit window with the three components:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>w3 <span class="op">=</span> (</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    .orderBy(<span class="st">"num"</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        end<span class="op">=</span><span class="dv">0</span>, <span class="co">#&lt;- zero means the current row, -1 is the row before the current</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>w4 <span class="op">=</span> (</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    .orderBy(<span class="st">"num"</span>)</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        end<span class="op">=</span>W.unboundedFollowing,</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w3).alias(<span class="st">"sum"</span>)).collect()</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", sum=1),</span></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=3),</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=6),</span></span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=10),]</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w4).alias(<span class="st">"sum"</span>)).collect()</span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", sum=10),</span></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=10),</span></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=10),</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", sum=10),]</span></span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, F.first(<span class="st">"num"</span>).over(w4).alias(<span class="st">"first"</span>)).collect()</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", first=1),</span></span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),</span></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),</span></span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),]</span></span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", last=4),</span></span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=4),</span></span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=4),</span></span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=4),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># better</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>w2 <span class="op">=</span> W.partitionBy(<span class="st">'key'</span>).orderBy(<span class="st">'num'</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w1).alias(<span class="st">"sum"</span>)).show()</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|sum|</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3| 10|</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1| 10|</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2| 10|</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w2).alias(<span class="st">"sum"</span>)).show()</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|sum|</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|  1|</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|  3|</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|  6|</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When <code>w2</code> is used, implicitly you have defined a rolling window specification, you are including all the rows in the window. For the <code>sum</code> function that might not be a problem, however when other functions are used sucha as <code>first</code> or <code>last</code> the problem becomes more apparent.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.last(<span class="st">"num"</span>).over(w1).alias(<span class="st">"last"</span>)).show()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|last|</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|   2|</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4|   2|</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|   2|</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|   2|</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.last(<span class="st">"num"</span>).over(w2).alias(<span class="st">"last"</span>)).show()</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|last|</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|   1|</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|   2|</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|   3|</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4|   4|</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here the result is dependen on the order of the rows within the dataframe, this might change if the dataframe is shuffled and the rows are retrieved in a different order. Making the results of your transformations not-deterministic.</p>
+<p>It is a good idea to always specify an explicit window with the three components: <code>partitionBy</code>, <code>orderBy</code> and <code>rowsBetween</code>/<code>rangeBetween</code>. That way you can gaurantee that the window behaves in a deterministic way.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#good</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>w3 <span class="op">=</span> (</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    .orderBy(<span class="st">"num"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        end<span class="op">=</span><span class="dv">0</span>, <span class="co">#&lt;- zero means the current row, -1 is the row before the current</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#good</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>w4 <span class="op">=</span> (</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    .orderBy(<span class="st">"num"</span>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        end<span class="op">=</span>W.unboundedFollowing,</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>,F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w3).alias(<span class="st">"sum"</span>)).show()</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|sum|</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|  1|</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|  3|</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|  6|</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>,F.<span class="bu">sum</span>(<span class="st">"num"</span>).over(w4).alias(<span class="st">"sum"</span>)).show()</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|sum|</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1| 10|</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2| 10|</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3| 10|</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now the window is fully defined, with <code>w3</code> being an expanding window and <code>w4</code> contains the entire partition. Even if the returned rows are in a different order, the outcome of the window function remains consistent and deterministic.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>,F.last(<span class="st">"num"</span>).over(w3).alias(<span class="st">"last"</span>)).show()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|last|</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|   1|</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|   2|</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|   3|</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4|   4|</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>,F.last(<span class="st">"num"</span>).over(w4).alias(<span class="st">"last"</span>)).show()</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="co"># |key|num|last|</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  1|   4|</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  2|   4|</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|   4|</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4|   4|</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Here we can see that the results are as we expect them to be. The results are deterministic and the order of the rows is not influencing the results.</p>
 <section id="dealing-with-nulls" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="dealing-with-nulls"><span class="header-section-number">9.1</span> Dealing with nulls</h2>
-<p>While nulls are ignored for aggregate functions (like <code>F.sum()</code> and <code>F.max()</code>), they will impact the result of analytic functions (like <code>F.first()/F.last()</code> and <code>F.lead()/F.lag()</code>)</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df_nulls <span class="op">=</span> spark.createDataFrame(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"a"</span>, <span class="va">None</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="va">None</span>)],</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, F.first(<span class="st">"num"</span>).over(w4).alias(<span class="st">"first"</span>)).collect()</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", first=None),</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=None),</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=None),</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=None),]</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", last=None),</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=None),</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=None),</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=None),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Best to avoid this problem by enabling the <code>ignorenulls</code> flag:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_nulls.select(</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"key"</span>, F.first(<span class="st">"num"</span>, ignorenulls<span class="op">=</span><span class="va">True</span>).over(w4).alias(<span class="st">"first"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>).collect()</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", first=1),</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", first=1),]</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, F.last(<span class="st">"num"</span>, ignorenulls<span class="op">=</span><span class="va">True</span>).over(w4).alias(<span class="st">"last"</span>)).collect()</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="co"># [Row(key="a", last=2),</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=2),</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=2),</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  Row(key="a", last=2),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Also be mindful of explicit ordering of nulls to make sure the expected results are obtained:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>w5 <span class="op">=</span> (</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    .orderBy(F.asc_nulls_first(<span class="st">"num"</span>))</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(W.currentRow, W.unboundedFollowing)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>w6 <span class="op">=</span> (</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    .orderBy(F.asc_nulls_last(<span class="st">"num"</span>))</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(W.currentRow, W.unboundedFollowing)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, F.lead(<span class="st">"num"</span>).over(w5).alias(<span class="st">"lead"</span>)).collect()</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># [ Row(key="a", lead=None),</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=None),</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=1),</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=2),]</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, F.lead(<span class="st">"num"</span>).over(w6).alias(<span class="st">"lead"</span>)).collect()</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co"># [ Row(key="a", lead=1),</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=2),</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=None),</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   Row(key="a", lead=None),]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>While nulls are ignored for aggregate functions (like <code>F.sum()</code> and <code>F.max()</code>), they will impact the result of analytic functions (sucha as <code>F.first()/F.last()</code> and <code>F.rank()</code>).</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df_nulls <span class="op">=</span> spark.createDataFrame(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"a"</span>, <span class="va">None</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">3</span>), (<span class="st">"a"</span>, <span class="va">None</span>)],</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.first(<span class="st">"num"</span>).over(w4).alias(<span class="st">"first"</span>)).show()</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># |key| num|first|</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|NULL| NULL|</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|NULL| NULL|</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   1| NULL|</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   2| NULL|</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   3| NULL|</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Depending on the usecase this might be the desired behavior, but it might not always be applicabler. Best to avoid this situation by excplicitly setting the sort order and the nulls behavior.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sorting ascending and nulls last</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>w5 <span class="op">=</span> (</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    .orderBy(F.asc_nulls_last(<span class="st">"num"</span>))  </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    .rowsBetween(</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        start<span class="op">=</span>W.unboundedPreceding,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        end<span class="op">=</span>W.unboundedFollowing,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>df_nulls.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.first(<span class="st">"num"</span>).over(w5).alias(<span class="st">"first"</span>)).show()</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># |key| num|first|</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   1|    1|</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   2|    1|</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   3|    1|</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|NULL|    1|</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|NULL|    1|</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="empty-partitionby" class="level2" data-number="9.2">
 <h2 data-number="9.2" class="anchored" data-anchor-id="empty-partitionby"><span class="header-section-number">9.2</span> Empty <code>partitionBy()</code></h2>
-<p>Spark window functions can be applied over all rows, using a global frame. This is accomplished by specifying zero columns in the partition by expression (i.e.&nbsp;<code>W.partitionBy()</code>).</p>
-<p>Code like this should be avoided, however, as it forces Spark to combine all data into a single partition, which can be extremely harmful for performance.</p>
-<p>Prefer to use aggregations whenever possible:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> W.partitionBy()</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.select(F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w).alias(<span class="st">'sum'</span>))</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.agg(F.<span class="bu">sum</span>(<span class="st">"num"</span>).alias(<span class="st">"sum"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Spark window functions can be applied over all rows, using a global frame. This is accomplished by specifying zero columns in the partition by expression (i.e.&nbsp;<code>W.partitionBy()</code>). Code like this should be avoided, however, as it forces Spark to combine all data into a single partition, which can be extremely harmful for performance. Prefer to use aggregations whenever possible:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> W.partitionBy()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df.select(F.<span class="bu">sum</span>(<span class="st">'num'</span>).over(w).alias(<span class="st">'sum'</span>))</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># WARN WindowExec: No Partition Defined for Window operation! </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Moving all data to a single partition, this can cause serious performance degradation</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>df.agg(F.<span class="bu">sum</span>(<span class="st">"num"</span>).alias(<span class="st">"sum"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
-<section id="micro-structure" class="level1" data-number="10">
-<h1 data-number="10"><span class="header-section-number">10</span> Micro structure</h1>
-<p>This is a style guide with an opinion, and here are some recommendation on how to strucutre your scripts and what is the best way of applying transformations to your data.</p>
+<section id="other-considerations-and-recommendations" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Other Considerations and Recommendations</h1>
 <ol type="1">
-<li>start with loading the specific data that you want, by combining <code>select</code> and <code>where</code> -&gt; repeat for all data sources</li>
-<li>select a base table(this should be the largest table) and <strong>left</strong> join all other tables</li>
-<li>perform aggregations or window transformations</li>
-<li>post-processing transformations</li>
-</ol>
-<p>If you utilize a functional approach, then you can use <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.transform.html?highlight=transform#pyspark.sql.DataFrame.transform"><code>transform()</code></a> method to chain multiple operations together, keep in mind that the function supplied to <code>transform()</code> should accept and return a dataframe. this structure will force you to write function that are ready for unit testing.</p>
-<section id="making-transformation-functions" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="making-transformation-functions"><span class="header-section-number">10.1</span> making transformation functions</h2>
-<p>this can be achieved in three ways:</p>
-<section id="wrapper-function" class="level3" data-number="10.1.1">
-<h3 data-number="10.1.1" class="anchored" data-anchor-id="wrapper-function"><span class="header-section-number">10.1.1</span> wrapper function</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> transform_wrapper(df):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f(df, specific_arg1, specific_arg2)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.transform(transform_wrapper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="lambda-function" class="level3" data-number="10.1.2">
-<h3 data-number="10.1.2" class="anchored" data-anchor-id="lambda-function"><span class="header-section-number">10.1.2</span> lambda function</h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.transform(<span class="kw">lambda</span> df: f(df, specific_arg1, specific_arg2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="partial-function" class="level3" data-number="10.1.3">
-<h3 data-number="10.1.3" class="anchored" data-anchor-id="partial-function"><span class="header-section-number">10.1.3</span> partial function</h3>
-<div class="sourceCode" id="cb26"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>f_par <span class="op">=</span> partial(f, arg1<span class="op">=</span>value1, arg2<span class="op">=</span>value2)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.transform(f_par)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Chaining expressions is a contentious topic, however, since this is an opinionated guide, we are opting to recommend some limits on the usage of chaining. See the conclusion of this section for a discussion of the rationale behind this recommendation.</p>
-<p>Avoid chaining of expressions into multi-line expressions with different types, particularly if they have different behaviours or contexts. For example- mixing column creation or joining with selecting and filtering.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> (</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    df</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    .select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    .join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    .join(df3, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    .drop(<span class="st">'c'</span>)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># better (seperating into steps)</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># first: we select and trim down the data that we need</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># second: we create the columns that we need to have</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># third: joining with other dataframes</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.select(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"key"</span>).<span class="bu">filter</span>(F.col(<span class="st">"a"</span>) <span class="op">==</span> <span class="st">"truthiness"</span>)</span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">"boverc"</span>, F.col(<span class="st">"b"</span>) <span class="op">/</span> F.col(<span class="st">"c"</span>))</span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.join(df2, <span class="st">"key"</span>, how<span class="op">=</span><span class="st">"inner"</span>).join(df3, <span class="st">"key"</span>, how<span class="op">=</span><span class="st">"left"</span>).drop(<span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Having each group of expressions isolated into its own logical code block improves legibility and makes it easier to find relevant logic. For example, a reader of the code below will probably jump to where they see dataframes being assigned <code>df = df...</code>.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> (</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    df</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    .select(<span class="st">'foo'</span>, <span class="st">'bar'</span>, <span class="st">'foobar'</span>, <span class="st">'abc'</span>)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'abc'</span>) <span class="op">==</span> <span class="dv">123</span>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    .join(another_table, <span class="st">'some_field'</span>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># better</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.select(<span class="st">"foo"</span>, <span class="st">"bar"</span>, <span class="st">"foobar"</span>, <span class="st">"abc"</span>).<span class="bu">filter</span>(F.col(<span class="st">"abc"</span>) <span class="op">==</span> <span class="dv">123</span>)</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.join(other<span class="op">=</span>another_table, on<span class="op">=</span><span class="st">"some_field"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>There are legitimate reasons to chain expressions together. These commonly represent atomic logic steps, and are acceptable. Apply a rule with a maximum of number chained expressions in the same block to keep the code readable. We recommend chains of no longer than 3 statements.</p>
-<p>If you find you are making longer chains, or having trouble because of the size of your variables, consider extracting the logic into a separate function:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>customers_with_shipping_address <span class="op">=</span> (</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    customers_with_shipping_address</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    .select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    .withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    .join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># also bad</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.select(<span class="st">'a'</span>, <span class="st">'b'</span>, <span class="st">'c'</span>, <span class="st">'key'</span>)</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.<span class="bu">filter</span>(F.col(<span class="st">'a'</span>) <span class="op">==</span> <span class="st">'truthiness'</span>)</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.withColumn(<span class="st">'boverc'</span>, F.col(<span class="st">'b'</span>) <span class="op">/</span> F.col(<span class="st">'c'</span>))</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>customers_with_shipping_address <span class="op">=</span> customers_with_shipping_address.join(df2, <span class="st">'key'</span>, how<span class="op">=</span><span class="st">'inner'</span>)</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># better</span></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> join_customers_with_shipping_address(customers, df_to_join):</span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    customers <span class="op">=</span> customers.select(<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"key"</span>).<span class="bu">filter</span>(</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>        F.col(<span class="st">"a"</span>) <span class="op">==</span> <span class="st">"truthiness"</span></span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    customers <span class="op">=</span> customers.withColumn(<span class="st">"boverc"</span>, F.col(<span class="st">"b"</span>) <span class="op">/</span> F.col(<span class="st">"c"</span>))</span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> customers.join(other<span class="op">=</span>df_to_join, on<span class="op">=</span><span class="st">"key"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Chains of more than 3 statement are prime candidates to factor into separate, well-named functions since they are already encapsulated, isolated blocks of logic.</p>
-<p>The rationale for why we’ve set these limits on chaining:</p>
-<ul>
-<li>Differentiation between PySpark code and SQL code. Chaining is something that goes against most, if not all, other Python styling. You don’t chain in Python, you assign.</li>
-<li>Discourage the creation of large single code blocks. These would often make more sense extracted as a named function.</li>
-<li>It doesn’t need to be all or nothing, but a maximum of five lines of chaining balances practicality with legibility.</li>
-<li>If you are using an IDE, it makes it easier to use automatic extractions or do code movements</li>
-<li>Large chains are hard to read and maintain, particularly if chains are nested.</li>
-</ul>
-<p>##TODO # Good flavor_analysis = ( ice_cream_sales .transform(clean_sales_data) .transform(add_price_category) .transform(calculate_flavor_metrics) )</p>
-</section>
-</section>
-</section>
-<section id="avoid-procedural-approach-with-intermediate-dataframes" class="level1" data-number="11">
-<h1 data-number="11"><span class="header-section-number">11</span> Avoid: Procedural approach with intermediate DataFrames</h1>
-<p>clean_sales = clean_sales_data(ice_cream_sales) categorized_sales = add_price_category(clean_sales) flavor_analysis = calculate_flavor_metrics(categorized_sales)</p>
-</section>
-<section id="other-considerations-and-recommendations" class="level1" data-number="12">
-<h1 data-number="12"><span class="header-section-number">12</span> Other Considerations and Recommendations</h1>
-<ol type="1">
-<li>Be wary of functions that grow too large. As a general rule, a file should not be over 250 lines, and a function should not be over 70 lines.</li>
-<li>Try to keep your code in logical blocks. For example, if you have multiple lines referencing the same things, try to keep them together. Separating them reduces context and readability.</li>
+<li>Be cautious of functions that grow too large. Generally, a file should not exceed 250 lines, and a function should not exceed 70 lines.</li>
+<li>Organize your code into logical blocks. For example, if you have multiple lines referencing the same elements, group them together. Separating them diminishes context and readability.</li>
 <li>Test your code! If you <em>can</em> run the local tests, do so and make sure that your new code is covered by the tests. If you can’t run the local tests, build the datasets on your branch and manually verify that the data looks as expected.</li>
-<li>Avoid <code>.otherwise(value)</code> as a general fallback. If you are mapping a list of keys to a list of values and a number of unknown keys appear, using <code>otherwise</code> will mask all of these into one value.</li>
-<li>Do not keep commented out code checked in the repository. This applies to single line of codes, functions, classes or modules. Rely on git and its capabilities of branching or looking at history instead.</li>
-<li>When encountering a large single transformation composed of integrating multiple different source tables, split it into the natural sub-steps and extract the logic to functions. This allows for easier higher level readability and allows for code re-usability and consistency between transforms.</li>
-<li>Try to be as explicit and descriptive as possible when naming functions or variables. Strive to capture what the function is actually doing as opposed to naming it based the objects used inside of it.</li>
-<li>Think twice about introducing new import aliases, unless there is a good reason to do so. Some of the established ones are <code>types</code> and <code>functions</code> from PySpark <code>from pyspark.sql import types as T, functions as F</code>.</li>
-<li>Avoid using literal strings or integers in filtering conditions, new values of columns etc. Instead, to capture their meaning, extract them into variables, constants, dicts or classes as suitable. This makes the code more readable and enforces consistency across the repository.</li>
+<li>Avoid using <code>.otherwise(value)</code> as a general fallback. If you are mapping a list of keys to a list of values and encounter unknown keys, using <code>otherwise</code> will mask all of these into a single value.</li>
+<li>When encountering a large, single transformation that integrates multiple different source tables, break it into sub-steps and extract the logic into functions. This enhances higher-level readability and promotes code reusability and consistency between transformations.</li>
+<li>Be as explicit and descriptive as possible when naming functions or variables. Aim to capture the function’s or variable’s purpose rather than naming it based on the objects it uses.</li>
+<li>Avoid using literal strings or integers in filtering conditions, new column values, etc. Instead, to capture their meaning, extract them into variables, constants, dictionaries, or classes as appropriate. This enhances code readability and enforces consistency across the repository.</li>
 </ol>
 
 

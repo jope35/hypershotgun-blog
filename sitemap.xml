@@ -2,38 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://jope35.github.io/hypershotgun-blog/whois.html</loc>
-    <lastmod>2025-03-08T20:54:45.620Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/DPD/dependency.html</loc>
-    <lastmod>2025-03-08T20:54:45.590Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/pyspark_style/pyspark_style.html</loc>
-    <lastmod>2025-03-08T20:54:45.617Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2025-03-08T20:54:45.595Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/stepcat/stepcat.html</loc>
-    <lastmod>2025-03-08T20:54:45.620Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/index.html</loc>
-    <lastmod>2025-03-08T20:54:45.583Z</lastmod>
-  </url>
-  <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/pyspark_style/pyspark_test.html</loc>
-    <lastmod>2025-03-08T20:54:45.617Z</lastmod>
+    <lastmod>2025-03-14T14:50:21.896Z</lastmod>
   </url>
   <url>
     <loc>https://jope35.github.io/hypershotgun-blog/posts/gitgud/gitconfig.html</loc>
-    <lastmod>2025-03-08T20:54:45.614Z</lastmod>
+    <lastmod>2025-03-14T14:50:21.891Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
+    <lastmod>2025-03-14T14:50:21.872Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/stepcat/stepcat.html</loc>
+    <lastmod>2025-03-14T14:50:21.896Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/index.html</loc>
+    <lastmod>2025-03-14T14:50:21.860Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/01_pyspark_style/pyspark_style.html</loc>
+    <lastmod>2025-03-14T14:50:21.860Z</lastmod>
+  </url>
+  <url>
+    <loc>https://jope35.github.io/hypershotgun-blog/posts/DPD/dependency.html</loc>
+    <lastmod>2025-03-14T14:50:21.867Z</lastmod>
   </url>
   <url>
     <loc>https://jope35.github.io/hypershotgun-blog/writing_tools/corrections.html</loc>
-    <lastmod>2025-03-08T20:54:45.620Z</lastmod>
+    <lastmod>2025-03-14T14:50:21.897Z</lastmod>
   </url>
 </urlset>
