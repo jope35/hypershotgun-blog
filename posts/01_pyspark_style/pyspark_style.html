@@ -9,7 +9,7 @@
 <meta name="author" content="Joost de Theije + LLM">
 <meta name="dcterms.date" content="2025-01-25">
 
-<title>Pyspark ⚡️ style guide – hyper-shotgun</title>
+<title>Mastering PySpark ⚡️ : Best Practices for Efficient Coding – hyper-shotgun</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Pyspark ⚡️ style guide</h1>
+      <h1 class="title">Mastering PySpark ⚡️ : Best Practices for Efficient Coding</h1>
             <p class="subtitle lead">appear in style and sparkly</p>
                       </div>
   </div>
@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div>
     <div class="abstract">
       <div class="block-title">Abstract</div>
-      PySpark is a wrapper language that allows users to interface with an Apache Spark backend to quickly process data. Spark can operate on massive datasets across a distributed network of servers, providing major performance and reliability benefits when utilized correctly. It presents challenges, even for experienced Python developers, as the PySpark syntax draws on the JVM heritage of Spark and therefore implements code patterns that may be unfamiliar. Adapted from <a href="https://github.com/palantir/pyspark-style-guide">here</a> and <a href="https://github.com/axelearning/pyspark-style-guide">here</a>
+      PySpark is a powerful tool for processing massive datasets, but it presents unique challenges, especially for experienced Python developers. This guide provides best practices for efficient PySpark coding, helping you avoid common pitfalls and write clean, performant code. By following these tips, you’ll enhance your PySpark skills and improve the reliability and performance of your data processing tasks. As the PySpark syntax draws on the JVM heritage of Spark and therefore implements code patterns that may be unfamiliar. Adapted from <a href="https://github.com/palantir/pyspark-style-guide">here</a> and <a href="https://github.com/axelearning/pyspark-style-guide">here</a>
     </div>
   </div>
   
@@ -195,15 +195,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of Contents</h2>
    
   <ul>
-  <li><a href="#standard-practices-for-efficient-coding" id="toc-standard-practices-for-efficient-coding" class="nav-link active" data-scroll-target="#standard-practices-for-efficient-coding"><span class="header-section-number">1</span> Standard practices for efficient coding 🧠</a>
+  <li><a href="#standard-practices-for-efficient-coding" id="toc-standard-practices-for-efficient-coding" class="nav-link active" data-scroll-target="#standard-practices-for-efficient-coding"><span class="header-section-number">1</span> Standard Practices for Efficient Coding 🧠</a>
   <ul class="collapse">
-  <li><a href="#import-pyspark-modules-with-default-aliases" id="toc-import-pyspark-modules-with-default-aliases" class="nav-link" data-scroll-target="#import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark modules with default aliases</a></li>
-  <li><a href="#type-annotaion-and-docstrings-in-functions" id="toc-type-annotaion-and-docstrings-in-functions" class="nav-link" data-scroll-target="#type-annotaion-and-docstrings-in-functions"><span class="header-section-number">1.2</span> Type annotaion and docstrings in functions</a></li>
+  <li><a href="#import-pyspark-modules-with-default-aliases" id="toc-import-pyspark-modules-with-default-aliases" class="nav-link" data-scroll-target="#import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark Modules with Default Aliases</a></li>
+  <li><a href="#type-annotations-and-docstrings-in-functions" id="toc-type-annotations-and-docstrings-in-functions" class="nav-link" data-scroll-target="#type-annotations-and-docstrings-in-functions"><span class="header-section-number">1.2</span> Type Annotations and Docstrings in Functions</a></li>
   <li><a href="#formatting" id="toc-formatting" class="nav-link" data-scroll-target="#formatting"><span class="header-section-number">1.3</span> Formatting</a></li>
   </ul></li>
   <li><a href="#implicit-column-selection" id="toc-implicit-column-selection" class="nav-link" data-scroll-target="#implicit-column-selection"><span class="header-section-number">2</span> Implicit column selection</a>
   <ul class="collapse">
-  <li><a href="#when-to-deviate" id="toc-when-to-deviate" class="nav-link" data-scroll-target="#when-to-deviate"><span class="header-section-number">2.1</span> When to deviate</a></li>
+  <li><a href="#when-to-deviate" id="toc-when-to-deviate" class="nav-link" data-scroll-target="#when-to-deviate"><span class="header-section-number">2.1</span> When to Deviate</a></li>
   </ul></li>
   <li><a href="#logical-operations" id="toc-logical-operations" class="nav-link" data-scroll-target="#logical-operations"><span class="header-section-number">3</span> Logical operations</a></li>
   <li><a href="#use-select-to-specify-a-schema-contract" id="toc-use-select-to-specify-a-schema-contract" class="nav-link" data-scroll-target="#use-select-to-specify-a-schema-contract"><span class="header-section-number">4</span> Use <code>select</code> to specify a schema contract</a>
@@ -236,19 +236,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <section id="standard-practices-for-efficient-coding" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Standard practices for efficient coding 🧠</h1>
+<h1 data-number="1"><span class="header-section-number">1</span> Standard Practices for Efficient Coding 🧠</h1>
 <section id="import-pyspark-modules-with-default-aliases" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark modules with default aliases</h2>
-<p>Always start with the following imports, <code>F</code> prefix for all PySpark functions, <code>T</code> prefix for all PySpark types, and <code>W</code> for Windows. Adding the <code>#noqa</code> comment at the end of the line will disable linters (like flake8) from flagging the line as an error. Importing these will enable you to use the types and functions without importing each item separately, resulting in a speedy workflow. This will also eliminate the oopsie when you are applying the sum from the Python library instead of the PySpark library☹.</p>
+<h2 data-number="1.1" class="anchored" data-anchor-id="import-pyspark-modules-with-default-aliases"><span class="header-section-number">1.1</span> Import PySpark Modules with Default Aliases</h2>
+<p>Always start with the following imports: use the <code>F</code> prefix for all PySpark functions, <code>T</code> prefix for all PySpark types, and <code>W</code> for Windows. Adding the <code>#noqa</code> comment at the end of the line will disable linters (like flake8) from flagging the line as an error. Importing these will enable you to use the types and functions without importing each item separately, resulting in a speedy workflow. This will also eliminate the oopsie when you are applying the sum from the Python library instead of the PySpark library☹.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame <span class="im">as</span> df, functions <span class="im">as</span> F, types <span class="im">as</span> T, Window <span class="im">as</span> W <span class="co">#noqa</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>F.<span class="bu">sum</span>()</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>T.IntegerType()</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>W.partitionBy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="type-annotaion-and-docstrings-in-functions" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="type-annotaion-and-docstrings-in-functions"><span class="header-section-number">1.2</span> Type annotaion and docstrings in functions</h2>
-<p>type hint and docstrings are a pretty good idea, it has numerous benefits such as - improve the readability -&gt; makes it easier to understand the code - enhance the IDE support -&gt; autocompletion, type checking, etc. - better documentation -&gt; document while you are coding store the solution with the problem - static type checking -&gt; tools like <a href="https://www.mypy-lang.org/">mypy</a> can be used to help you catch errors early.</p>
+<section id="type-annotations-and-docstrings-in-functions" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="type-annotations-and-docstrings-in-functions"><span class="header-section-number">1.2</span> Type Annotations and Docstrings in Functions</h2>
+<p>Type annotations and docstrings are excellent practices with numerous benefits, including: - Improved readability: They make the code easier to understand. - Enhanced IDE support: They enable autocompletion, type checking, and other features. - Better documentation: They allow you to document your code as you write it, storing the solution with the problem. - Static type checking: Tools like <a href="https://www.mypy-lang.org/">mypy</a> can help catch errors early.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyspark.sql <span class="im">import</span> DataFrame</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
@@ -307,9 +307,9 @@ Note that there are five types of callouts, including:
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># better - since Spark 3.0</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.select(F.lower(<span class="st">'colA'</span>), F.upper(<span class="st">'colB'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>In most cases, the thrid option is best. Spark 3.0 expanded the scenarios where this approach works. However, when using strings as column selection isn’t feasible, fall back</p>
+<p>In most cases, the third option is best. Spark 3.0 expanded the scenarios where this approach works. However, when using strings as column selection isn’t feasible, fall back to the second option.</p>
 <section id="when-to-deviate" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="when-to-deviate"><span class="header-section-number">2.1</span> When to deviate</h2>
+<h2 data-number="2.1" class="anchored" data-anchor-id="when-to-deviate"><span class="header-section-number">2.1</span> When to Deviate</h2>
 <p>In some contexts, you might need to access columns from multiple dataframes with overlapping names. For example, in matching expressions like <code>df.join(df2, on=(df.key == df2.key), how='left')</code>. In such cases, it’s acceptable to reference columns directly by their dataframe. Please see <a href="#joins">Joins</a> for more details.</p>
 </section>
 </section>
@@ -318,7 +318,7 @@ Note that there are five types of callouts, including:
 <p>Logical operations, which often reside inside <code>.filter()</code> or <code>F.when()</code>, need to be readable. Keep logic expressions inside the same code block to <strong>three (3) expressions at most</strong>. If they grow longer, it is often a sign that the code can and should be extracted and/or simplified. Extracting complex logical operations into variables makes the code easier to read and reason about, which in turn also reduces bugs.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>F.when( (F.col(<span class="st">'prod_status'</span>) <span class="op">==</span> <span class="st">'Delivered'</span>) <span class="op">|</span> (((F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> ((F.col(<span class="st">'currentRegistration'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> ((F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> ((F.col(<span class="st">'originalOperator'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> (F.col(<span class="st">'currentOperator'</span>) <span class="op">!=</span> <span class="st">''</span>)))))), <span class="st">'In Service'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The code above can be simplified in different ways. To start, focus on grouping the logic steps in named variables. PySpark requires that expressions are wrapped with parentheses -&gt; (). This, mixed with actual parenthesis to group logical operations, can hurt readability. For example the code above has a redundant condition -&gt; <code>(F.datediff(df.deliveryDate_actual, df.current_date) &lt; 0)</code> that it very hard to spot.</p>
+<p>The code above can be simplified in different ways. To start, focus on grouping the logic steps in named variables. PySpark requires that expressions are wrapped with parentheses -&gt; (). This, mixed with actual parentheses to group logical operations, can hurt readability. For example, the code above has a redundant condition -&gt; <code>(F.datediff(df.deliveryDate_actual, df.current_date) &lt; 0)</code> that is very hard to spot.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># better</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>has_operator <span class="op">=</span> ((F.col(<span class="st">'originalOperator'</span>) <span class="op">!=</span> <span class="st">''</span>) <span class="op">|</span> (F.col(<span class="st">'currentOperator'</span>) <span class="op">!=</span> <span class="st">''</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>delivery_date_passed <span class="op">=</span> (F.datediff(<span class="st">'deliveryDate_actual'</span>, <span class="st">'current_date'</span>) <span class="op">&lt;</span> <span class="dv">0</span>)</span>
@@ -326,7 +326,7 @@ Note that there are five types of callouts, including:
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>is_delivered <span class="op">=</span> (F.col(<span class="st">'prod_status'</span>) <span class="op">==</span> <span class="st">'Delivered'</span>)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>F.when(is_delivered <span class="op">|</span> (delivery_date_passed <span class="op">&amp;</span> (has_registration <span class="op">|</span> has_operator)), <span class="st">'In Service'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The above example drops the redundant expression and is easier to read. We can improve it further by reducing the number of operations and group the ones that have a business meaning together.</p>
+<p>The above example drops the redundant expression and is easier to read. We can improve it further by reducing the number of operations and grouping the ones that have a business meaning together.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>has_registration <span class="op">=</span> F.col(<span class="st">"currentRegistration"</span>).rlike(<span class="st">".+"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>has_operator <span class="op">=</span> (F.col(<span class="st">"originalOperator"</span>) <span class="op">!=</span> <span class="st">""</span>) <span class="op">|</span> (F.col(<span class="st">"currentOperator"</span>) <span class="op">!=</span> <span class="st">""</span>)</span>
@@ -335,11 +335,12 @@ Note that there are five types of callouts, including:
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>delivery_date_passed <span class="op">=</span> F.datediff(<span class="st">"deliveryDate_actual"</span>, <span class="st">"current_date"</span>) <span class="op">&lt;</span> <span class="dv">0</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>F.when(is_delivered <span class="op">|</span> (delivery_date_passed <span class="op">&amp;</span> is_active), <span class="st">"In Service"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The <code>F.when</code> expression is now readable and the desired behavior is clear to anyone reviewing this code. Suprise that person is going to be you in 6 months. The reader only needs to visit the individual expressions if they suspect there is an error. It also makes each chunk of logic easy to reason about and test. You do have unit tests right?. if you want these expersions can be extracted into their own functions.</p>
+<p>The <code>F.when</code> expression is now readable, and the desired behavior is clear to anyone reviewing this code. Surprise, that person is going to be you in 6 months. The reader only needs to visit the individual expressions if they suspect there is an error. It also makes each chunk of logic easy to reason about and test. You do have unit tests, right?. If you want, these expressions can be extracted into their own functions.</p>
 </section>
 <section id="use-select-to-specify-a-schema-contract" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Use <code>select</code> to specify a schema contract</h1>
-<p>Doing a select at the beginning or a end of a PySpark transform, specifies the contract with both the reader and the code about the expected dataframe schema for inputs and outputs. Keep select statements as simple as possible. Apply only <em>one</em> function from <code>spark.sql.function</code> per column, plus an optional <code>.alias()</code> to give it a meaningful name. Expressions involving more than one dataframe, or conditional operations like <code>.when()</code> are discouraged to be used in a select.</p>
+<p>Doing a select at the beginning or an end of a PySpark transform, specifies the contract with both the reader and the code about the expected dataframe schema for inputs and outputs. Keep select statements as simple as possible. Apply only <em>one</em> function from <code>spark.sql.function</code> per column, plus an optional <code>.alias()</code> to give it a meaningful name. Expressions involving more than one dataframe, or conditional operations like <code>.when()</code> are discouraged from being used in a select.</p>
+<p>A select at the beginning or end of a PySpark transform specifies the contract with both the reader and the code about the expected dataframe schema for inputs and outputs. Keep select statements as simple as possible. Apply only one function from <code>spark.sql.function</code> per column, plus an optional <code>.alias()</code> to give it a meaningful name. Expressions involving more than one dataframe or conditional operations like <code>.when()</code> are discouraged in a select.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>aircraft <span class="op">=</span> aircraft.select(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'aircraft_id'</span>,</span>
@@ -352,7 +353,7 @@ Note that there are five types of callouts, including:
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'operator_code'</span>,</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    F.col(<span class="st">'number_of_business_seats'</span>).cast(<span class="st">'long'</span>),</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Unless order matters to you, try to <span style="background-color: #FFD700;">cluster together operations of the same type</span>, reducing the cognitve load on the reader of the code.</p>
+<p>Unless order matters to you, try to <span style="background-color: #FFD700;">cluster together operations of the same type</span>, reducing the cognitive load on the reader of the code.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>aircraft <span class="op">=</span> aircraft.select(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"aircraft_id"</span>,</span>
@@ -367,7 +368,7 @@ Note that there are five types of callouts, including:
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="modifying-columns-in-select" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="modifying-columns-in-select"><span class="header-section-number">4.1</span> Modifying columns in <code>select</code></h2>
-<p>The <code>select()</code> statement redefines the schema of a dataframe, so it naturally supports the inclusion or exclusion of columns, old and new, as well as the redefinition of pre-existing ones. By centralising all such operations in a single statement, it becomes much easier to identify the final schema, which makes code more readable. It also makes code more concise.</p>
+<p>The <code>select()</code> statement redefines the schema of a dataframe, so it naturally supports the inclusion or exclusion of columns, old and new, as well as the redefinition of pre-existing ones. By centralizing all such operations in a single statement, it becomes much easier to identify the final schema, which makes code more readable. It also makes code more concise.</p>
 <p>Instead of calling <code>withColumnRenamed()</code> -&gt; use <code>alias()</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#bad</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">'key'</span>, <span class="st">'comments'</span>).withColumnRenamed(<span class="st">'comments'</span>, <span class="st">'num_comments'</span>)</span>
@@ -383,14 +384,14 @@ Note that there are five types of callouts, including:
 </section>
 <section id="inclusive-selection-above-exclusive" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="inclusive-selection-above-exclusive"><span class="header-section-number">4.2</span> Inclusive selection above exclusive</h2>
-<p>Only select columns that are needed, avoid using <code>drop()</code> as over time it <del>might</del> will return a different dataframe than expected, and it will be your job of fixing it.</p>
-<p>Finally, instead of adding new columns via the select statement, using <code>.withColumn()</code> is recommended when adding a <strong>single</strong> columns. When adding or manipulating tens or hundreds of columns, use a single <code>.select()</code> for performance reasons.</p>
+<p>Only select columns that are needed, avoid using <code>drop()</code> as over time it <del>might</del> <strong>will</strong> return a different dataframe than expected, and it will be your job of fixing it.</p>
+<p>Finally, instead of adding new columns via the select statement, using <code>.withColumn()</code> is recommended when adding a single column. When adding or manipulating tens or hundreds of columns, use a single <code>.select()</code> for performance reasons.</p>
 </section>
 </section>
 <section id="empty-columns" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Empty columns</h1>
-<p>If you need to add an empty column to satisfy a schema, <strong>always</strong> use <code>F.lit(None)</code> for populating that column. Never use an empty string or some other string signalling an empty value (such as <code>-</code>,<code></code>, or <code>NA</code> this can be interpeted as ‘North America’ for example).</p>
-<p>Beyond being technically correct(the best kind of correct), one practical reason for using <code>F.lit(None)</code> is preserving the ability to use utilities like <code>isNull</code>, instead of having to verify empty strings, nulls, and <code>'NA'</code>, etc. Your future self will thank you.</p>
+<p>If you need to add an empty column to satisfy a schema, <strong>always</strong> use <code>F.lit(None)</code> for populating that column. Never use an empty string or some other string signaling an empty value (such as <code>-</code>,<code></code>, or <code>NA</code> this can be interpreted as ‘North America’ for example).</p>
+<p>Beyond being technically correct (the best kind of correct), one practical reason for using <code>F.lit(None)</code> is preserving the ability to use utilities like <code>isNull</code>, instead of having to verify empty strings, nulls, and <code>'NA'</code>, etc. Your future self will thank you.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.withColumn(<span class="st">'foo'</span>, F.lit(<span class="st">''</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -402,7 +403,7 @@ Note that there are five types of callouts, including:
 </section>
 <section id="using-comments" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Using comments</h1>
-<p>While comments can provide useful insight into code, it is often more valuable to refactor the code to improve its readability and only use comments to explain the why or provide more context. Most if not all people lookinf ath the code will be able to understand what the code is doing, but not why it is doing it.</p>
+<p>While comments can provide useful insight into code, it is often more valuable to refactor the code to improve its readability and only use comments to explain the why or provide more context. Most if not all, people looking at the code will be able to understand what the code is doing but not why it is doing it.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast the timestamp columns</span></span>
@@ -416,7 +417,7 @@ Note that there are five types of callouts, including:
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">'start_date'</span>, <span class="st">'delivery_date'</span>]</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c <span class="kw">in</span> cols:</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.withColumn(c, F.from_unixtime(F.col(c) <span class="op">/</span> <span class="dv">1000</span>).cast(T.TimestampType()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Instead of leaving comments that only describe the logic you wrote, aim to leave comments that give context, that explain the <strong>why</strong> of decisions you made when writing the code. This is particularly important for PySpark, since the reader can understand your code, but often doesn’t have context on the data that feeds into your PySpark transform. Small pieces of logic might have involved hours of digging👷 through data to understand the correct behavior, in which case comments explaining the rationale are especially valuable.</p>
+<p>Instead of leaving comments that only describe the logic you wrote, aim to leave comments that give context and explain the <strong>why</strong> of decisions you made when writing the code. This is particularly important for PySpark since the reader can understand your code but frequently doesn’t have context on the data that feeds into your PySpark transform. Small pieces of logic might have involved hours of digging👷 through data to understand the correct behavior, in which case comments explaining the rationale are especially valuable.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The consumer of this dataset expects a timestamp instead of a date, and we need</span></span>
@@ -432,8 +433,8 @@ Note that there are five types of callouts, including:
 </section>
 <section id="joins" class="level1" data-number="8">
 <h1 data-number="8"><span class="header-section-number">8</span> Joins</h1>
-<p>Be careful with joins! If you perform a left join, and the right side has multiple matches for a key, that row will be duplicated as many times as there are matches. This is called a “join explosion” and can dramatically bloat the output of your transforms job. Always double check your assumptions to see that the key you are joining on is unique, unless you are expecting the multiplication.</p>
-<p>Bad joins are the source of many tricky-to-debug issues. <strong>Always</strong> pass the join type by name, even if you are using the default values such as <code>(inner)</code>. You did know that <code>inner</code> is the <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html#pyspark.sql.DataFrame.join">default</a>, right?</p>
+<p>Be careful with joins! If you perform a left join, and the right side has multiple matches for a key, that row will be duplicated as many times as there are matches. This is called a “join explosion” and can dramatically bloat the output of your transform job. Always double-check your assumptions to see that the key you are joining on is unique, unless you are expecting the multiplication.</p>
+<p>Bad joins are the source of many tricky-to-debug issues. <strong>Always</strong> pass the join type by name, even if you are using the default values, such as <code>(inner)</code>. You did know that <code>inner</code> is the <a href="https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.join.html#pyspark.sql.DataFrame.join">default</a>, right?</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flights.join(aircraft, <span class="st">'aircraft_id'</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -442,7 +443,7 @@ Note that there are five types of callouts, including:
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># good</span></span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> flights.join(other<span class="op">=</span>aircraft, on<span class="op">=</span><span class="st">"aircraft_id"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Avoid <code>right</code> joins. If you are about to use a <code>right</code> join, switch the order of your dataframes and use a <code>left</code> join instead. It is more intuitive since the dataframe you are doing the operation on is the one that you are centering your join around. This one doesnt make sense, but it does.</p>
+<p>Avoid <code>right</code> joins. If you are about to use a <code>right</code> join, switch the order of your dataframes and use a <code>left</code> join instead. It is more intuitive since the dataframe you are doing the operation on is the one that you are centering your join around. This one doesn’t make sense, but it does.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bad</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>flights <span class="op">=</span> aircraft.join(flights, <span class="st">'aircraft_id'</span>, how<span class="op">=</span><span class="st">'right'</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -478,14 +479,14 @@ Note that there are five types of callouts, including:
 <span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In such cases, keep in mind:</p>
 <ul>
-<li>It is a better idea to only select the cols that are needed <em>before</em> joining</li>
-<li>In case you do need both, it might be best to rename one of them prior to joining, signaling the difference between the two cols, as most likely the underlying data generating process is different.</li>
+<li>It is a better idea to only select the columns that are needed <em>before</em> joining</li>
+<li>In case you do need both, it might be best to rename one of them prior to joining, signaling the difference between the two columns, as most likely the underlying data generating process is different.</li>
 <li>You should always resolve ambiguous columns before outputting a dataset. After the transform is finished you can no longer distinguish between cols.</li>
 </ul>
 </section>
 <section id="dropduplicates-and-.distinct-to-clean-joins" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="dropduplicates-and-.distinct-to-clean-joins"><span class="header-section-number">8.2</span> <code>.dropDuplicates()</code> and <code>.distinct()</code> to “clean” joins</h2>
-<p>Don’t think about using <code>.dropDuplicates()</code> or <code>.distinct()</code> as a quick fix for data duplication after a join. If unexpected duplicate rows are in your dataframe, there is always an underlying reason for why those duplicate rows appear. Adding <code>.dropDuplicates()</code> only masks this problem and adds unneccesary cpu cycles.</p>
+<p>Don’t think about using <code>.dropDuplicates()</code> or <code>.distinct()</code> as a quick fix for data duplication after a join. If unexpected duplicate rows are in your dataframe, there is always an underlying reason for why those duplicate rows appear. Adding <code>.dropDuplicates()</code> only masks this problem and adds unnecessary CPU cycles.</p>
 </section>
 </section>
 <section id="window-functions" class="level1" data-number="9">
@@ -528,7 +529,7 @@ Note that there are five types of callouts, including:
 <span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|  6|</span></span>
 <span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
 <span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>When <code>w2</code> is used, implicitly you have defined a rolling window specification, you are including all the rows in the window. For the <code>sum</code> function that might not be a problem, however when other functions are used sucha as <code>first</code> or <code>last</code> the problem becomes more apparent.</p>
+<p>When <code>w2</code> is used, implicitly you have defined a rolling window specification, you are including all the rows in the window. For the <code>sum</code> function that might not be a problem, however when other functions are used such as <code>first</code> or <code>last</code> the problem becomes more apparent.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>, F.last(<span class="st">"num"</span>).over(w1).alias(<span class="st">"last"</span>)).show()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
@@ -549,8 +550,8 @@ Note that there are five types of callouts, including:
 <span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3|   3|</span></span>
 <span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4|   4|</span></span>
 <span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Here the result is dependen on the order of the rows within the dataframe, this might change if the dataframe is shuffled and the rows are retrieved in a different order. Making the results of your transformations not-deterministic.</p>
-<p>It is a good idea to always specify an explicit window with the three components: <code>partitionBy</code>, <code>orderBy</code> and <code>rowsBetween</code>/<code>rangeBetween</code>. That way you can gaurantee that the window behaves in a deterministic way.</p>
+<p>Here the result is dependent on the order of the rows within the dataframe, this might change if the dataframe is shuffled and the rows are retrieved in a different order. Making the results of your transformations non-deterministic.</p>
+<p>It is a good idea to always specify an explicit window with the three components: <code>partitionBy</code>, <code>orderBy</code> and <code>rowsBetween</code>/<code>rangeBetween</code>. That way you can guarantee that the window behaves in a deterministic way.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#good</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>w3 <span class="op">=</span> (</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
@@ -590,7 +591,7 @@ Note that there are five types of callouts, including:
 <span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  3| 10|</span></span>
 <span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|  4| 10|</span></span>
 <span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+---+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Now the window is fully defined, with <code>w3</code> being an expanding window and <code>w4</code> contains the entire partition. Even if the returned rows are in a different order, the outcome of the window function remains consistent and deterministic.</p>
+<p>Now the window is fully defined, with <code>w3</code> being an expanding window and <code>w4</code> containing the entire partition. Even if the returned rows are in a different order, the outcome of the window function remains consistent and deterministic.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df.select(<span class="st">"key"</span>, <span class="st">"num"</span>,F.last(<span class="st">"num"</span>).over(w3).alias(<span class="st">"last"</span>)).show()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+---+----+</span></span>
@@ -615,7 +616,7 @@ Note that there are five types of callouts, including:
 <p>Here we can see that the results are as we expect them to be. The results are deterministic and the order of the rows is not influencing the results.</p>
 <section id="dealing-with-nulls" class="level2" data-number="9.1">
 <h2 data-number="9.1" class="anchored" data-anchor-id="dealing-with-nulls"><span class="header-section-number">9.1</span> Dealing with nulls</h2>
-<p>While nulls are ignored for aggregate functions (like <code>F.sum()</code> and <code>F.max()</code>), they will impact the result of analytic functions (sucha as <code>F.first()/F.last()</code> and <code>F.rank()</code>).</p>
+<p>While nulls are ignored for aggregate functions (like <code>F.sum()</code> and <code>F.max()</code>), they will impact the result of analytic functions (such as <code>F.first()/F.last()</code> and <code>F.rank()</code>).</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df_nulls <span class="op">=</span> spark.createDataFrame(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"a"</span>, <span class="va">None</span>), (<span class="st">"a"</span>, <span class="dv">2</span>), (<span class="st">"a"</span>, <span class="dv">1</span>), (<span class="st">"a"</span>, <span class="dv">3</span>), (<span class="st">"a"</span>, <span class="va">None</span>)],</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"key"</span>, <span class="st">"num"</span>],</span>
@@ -631,7 +632,7 @@ Note that there are five types of callouts, including:
 <span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   2| NULL|</span></span>
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># |  a|   3| NULL|</span></span>
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># +---+----+-----+</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Depending on the usecase this might be the desired behavior, but it might not always be applicabler. Best to avoid this situation by excplicitly setting the sort order and the nulls behavior.</p>
+<p>Depending on the use case this might be the desired behavior, but it might not always be applicable. It is best to avoid this situation by explicitly setting the sort order and the nulls behavior.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sorting ascending and nulls last</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>w5 <span class="op">=</span> (</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    W.partitionBy(<span class="st">"key"</span>)</span>
