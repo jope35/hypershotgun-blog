@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Joost de Theije + LLM">
+<meta name="dcterms.date" content="2026-01-20">
+
+<title>Pigeons, Birthdays, and Collisions – hyper-shotgun</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-4b10d88bc01b3c2b62a30403842a2cd1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-b40011a2ffb848728e6b87d40e816af6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-1962b8704e35fd18bddbdb7d8a4a5ec2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-b40011a2ffb848728e6b87d40e816af6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo light-content">
+    <img src="../../apple-touch-icon.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">hyper-shotgun</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../whois.html"> 
+<span class="menu-text">whois 🤖</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.linkedin.com/in/joostdetheije/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text">LinkedIn</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/jope35"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">Github</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Pigeons, Birthdays, and Collisions</h1>
+            <p class="subtitle lead">Somehow this relates to Feature Hasing</p>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Joost de Theije + LLM </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 20, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  <div>
+    <div class="abstract">
+      <div class="block-title">Abstract</div>
+      Ever stuffed too many socks in a drawer? That’s the Pigeonhole Principle in action, hiding everywhere from birthday parties to hash tables. This article explores collision mathematics through pigeons, birthdays, and feature hashing. We’ll show why collisions are inevitable (spoiler: sooner than you think) with interactive visualizations proving even 512-bit hashes eventually collade. Buckle up for a fun ride through the math governing how our digital world handles too much stuff in too little space.
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of Contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#the-pigeonhole-principle-and-the-birthday-paradox" id="toc-the-pigeonhole-principle-and-the-birthday-paradox" class="nav-link" data-scroll-target="#the-pigeonhole-principle-and-the-birthday-paradox"><span class="header-section-number">2</span> The Pigeonhole Principle and the Birthday Paradox</a>
+  <ul class="collapse">
+  <li><a href="#the-pigeonhole-principle-when-space-runs-out" id="toc-the-pigeonhole-principle-when-space-runs-out" class="nav-link" data-scroll-target="#the-pigeonhole-principle-when-space-runs-out"><span class="header-section-number">2.1</span> The Pigeonhole Principle: When Space Runs Out</a></li>
+  <li><a href="#the-birthday-paradox-a-surprising-twist" id="toc-the-birthday-paradox-a-surprising-twist" class="nav-link" data-scroll-target="#the-birthday-paradox-a-surprising-twist"><span class="header-section-number">2.2</span> The Birthday Paradox: A Surprising Twist</a></li>
+  <li><a href="#connecting-the-dots-why-these-ideas-matter" id="toc-connecting-the-dots-why-these-ideas-matter" class="nav-link" data-scroll-target="#connecting-the-dots-why-these-ideas-matter"><span class="header-section-number">2.3</span> Connecting the Dots: Why These Ideas Matter</a></li>
+  </ul></li>
+  <li><a href="#hashing-basics-when-data-runs-out-of-room" id="toc-hashing-basics-when-data-runs-out-of-room" class="nav-link" data-scroll-target="#hashing-basics-when-data-runs-out-of-room"><span class="header-section-number">3</span> Hashing Basics: When Data Runs Out of Room</a>
+  <ul class="collapse">
+  <li><a href="#from-pigeons-to-data-the-birth-of-hashing" id="toc-from-pigeons-to-data-the-birth-of-hashing" class="nav-link" data-scroll-target="#from-pigeons-to-data-the-birth-of-hashing"><span class="header-section-number">3.1</span> From Pigeons to Data: The Birth of Hashing</a></li>
+  <li><a href="#how-hashing-works-the-magic-black-box" id="toc-how-hashing-works-the-magic-black-box" class="nav-link" data-scroll-target="#how-hashing-works-the-magic-black-box"><span class="header-section-number">3.2</span> How Hashing Works: The Magic Black Box</a>
+  <ul class="collapse">
+  <li><a href="#why-collisions-are-inevitable" id="toc-why-collisions-are-inevitable" class="nav-link" data-scroll-target="#why-collisions-are-inevitable"><span class="header-section-number">3.2.1</span> Why Collisions Are Inevitable</a></li>
+  </ul></li>
+  <li><a href="#hashing-collision-probabilities" id="toc-hashing-collision-probabilities" class="nav-link" data-scroll-target="#hashing-collision-probabilities"><span class="header-section-number">3.3</span> Hashing Collision Probabilities</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Have you ever wondered how seemingly unrelated topics such as pigeons, birthdays, and collisions possibly share a connection? At first glance, they appear to belong to entirely different worlds. Pigeons are birds, birthdays are personal milestones, and collisions are unfortunatly a common sight in modern day traffic. Yet, beneath the surface, these concepts are tied together in a quirky way in how things fit into spaces that are too small to contain them.</p>
+<p>This principle isn’t just an observation; it’s a building block of mathematics. It explains why, in a room of just 23 people, there’s a 50% chance that two people share the same birthday 🎂. It reveals why cramming too many pigeons into too few holes guarantees some are going to share a pigeon hole.</p>
+<p>And it underpins a challenge in machine learning: how to efficiently map vast amounts of data into a manageable space without everything colliding into a mess.</p>
+</section>
+<section id="the-pigeonhole-principle-and-the-birthday-paradox" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The Pigeonhole Principle and the Birthday Paradox</h1>
+<section id="the-pigeonhole-principle-when-space-runs-out" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-pigeonhole-principle-when-space-runs-out"><span class="header-section-number">2.1</span> The Pigeonhole Principle: When Space Runs Out</h2>
+<p>Imagine you are a pigeon keeper you have a 9 spaces for pigeons to nest in, and you have 3 birds. no problem what so ever. There is space for all the birds.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="artifacts/birds_green.jpg" title="3 birds fit into 9 holes, no problem" class="img-fluid figure-img"></p>
+<figcaption>enough space for all the birds, nobody has to share a hole</figcaption>
+</figure>
+</div>
+<p>Now imagine you have 10 birds, we only have 9 holes. No matter how hard you try, at least one of those holes <em>must</em> end up with more than one pigeon.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="artifacts/birds_red.jpg" class="img-fluid figure-img"></p>
+<figcaption>no enogh space for all the birds, at least one hole must have more than one bird</figcaption>
+</figure>
+</div>
+<p>Welcome to the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">Wikipedia: Pigeonhole principle</a>, one of the simplest ideas in mathematics. if we have <span class="math inline">\(n\)</span> items and <span class="math inline">\(m\)</span> containers, at least one container must hold more than <span class="math inline">\(n\)</span> items.</p>
+<p>It’s an obvious idea, but its implications are widely applicable. Whether you’re stuffing pigeons into holes, assigning students to classrooms, or mapping data to storage bins, <strong>when you force too many things into too little space, collisions are inevitable.</strong></p>
+</section>
+<section id="the-birthday-paradox-a-surprising-twist" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-birthday-paradox-a-surprising-twist"><span class="header-section-number">2.2</span> The Birthday Paradox: A Surprising Twist</h2>
+<p>Now, let’s trade pigeons for people and holes for birthdays. You’re at a party with 23 guests, and someone asks: “What’s the chance that two people here share the same birthday?” Most people guess the odds are low—after all, there are 365 possible birthdays, so surely 23 people wouldn’t be enough to guarantee a match, right?</p>
+<p>The birthday paradox reveals that there’s actually a 50% chance two people in that room share a birthday with only 23 people. By the time you reach 70 people, the probability skyrockets to 99.9%. How is this possible?</p>
+<p style="text-align:center; font-size:72px;">
+🎂➡️📅
+</p>
+<p>The key lies in <strong>shifting perspective</strong>. Most of us instinctively think about the odds of someone else sharing our birthday. That is unlikely—just a 6% chance with 23 people. But the birthday paradox isn’t about matching your birthday. It’s about any two people in the room matching each other. Suddenly, the math flips, and collisions become not just likely but guaranteed as the group grows. We are stuffing pigeons into holes again.</p>
+</section>
+<section id="connecting-the-dots-why-these-ideas-matter" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="connecting-the-dots-why-these-ideas-matter"><span class="header-section-number">2.3</span> Connecting the Dots: Why These Ideas Matter</h2>
+<p>At first glance, the pigeonhole principle and the birthday paradox seem like unrelated curiosities. One is about cramming pigeons into holes; the other is about people sharing birthdays. But strip away the context, and you’ll find they’re two sides of the same coin:</p>
+<ul>
+<li><strong>Pigeonhole Principle</strong>: “If you have more items than containers, collisions are guaranteed.”</li>
+<li><strong>Birthday Paradox</strong>: “Even with far fewer items than containers, collisions become likely faster than you’d expect.”</li>
+</ul>
+<p>Both principles expose the same truth: when you map a large set to a smaller space, overlaps are inevitable. The pigeonhole principle proves it’s certain with enough items, while the birthday paradox shows it happens earlier than intuition suggests.</p>
+<p>For now, let’s zoom in on the math behind the birthday paradox to see just how quickly collisions can sneak up on you.</p>
+<details>
+<summary>
+Click to expand the math behind the birthday paradox
+</summary>
+<p>Let’s zoom in on the formula for the probability that at least two people in a group of <span class="math inline">\(n\)</span> will share a birthday, assuming <span class="math inline">\(d\)</span> possible birthdays (e.g., <span class="math inline">\(d=365\)</span>):</p>
+<p>% d = number of possible birthdays (usually 365), n = number of people</p>
+<p><span class="math display">\[
+P_{\text{distinct}}(n)
+= \prod_{k=0}^{n-1}\frac{d-k}{d}
+= \frac{d(d-1)\cdots(d-n+1)}{d^{n}}
+= \frac{d!}{(d-n)!\,d^{n}}
+\qquad (n \le d)\]</span> <span class="math display">\[
+P_{\text{shared}}(n)
+= 1 - P_{\text{distinct}}(n)\]</span> <span class="math display">\[
+P_{\text{shared}}(n)
+\approx 1 - \exp\!\left(-\frac{n(n-1)}{2d}\right)
+\qquad (n \ll d)
+\]</span></p>
+<p>Where: - <span class="math inline">\(n\)</span> is the number of people, - <span class="math inline">\(d\)</span> is the number of possible birthdays.</p>
+</details>
+<p><span class="math inline">\(d\)</span> is the number of possible birthdays (365/366), <span class="math inline">\(n\)</span> is the number of people</p>
+<p><span class="math display">\[
+P_{\text{shared}}(n)
+\approx 1 - \exp\!\left(-\frac{n(n-1)}{2d}\right)
+\qquad (n \ll d)\]</span></p>
+<p>If we visualize the probability of a shared birthday, we get the following chart:</p>
+<div id="e87e9be3" class="cell" data-execution_count="31">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>days <span class="op">=</span> <span class="dv">365</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n_max <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> np.arange(<span class="dv">1</span>, n_max <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute probability of at least one shared birthday</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> np.arange(n_max)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>log_p_distinct <span class="op">=</span> np.cumsum(np.log((days <span class="op">-</span> k) <span class="op">/</span> days))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>p_shared <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> np.exp(log_p_distinct)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Number of people"</span>: n,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Probability of two or more sharing a birthday"</span>: p_shared,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Probability (rounded)"</span>: np.<span class="bu">round</span>(p_shared, <span class="dv">3</span>),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a selection that chooses the nearest point &amp; selects based on x-value</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>nearest <span class="op">=</span> alt.selection_point(</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    nearest<span class="op">=</span><span class="va">True</span>, on<span class="op">=</span><span class="st">"pointerover"</span>, fields<span class="op">=</span>[<span class="st">"Number of people"</span>], empty<span class="op">=</span><span class="va">False</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># The basic line</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>line <span class="op">=</span> (</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    alt.Chart(df)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    .mark_line(interpolate<span class="op">=</span><span class="st">"basis"</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    .encode(</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span>alt.X(<span class="st">"Number of people"</span>, title<span class="op">=</span><span class="st">"Number of people"</span>),</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span>alt.Y(</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Probability of two or more sharing a birthday"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">1</span>]),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">"Probability of two or more people sharing a birthday"</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>when_near <span class="op">=</span> alt.when(nearest)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw points on the line and highlight based on selection</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>points <span class="op">=</span> line.mark_point().encode(</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    opacity<span class="op">=</span>when_near.then(alt.value(<span class="dv">1</span>)).otherwise(alt.value(<span class="dv">0</span>))</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw a rule at the location of the selection</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>rules <span class="op">=</span> (</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    alt.Chart(df)</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    .mark_rule(color<span class="op">=</span><span class="st">"gray"</span>)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    .encode(</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">"Number of people:Q"</span>,</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>        opacity<span class="op">=</span>when_near.then(alt.value(<span class="fl">0.3</span>)).otherwise(alt.value(<span class="dv">0</span>)),</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        tooltip<span class="op">=</span>[</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"Number of people"</span>, title<span class="op">=</span><span class="st">"Number of people"</span>),</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            alt.Tooltip(<span class="st">"Probability (rounded)"</span>, title<span class="op">=</span><span class="st">"Probability"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".2f"</span>),</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    .add_params(nearest)</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>chart <span class="op">=</span> (</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    alt.layer(</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        line,</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>        points,</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        rules,</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    .properties(</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Chance of a birthday collision, is higher than intuition suggests"</span>,</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        width<span class="op">=</span><span class="dv">500</span>,</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        height<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    .configure_axis(grid<span class="op">=</span><span class="va">True</span>, gridOpacity<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>chart</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="31">
+
+<style>
+  #altair-viz-703693f71e8f41dbaa92022b2c53bbe5.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-703693f71e8f41dbaa92022b2c53bbe5.vega-embed details,
+  #altair-viz-703693f71e8f41dbaa92022b2c53bbe5.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-703693f71e8f41dbaa92022b2c53bbe5"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-703693f71e8f41dbaa92022b2c53bbe5") {
+      outputDiv = document.getElementById("altair-viz-703693f71e8f41dbaa92022b2c53bbe5");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}, "axis": {"grid": true, "gridOpacity": 0.3}}, "layer": [{"mark": {"type": "line", "interpolate": "basis"}, "encoding": {"x": {"field": "Number of people", "title": "Number of people", "type": "quantitative"}, "y": {"field": "Probability of two or more sharing a birthday", "scale": {"domain": [0, 1]}, "title": "Probability of two or more people sharing a birthday", "type": "quantitative"}}}, {"mark": {"type": "point"}, "encoding": {"opacity": {"condition": [{"param": "param_7f6a2ec22e393630", "value": 1, "empty": false}], "value": 0}, "x": {"field": "Number of people", "title": "Number of people", "type": "quantitative"}, "y": {"field": "Probability of two or more sharing a birthday", "scale": {"domain": [0, 1]}, "title": "Probability of two or more people sharing a birthday", "type": "quantitative"}}}, {"mark": {"type": "rule", "color": "gray"}, "encoding": {"opacity": {"condition": [{"param": "param_7f6a2ec22e393630", "value": 0.3, "empty": false}], "value": 0}, "tooltip": [{"field": "Number of people", "title": "Number of people", "type": "quantitative"}, {"field": "Probability (rounded)", "format": ".2f", "title": "Probability", "type": "quantitative"}], "x": {"field": "Number of people", "type": "quantitative"}}, "name": "view_a788a0d6927efea5_2"}], "data": {"name": "data-01275bd9ace4153a954a9c99c8550abc"}, "height": 300, "params": [{"name": "param_7f6a2ec22e393630", "select": {"type": "point", "fields": ["Number of people"], "nearest": true, "on": "pointerover"}, "views": ["view_a788a0d6927efea5_2"]}], "title": "Chance of a birthday collision, is higher than intuition suggests", "width": 500, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-01275bd9ace4153a954a9c99c8550abc": [{"Number of people": 1, "Probability of two or more sharing a birthday": 0.0, "Probability (rounded)": 0.0}, {"Number of people": 2, "Probability of two or more sharing a birthday": 0.002739726027397249, "Probability (rounded)": 0.003}, {"Number of people": 3, "Probability of two or more sharing a birthday": 0.008204165884781345, "Probability (rounded)": 0.008}, {"Number of people": 4, "Probability of two or more sharing a birthday": 0.016355912466550215, "Probability (rounded)": 0.016}, {"Number of people": 5, "Probability of two or more sharing a birthday": 0.02713557369979347, "Probability (rounded)": 0.027}, {"Number of people": 6, "Probability of two or more sharing a birthday": 0.040462483649111425, "Probability (rounded)": 0.04}, {"Number of people": 7, "Probability of two or more sharing a birthday": 0.056235703095975365, "Probability (rounded)": 0.056}, {"Number of people": 8, "Probability of two or more sharing a birthday": 0.07433529235166902, "Probability (rounded)": 0.074}, {"Number of people": 9, "Probability of two or more sharing a birthday": 0.09462383388916673, "Probability (rounded)": 0.095}, {"Number of people": 10, "Probability of two or more sharing a birthday": 0.11694817771107768, "Probability (rounded)": 0.117}, {"Number of people": 11, "Probability of two or more sharing a birthday": 0.14114137832173312, "Probability (rounded)": 0.141}, {"Number of people": 12, "Probability of two or more sharing a birthday": 0.1670247888380645, "Probability (rounded)": 0.167}, {"Number of people": 13, "Probability of two or more sharing a birthday": 0.19441027523242937, "Probability (rounded)": 0.194}, {"Number of people": 14, "Probability of two or more sharing a birthday": 0.223102512004973, "Probability (rounded)": 0.223}, {"Number of people": 15, "Probability of two or more sharing a birthday": 0.25290131976368635, "Probability (rounded)": 0.253}, {"Number of people": 16, "Probability of two or more sharing a birthday": 0.2836040052528499, "Probability (rounded)": 0.284}, {"Number of people": 17, "Probability of two or more sharing a birthday": 0.31500766529656066, "Probability (rounded)": 0.315}, {"Number of people": 18, "Probability of two or more sharing a birthday": 0.34691141787178936, "Probability (rounded)": 0.347}, {"Number of people": 19, "Probability of two or more sharing a birthday": 0.37911852603153673, "Probability (rounded)": 0.379}, {"Number of people": 20, "Probability of two or more sharing a birthday": 0.41143838358058005, "Probability (rounded)": 0.411}, {"Number of people": 21, "Probability of two or more sharing a birthday": 0.4436883351652058, "Probability (rounded)": 0.444}, {"Number of people": 22, "Probability of two or more sharing a birthday": 0.4756953076625501, "Probability (rounded)": 0.476}, {"Number of people": 23, "Probability of two or more sharing a birthday": 0.5072972343239854, "Probability (rounded)": 0.507}, {"Number of people": 24, "Probability of two or more sharing a birthday": 0.5383442579145288, "Probability (rounded)": 0.538}, {"Number of people": 25, "Probability of two or more sharing a birthday": 0.5686997039694639, "Probability (rounded)": 0.569}, {"Number of people": 26, "Probability of two or more sharing a birthday": 0.5982408201359389, "Probability (rounded)": 0.598}, {"Number of people": 27, "Probability of two or more sharing a birthday": 0.626859282263242, "Probability (rounded)": 0.627}, {"Number of people": 28, "Probability of two or more sharing a birthday": 0.6544614723423994, "Probability (rounded)": 0.654}, {"Number of people": 29, "Probability of two or more sharing a birthday": 0.680968537477777, "Probability (rounded)": 0.681}, {"Number of people": 30, "Probability of two or more sharing a birthday": 0.7063162427192687, "Probability (rounded)": 0.706}, {"Number of people": 31, "Probability of two or more sharing a birthday": 0.7304546337286439, "Probability (rounded)": 0.73}, {"Number of people": 32, "Probability of two or more sharing a birthday": 0.7533475278503207, "Probability (rounded)": 0.753}, {"Number of people": 33, "Probability of two or more sharing a birthday": 0.774971854175772, "Probability (rounded)": 0.775}, {"Number of people": 34, "Probability of two or more sharing a birthday": 0.7953168646201543, "Probability (rounded)": 0.795}, {"Number of people": 35, "Probability of two or more sharing a birthday": 0.8143832388747152, "Probability (rounded)": 0.814}, {"Number of people": 36, "Probability of two or more sharing a birthday": 0.8321821063798795, "Probability (rounded)": 0.832}, {"Number of people": 37, "Probability of two or more sharing a birthday": 0.8487340082163846, "Probability (rounded)": 0.849}, {"Number of people": 38, "Probability of two or more sharing a birthday": 0.8640678210821209, "Probability (rounded)": 0.864}, {"Number of people": 39, "Probability of two or more sharing a birthday": 0.878219664366722, "Probability (rounded)": 0.878}, {"Number of people": 40, "Probability of two or more sharing a birthday": 0.8912318098179489, "Probability (rounded)": 0.891}, {"Number of people": 41, "Probability of two or more sharing a birthday": 0.9031516114817354, "Probability (rounded)": 0.903}, {"Number of people": 42, "Probability of two or more sharing a birthday": 0.9140304715618692, "Probability (rounded)": 0.914}, {"Number of people": 43, "Probability of two or more sharing a birthday": 0.9239228556561199, "Probability (rounded)": 0.924}, {"Number of people": 44, "Probability of two or more sharing a birthday": 0.9328853685514262, "Probability (rounded)": 0.933}, {"Number of people": 45, "Probability of two or more sharing a birthday": 0.9409758994657749, "Probability (rounded)": 0.941}, {"Number of people": 46, "Probability of two or more sharing a birthday": 0.9482528433672547, "Probability (rounded)": 0.948}, {"Number of people": 47, "Probability of two or more sharing a birthday": 0.9547744028332993, "Probability (rounded)": 0.955}, {"Number of people": 48, "Probability of two or more sharing a birthday": 0.9605979728794224, "Probability (rounded)": 0.961}, {"Number of people": 49, "Probability of two or more sharing a birthday": 0.9657796093226765, "Probability (rounded)": 0.966}, {"Number of people": 50, "Probability of two or more sharing a birthday": 0.9703735795779884, "Probability (rounded)": 0.97}, {"Number of people": 51, "Probability of two or more sharing a birthday": 0.9744319933344283, "Probability (rounded)": 0.974}, {"Number of people": 52, "Probability of two or more sharing a birthday": 0.9780045093342753, "Probability (rounded)": 0.978}, {"Number of people": 53, "Probability of two or more sharing a birthday": 0.9811381134839128, "Probability (rounded)": 0.981}, {"Number of people": 54, "Probability of two or more sharing a birthday": 0.9838769627588515, "Probability (rounded)": 0.984}, {"Number of people": 55, "Probability of two or more sharing a birthday": 0.9862622888164461, "Probability (rounded)": 0.986}, {"Number of people": 56, "Probability of two or more sharing a birthday": 0.9883323548852008, "Probability (rounded)": 0.988}, {"Number of people": 57, "Probability of two or more sharing a birthday": 0.9901224593411699, "Probability (rounded)": 0.99}, {"Number of people": 58, "Probability of two or more sharing a birthday": 0.9916649793892612, "Probability (rounded)": 0.992}, {"Number of people": 59, "Probability of two or more sharing a birthday": 0.992989448417817, "Probability (rounded)": 0.993}, {"Number of people": 60, "Probability of two or more sharing a birthday": 0.994122660865348, "Probability (rounded)": 0.994}, {"Number of people": 61, "Probability of two or more sharing a birthday": 0.9950887988052908, "Probability (rounded)": 0.995}, {"Number of people": 62, "Probability of two or more sharing a birthday": 0.9959095748953655, "Probability (rounded)": 0.996}, {"Number of people": 63, "Probability of two or more sharing a birthday": 0.9966043868309472, "Probability (rounded)": 0.997}, {"Number of people": 64, "Probability of two or more sharing a birthday": 0.9971904789669755, "Probability (rounded)": 0.997}, {"Number of people": 65, "Probability of two or more sharing a birthday": 0.9976831073124921, "Probability (rounded)": 0.998}, {"Number of people": 66, "Probability of two or more sharing a birthday": 0.9980957046404045, "Probability (rounded)": 0.998}, {"Number of people": 67, "Probability of two or more sharing a birthday": 0.9984400429793998, "Probability (rounded)": 0.998}, {"Number of people": 68, "Probability of two or more sharing a birthday": 0.9987263912544141, "Probability (rounded)": 0.999}, {"Number of people": 69, "Probability of two or more sharing a birthday": 0.9989636663083863, "Probability (rounded)": 0.999}, {"Number of people": 70, "Probability of two or more sharing a birthday": 0.9991595759651571, "Probability (rounded)": 0.999}, {"Number of people": 71, "Probability of two or more sharing a birthday": 0.9993207531773187, "Probability (rounded)": 0.999}, {"Number of people": 72, "Probability of two or more sharing a birthday": 0.9994528806414568, "Probability (rounded)": 0.999}, {"Number of people": 73, "Probability of two or more sharing a birthday": 0.9995608055560187, "Probability (rounded)": 1.0}, {"Number of people": 74, "Probability of two or more sharing a birthday": 0.9996486444448149, "Probability (rounded)": 1.0}, {"Number of people": 75, "Probability of two or more sharing a birthday": 0.9997198781738114, "Probability (rounded)": 1.0}, {"Number of people": 76, "Probability of two or more sharing a birthday": 0.9997774374531652, "Probability (rounded)": 1.0}, {"Number of people": 77, "Probability of two or more sharing a birthday": 0.999823779243739, "Probability (rounded)": 1.0}, {"Number of people": 78, "Probability of two or more sharing a birthday": 0.9998609545813611, "Probability (rounded)": 1.0}, {"Number of people": 79, "Probability of two or more sharing a birthday": 0.9998906683968511, "Probability (rounded)": 1.0}, {"Number of people": 80, "Probability of two or more sharing a birthday": 0.9999143319493135, "Probability (rounded)": 1.0}, {"Number of people": 81, "Probability of two or more sharing a birthday": 0.999933108508368, "Probability (rounded)": 1.0}, {"Number of people": 82, "Probability of two or more sharing a birthday": 0.9999479529215796, "Probability (rounded)": 1.0}, {"Number of people": 83, "Probability of two or more sharing a birthday": 0.9999596456898823, "Probability (rounded)": 1.0}, {"Number of people": 84, "Probability of two or more sharing a birthday": 0.9999688221494433, "Probability (rounded)": 1.0}, {"Number of people": 85, "Probability of two or more sharing a birthday": 0.9999759973260097, "Probability (rounded)": 1.0}, {"Number of people": 86, "Probability of two or more sharing a birthday": 0.9999815869898157, "Probability (rounded)": 1.0}, {"Number of people": 87, "Probability of two or more sharing a birthday": 0.9999859253976947, "Probability (rounded)": 1.0}, {"Number of people": 88, "Probability of two or more sharing a birthday": 0.9999892801659155, "Probability (rounded)": 1.0}, {"Number of people": 89, "Probability of two or more sharing a birthday": 0.9999918646738591, "Probability (rounded)": 1.0}, {"Number of people": 90, "Probability of two or more sharing a birthday": 0.9999938483561236, "Probability (rounded)": 1.0}, {"Number of people": 91, "Probability of two or more sharing a birthday": 0.9999953651998191, "Probability (rounded)": 1.0}, {"Number of people": 92, "Probability of two or more sharing a birthday": 0.9999965207253437, "Probability (rounded)": 1.0}, {"Number of people": 93, "Probability of two or more sharing a birthday": 0.9999973976932023, "Probability (rounded)": 1.0}, {"Number of people": 94, "Probability of two or more sharing a birthday": 0.9999980607467152, "Probability (rounded)": 1.0}, {"Number of people": 95, "Probability of two or more sharing a birthday": 0.9999985601708488, "Probability (rounded)": 1.0}, {"Number of people": 96, "Probability of two or more sharing a birthday": 0.9999989349209019, "Probability (rounded)": 1.0}, {"Number of people": 97, "Probability of two or more sharing a birthday": 0.9999992150512947, "Probability (rounded)": 1.0}, {"Number of people": 98, "Probability of two or more sharing a birthday": 0.9999994236541013, "Probability (rounded)": 1.0}, {"Number of people": 99, "Probability of two or more sharing a birthday": 0.9999995783990275, "Probability (rounded)": 1.0}, {"Number of people": 100, "Probability of two or more sharing a birthday": 0.9999996927510721, "Probability (rounded)": 1.0}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+</section>
+</section>
+<section id="hashing-basics-when-data-runs-out-of-room" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Hashing Basics: When Data Runs Out of Room</h1>
+<section id="from-pigeons-to-data-the-birth-of-hashing" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="from-pigeons-to-data-the-birth-of-hashing"><span class="header-section-number">3.1</span> From Pigeons to Data: The Birth of Hashing</h2>
+<p>We’ve seen how the pigeonhole principle and the birthday paradox reveal a fundamental truth: when you try to fit too many things into too little space, collisions are inevitable. But what does this have to do with computers and data? Enter hashing, a concept that takes the pigeonhole principle and applies it to the digital world.</p>
+<p>At its core, hashing is a way to take a large, unwieldy piece of data—like a pdf, a photo, or even an entire book and map it to a smaller, fixed-size value, called a hash which is similar to the fingerprint of humans. Each and every one of the, is unique and them are about the same size. the fixed-size value of the hash can be tought of like a pigeon hole, and the data we want to hash is the pigeon.</p>
+</section>
+<section id="how-hashing-works-the-magic-black-box" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="how-hashing-works-the-magic-black-box"><span class="header-section-number">3.2</span> How Hashing Works: The Magic Black Box</h2>
+<p>Hash functions are like black boxes. You toss something in—whether it’s a PDF, a photo, a book, or even a single word—and out pops a fixed-length string of seemingly random characters. For example:</p>
+<ul>
+<li>Input: <code>"hello"</code> → Output: <code>"4acdf636-caee-88b8-ad0e-cb17fe41d7f7"</code></li>
+<li>Input: <code>The entire text of "Dune: Messiah"</code> → Output: <code>"d52492b0-440d-88c5-af3a-cce3d3afeb00"</code></li>
+</ul>
+<p>No matter what you feed into a hash function, the output is always the same length. It’s like a digital fingerprint: unique (in theory) and compact. But here’s the catch: the number of possible outputs isn’t infinite/ <span class="math inline">\(\infty\)</span>. Just like the pigeonhole principle, if you have more inputs than possible outputs, collisions can and will happen.</p>
+<section id="why-collisions-are-inevitable" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="why-collisions-are-inevitable"><span class="header-section-number">3.2.1</span> Why Collisions Are Inevitable</h3>
+<p>Hash functions map an infinite (or near-infinite) number of possible inputs to a finite number of outputs.</p>
+<p>For example: - A hash function that outputs 64-bit hashes has <span class="math inline">\(2^{64}\)</span> possible outputs. - A hash function that outputs 256-bit hashes has <span class="math inline">\(2^{256}\)</span> possible outputs.</p>
+<p>But no matter how large the output space, it’s still finite. And if you have enough inputs, collisions will occur—just like cramming too many pigeons into too few holes. The birthday paradox tells us that collisions happen way sooner than you’d expect, too.</p>
+</section>
+</section>
+<section id="hashing-collision-probabilities" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="hashing-collision-probabilities"><span class="header-section-number">3.3</span> Hashing Collision Probabilities</h2>
+<div id="d5b057ba" class="cell" data-execution_count="32">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Parameters ---</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>n_elements <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>, <span class="dv">500</span>, <span class="dv">1000</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>n_buckets <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1_000</span>, <span class="dv">5_000</span>, <span class="dv">10_000</span>, <span class="dv">50_000</span>, <span class="dv">100_000</span>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Build long-form DataFrame ---</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_elements:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> d <span class="kw">in</span> n_buckets:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> np.exp(<span class="op">-</span>n <span class="op">*</span> (n <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> d))) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        rows.append(</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Elements (n)"</span>: n,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Buckets (d)"</span>: d,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Collision %"</span>: <span class="bu">round</span>(prob, <span class="dv">1</span>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># String labels for ordinal axes</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"n_label"</span>] <span class="op">=</span> df[<span class="st">"Elements (n)"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"d_label"</span>] <span class="op">=</span> df[<span class="st">"Buckets (d)"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:,}</span><span class="ss">"</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"cell_text"</span>] <span class="op">=</span> df[<span class="st">"Collision %"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort orders (elements: high at top; buckets: left to right)</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>elements_sorted <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:,}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> <span class="bu">sorted</span>(n_elements, reverse<span class="op">=</span><span class="va">True</span>)]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>buckets_sorted <span class="op">=</span> [<span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:,}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> n_buckets]</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Shared encodings ---</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> alt.Chart(df).encode(</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(<span class="st">"n_label:N"</span>, sort<span class="op">=</span>elements_sorted, title<span class="op">=</span><span class="st">"Number of Elements (n)"</span>),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(<span class="st">"d_label:N"</span>, sort<span class="op">=</span>buckets_sorted, title<span class="op">=</span><span class="st">"Output Dimension of Hash (d)"</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Heatmap layer ---</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>heatmap <span class="op">=</span> base.mark_rect(stroke<span class="op">=</span><span class="st">"white"</span>, strokeWidth<span class="op">=</span><span class="dv">1</span>).encode(</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Collision %:Q"</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">100</span>], <span class="bu">range</span><span class="op">=</span>[<span class="st">"#2ecc71"</span>, <span class="st">"#f1c40f"</span>, <span class="st">"#e74c3c"</span>]),</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=</span>alt.Legend(title<span class="op">=</span><span class="st">"Collision %"</span>),</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Elements (n):Q"</span>, title<span class="op">=</span><span class="st">"Elements (n)"</span>),</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Buckets (d):Q"</span>, title<span class="op">=</span><span class="st">"Buckets (d)"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">","</span>),</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Collision %:Q"</span>, title<span class="op">=</span><span class="st">"Collision %"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".1f"</span>),</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Text label layer ---</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> base.mark_text(fontSize<span class="op">=</span><span class="dv">10</span>, fontWeight<span class="op">=</span><span class="st">"bold"</span>).encode(</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">"cell_text:N"</span>,</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.condition(</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>        alt.datum[<span class="st">"Collision %"</span>] <span class="op">&gt;=</span> <span class="dv">0</span>,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        alt.value(<span class="st">"white"</span>),</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        alt.value(<span class="st">"black"</span>),</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Combine ---</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>chart <span class="op">=</span> (heatmap <span class="op">+</span> text).properties(</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Collision Probability - Birthday Paradox: P ≈ 1 − exp(−n(n−1) / 2d)"</span>,</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">550</span>,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">350</span>,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>chart</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="32">
+
+<style>
+  #altair-viz-3169dd82ad034727bbcf3add5f652b7d.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-3169dd82ad034727bbcf3add5f652b7d.vega-embed details,
+  #altair-viz-3169dd82ad034727bbcf3add5f652b7d.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-3169dd82ad034727bbcf3add5f652b7d"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-3169dd82ad034727bbcf3add5f652b7d") {
+      outputDiv = document.getElementById("altair-viz-3169dd82ad034727bbcf3add5f652b7d");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "rect", "stroke": "white", "strokeWidth": 1}, "encoding": {"color": {"field": "Collision %", "legend": {"title": "Collision %"}, "scale": {"domain": [0, 50, 100], "range": ["#2ecc71", "#f1c40f", "#e74c3c"]}, "type": "quantitative"}, "tooltip": [{"field": "Elements (n)", "title": "Elements (n)", "type": "quantitative"}, {"field": "Buckets (d)", "format": ",", "title": "Buckets (d)", "type": "quantitative"}, {"field": "Collision %", "format": ".1f", "title": "Collision %", "type": "quantitative"}], "x": {"field": "n_label", "sort": ["1,000", "500", "200", "100", "50", "20", "10", "5"], "title": "Number of Elements (n)", "type": "nominal"}, "y": {"field": "d_label", "sort": ["50", "100", "500", "1,000", "5,000", "10,000", "50,000", "100,000"], "title": "Output Dimension of Hash (d)", "type": "nominal"}}}, {"mark": {"type": "text", "fontSize": 10, "fontWeight": "bold"}, "encoding": {"color": {"condition": {"test": "(datum['Collision %'] >= 0)", "value": "white"}, "value": "black"}, "text": {"field": "cell_text", "type": "nominal"}, "x": {"field": "n_label", "sort": ["1,000", "500", "200", "100", "50", "20", "10", "5"], "title": "Number of Elements (n)", "type": "nominal"}, "y": {"field": "d_label", "sort": ["50", "100", "500", "1,000", "5,000", "10,000", "50,000", "100,000"], "title": "Output Dimension of Hash (d)", "type": "nominal"}}}], "data": {"name": "data-8964c25853eebf9c8c9a54eb527517b7"}, "height": 350, "title": "Collision Probability - Birthday Paradox: P \u2248 1 \u2212 exp(\u2212n(n\u22121) / 2d)", "width": 550, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-8964c25853eebf9c8c9a54eb527517b7": [{"Elements (n)": 5, "Buckets (d)": 50, "Collision %": 18.1, "n_label": "5", "d_label": "50", "cell_text": "18.1%"}, {"Elements (n)": 5, "Buckets (d)": 100, "Collision %": 9.5, "n_label": "5", "d_label": "100", "cell_text": "9.5%"}, {"Elements (n)": 5, "Buckets (d)": 500, "Collision %": 2.0, "n_label": "5", "d_label": "500", "cell_text": "2.0%"}, {"Elements (n)": 5, "Buckets (d)": 1000, "Collision %": 1.0, "n_label": "5", "d_label": "1,000", "cell_text": "1.0%"}, {"Elements (n)": 5, "Buckets (d)": 5000, "Collision %": 0.2, "n_label": "5", "d_label": "5,000", "cell_text": "0.2%"}, {"Elements (n)": 5, "Buckets (d)": 10000, "Collision %": 0.1, "n_label": "5", "d_label": "10,000", "cell_text": "0.1%"}, {"Elements (n)": 5, "Buckets (d)": 50000, "Collision %": 0.0, "n_label": "5", "d_label": "50,000", "cell_text": "0.0%"}, {"Elements (n)": 5, "Buckets (d)": 100000, "Collision %": 0.0, "n_label": "5", "d_label": "100,000", "cell_text": "0.0%"}, {"Elements (n)": 10, "Buckets (d)": 50, "Collision %": 59.3, "n_label": "10", "d_label": "50", "cell_text": "59.3%"}, {"Elements (n)": 10, "Buckets (d)": 100, "Collision %": 36.2, "n_label": "10", "d_label": "100", "cell_text": "36.2%"}, {"Elements (n)": 10, "Buckets (d)": 500, "Collision %": 8.6, "n_label": "10", "d_label": "500", "cell_text": "8.6%"}, {"Elements (n)": 10, "Buckets (d)": 1000, "Collision %": 4.4, "n_label": "10", "d_label": "1,000", "cell_text": "4.4%"}, {"Elements (n)": 10, "Buckets (d)": 5000, "Collision %": 0.9, "n_label": "10", "d_label": "5,000", "cell_text": "0.9%"}, {"Elements (n)": 10, "Buckets (d)": 10000, "Collision %": 0.4, "n_label": "10", "d_label": "10,000", "cell_text": "0.4%"}, {"Elements (n)": 10, "Buckets (d)": 50000, "Collision %": 0.1, "n_label": "10", "d_label": "50,000", "cell_text": "0.1%"}, {"Elements (n)": 10, "Buckets (d)": 100000, "Collision %": 0.0, "n_label": "10", "d_label": "100,000", "cell_text": "0.0%"}, {"Elements (n)": 20, "Buckets (d)": 50, "Collision %": 97.8, "n_label": "20", "d_label": "50", "cell_text": "97.8%"}, {"Elements (n)": 20, "Buckets (d)": 100, "Collision %": 85.0, "n_label": "20", "d_label": "100", "cell_text": "85.0%"}, {"Elements (n)": 20, "Buckets (d)": 500, "Collision %": 31.6, "n_label": "20", "d_label": "500", "cell_text": "31.6%"}, {"Elements (n)": 20, "Buckets (d)": 1000, "Collision %": 17.3, "n_label": "20", "d_label": "1,000", "cell_text": "17.3%"}, {"Elements (n)": 20, "Buckets (d)": 5000, "Collision %": 3.7, "n_label": "20", "d_label": "5,000", "cell_text": "3.7%"}, {"Elements (n)": 20, "Buckets (d)": 10000, "Collision %": 1.9, "n_label": "20", "d_label": "10,000", "cell_text": "1.9%"}, {"Elements (n)": 20, "Buckets (d)": 50000, "Collision %": 0.4, "n_label": "20", "d_label": "50,000", "cell_text": "0.4%"}, {"Elements (n)": 20, "Buckets (d)": 100000, "Collision %": 0.2, "n_label": "20", "d_label": "100,000", "cell_text": "0.2%"}, {"Elements (n)": 50, "Buckets (d)": 50, "Collision %": 100.0, "n_label": "50", "d_label": "50", "cell_text": "100.0%"}, {"Elements (n)": 50, "Buckets (d)": 100, "Collision %": 100.0, "n_label": "50", "d_label": "100", "cell_text": "100.0%"}, {"Elements (n)": 50, "Buckets (d)": 500, "Collision %": 91.4, "n_label": "50", "d_label": "500", "cell_text": "91.4%"}, {"Elements (n)": 50, "Buckets (d)": 1000, "Collision %": 70.6, "n_label": "50", "d_label": "1,000", "cell_text": "70.6%"}, {"Elements (n)": 50, "Buckets (d)": 5000, "Collision %": 21.7, "n_label": "50", "d_label": "5,000", "cell_text": "21.7%"}, {"Elements (n)": 50, "Buckets (d)": 10000, "Collision %": 11.5, "n_label": "50", "d_label": "10,000", "cell_text": "11.5%"}, {"Elements (n)": 50, "Buckets (d)": 50000, "Collision %": 2.4, "n_label": "50", "d_label": "50,000", "cell_text": "2.4%"}, {"Elements (n)": 50, "Buckets (d)": 100000, "Collision %": 1.2, "n_label": "50", "d_label": "100,000", "cell_text": "1.2%"}, {"Elements (n)": 100, "Buckets (d)": 50, "Collision %": 100.0, "n_label": "100", "d_label": "50", "cell_text": "100.0%"}, {"Elements (n)": 100, "Buckets (d)": 100, "Collision %": 100.0, "n_label": "100", "d_label": "100", "cell_text": "100.0%"}, {"Elements (n)": 100, "Buckets (d)": 500, "Collision %": 100.0, "n_label": "100", "d_label": "500", "cell_text": "100.0%"}, {"Elements (n)": 100, "Buckets (d)": 1000, "Collision %": 99.3, "n_label": "100", "d_label": "1,000", "cell_text": "99.3%"}, {"Elements (n)": 100, "Buckets (d)": 5000, "Collision %": 62.8, "n_label": "100", "d_label": "5,000", "cell_text": "62.8%"}, {"Elements (n)": 100, "Buckets (d)": 10000, "Collision %": 39.0, "n_label": "100", "d_label": "10,000", "cell_text": "39.0%"}, {"Elements (n)": 100, "Buckets (d)": 50000, "Collision %": 9.4, "n_label": "100", "d_label": "50,000", "cell_text": "9.4%"}, {"Elements (n)": 100, "Buckets (d)": 100000, "Collision %": 4.8, "n_label": "100", "d_label": "100,000", "cell_text": "4.8%"}, {"Elements (n)": 200, "Buckets (d)": 50, "Collision %": 100.0, "n_label": "200", "d_label": "50", "cell_text": "100.0%"}, {"Elements (n)": 200, "Buckets (d)": 100, "Collision %": 100.0, "n_label": "200", "d_label": "100", "cell_text": "100.0%"}, {"Elements (n)": 200, "Buckets (d)": 500, "Collision %": 100.0, "n_label": "200", "d_label": "500", "cell_text": "100.0%"}, {"Elements (n)": 200, "Buckets (d)": 1000, "Collision %": 100.0, "n_label": "200", "d_label": "1,000", "cell_text": "100.0%"}, {"Elements (n)": 200, "Buckets (d)": 5000, "Collision %": 98.1, "n_label": "200", "d_label": "5,000", "cell_text": "98.1%"}, {"Elements (n)": 200, "Buckets (d)": 10000, "Collision %": 86.3, "n_label": "200", "d_label": "10,000", "cell_text": "86.3%"}, {"Elements (n)": 200, "Buckets (d)": 50000, "Collision %": 32.8, "n_label": "200", "d_label": "50,000", "cell_text": "32.8%"}, {"Elements (n)": 200, "Buckets (d)": 100000, "Collision %": 18.0, "n_label": "200", "d_label": "100,000", "cell_text": "18.0%"}, {"Elements (n)": 500, "Buckets (d)": 50, "Collision %": 100.0, "n_label": "500", "d_label": "50", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 100, "Collision %": 100.0, "n_label": "500", "d_label": "100", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 500, "Collision %": 100.0, "n_label": "500", "d_label": "500", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 1000, "Collision %": 100.0, "n_label": "500", "d_label": "1,000", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 5000, "Collision %": 100.0, "n_label": "500", "d_label": "5,000", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 10000, "Collision %": 100.0, "n_label": "500", "d_label": "10,000", "cell_text": "100.0%"}, {"Elements (n)": 500, "Buckets (d)": 50000, "Collision %": 91.8, "n_label": "500", "d_label": "50,000", "cell_text": "91.8%"}, {"Elements (n)": 500, "Buckets (d)": 100000, "Collision %": 71.3, "n_label": "500", "d_label": "100,000", "cell_text": "71.3%"}, {"Elements (n)": 1000, "Buckets (d)": 50, "Collision %": 100.0, "n_label": "1,000", "d_label": "50", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 100, "Collision %": 100.0, "n_label": "1,000", "d_label": "100", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 500, "Collision %": 100.0, "n_label": "1,000", "d_label": "500", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 1000, "Collision %": 100.0, "n_label": "1,000", "d_label": "1,000", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 5000, "Collision %": 100.0, "n_label": "1,000", "d_label": "5,000", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 10000, "Collision %": 100.0, "n_label": "1,000", "d_label": "10,000", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 50000, "Collision %": 100.0, "n_label": "1,000", "d_label": "50,000", "cell_text": "100.0%"}, {"Elements (n)": 1000, "Buckets (d)": 100000, "Collision %": 99.3, "n_label": "1,000", "d_label": "100,000", "cell_text": "99.3%"}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+<p>In the plot above we can see the probability of a collision for a hash function with an output dimension of <span class="math inline">\(d\)</span> as the number of inputs <span class="math inline">\(n\)</span> increases. If the output dimension of the hash function is large enough, the probability of a collision remains low even as the number of inputs grows. However the output dimension of the hash function should be large enough to accomodate the number of inputs, otherwise hash collisions will become more likely.</p>
+<div id="d899180c" class="cell" data-execution_count="37">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> altair <span class="im">as</span> alt</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Parameters ---</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>n_elements <span class="op">=</span> [</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.0</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">4</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fl">6.1</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">8</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">2.6</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">18</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fl">7.4</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">32</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fl">4.8</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">37</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fl">8.9</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">56</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">1.6</span> <span class="op">*</span> <span class="dv">10</span><span class="op">**</span><span class="dv">76</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>output_powers <span class="op">=</span> [</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="dv">32</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="dv">64</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="dv">128</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="dv">224</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="dv">256</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="dv">384</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="dv">512</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>n_output_dims <span class="op">=</span> [<span class="dv">2</span><span class="op">**</span>p <span class="cf">for</span> p <span class="kw">in</span> output_powers]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Build long-form DataFrame ---</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> n_elements:</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> power, d <span class="kw">in</span> <span class="bu">zip</span>(output_powers, n_output_dims):</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> np.exp(<span class="op">-</span>n <span class="op">*</span> (n <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> d))) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        rows.append(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Elements (n)"</span>: n,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Output Dimensions (d)"</span>: d,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Output Dimension"</span>: power,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Collision %"</span>: <span class="bu">round</span>(prob, <span class="dv">1</span>),</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(rows)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co"># String labels for ordinal axes</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sci_notation(x):</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Format in scientific notation, e.g. 1e+06</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="bu">int</span>(x)<span class="sc">:.0e}</span><span class="ss">"</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"n_label"</span>] <span class="op">=</span> df[<span class="st">"Elements (n)"</span>].<span class="bu">apply</span>(sci_notation)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"d_label"</span>] <span class="op">=</span> df[<span class="st">"Output Dimension"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> p: <span class="ss">f"2^</span><span class="sc">{</span>p<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"cell_text"</span>] <span class="op">=</span> df[<span class="st">"Collision %"</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="ss">f"</span><span class="sc">{</span>x<span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort orders (output powers: high at top; elements: left to right)</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>output_powers_sorted <span class="op">=</span> [<span class="ss">f"2^</span><span class="sc">{</span>p<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> p <span class="kw">in</span> output_powers]  <span class="co"># low at top</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>elements_sorted <span class="op">=</span> [</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    sci_notation(x) <span class="cf">for</span> x <span class="kw">in</span> n_elements[::<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>]  <span class="co"># scientific notation, high to low, left to right</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Shared encodings (TRANSPOSE axes) ---</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> alt.Chart(df).encode(</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>alt.X(</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"n_label:N"</span>,</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>        sort<span class="op">=</span>elements_sorted,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Number of Elements (n)"</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span>alt.Axis(labelAngle<span class="op">=-</span><span class="dv">45</span>),</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>alt.Y(</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="st">"d_label:N"</span>,</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>        sort<span class="op">=</span>output_powers_sorted,</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>        title<span class="op">=</span><span class="st">"Output Dimension of Hash (d)"</span>,</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Heatmap layer ---</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>heatmap <span class="op">=</span> base.mark_rect(stroke<span class="op">=</span><span class="st">"white"</span>, strokeWidth<span class="op">=</span><span class="dv">1</span>).encode(</span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.Color(</span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Collision %:Q"</span>,</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>        scale<span class="op">=</span>alt.Scale(domain<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">100</span>], <span class="bu">range</span><span class="op">=</span>[<span class="st">"#2ecc71"</span>, <span class="st">"#f1c40f"</span>, <span class="st">"#e74c3c"</span>]),</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>        legend<span class="op">=</span>alt.Legend(title<span class="op">=</span><span class="st">"Collision %"</span>),</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>    tooltip<span class="op">=</span>[</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Elements (n):Q"</span>, title<span class="op">=</span><span class="st">"Elements (n)"</span>),</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Output Dimensions (d):Q"</span>, title<span class="op">=</span><span class="st">"Output Dimension (d)"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">","</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Output Power:Q"</span>, title<span class="op">=</span><span class="st">"Hash Output Power"</span>),</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>        alt.Tooltip(<span class="st">"Collision %:Q"</span>, title<span class="op">=</span><span class="st">"Collision %"</span>, <span class="bu">format</span><span class="op">=</span><span class="st">".1f"</span>),</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Text label layer ---</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> base.mark_text(fontSize<span class="op">=</span><span class="dv">10</span>, fontWeight<span class="op">=</span><span class="st">"bold"</span>).encode(</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="st">"cell_text:N"</span>,</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span>alt.condition(</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>        alt.datum[<span class="st">"Collision %"</span>] <span class="op">&gt;=</span> <span class="fl">0.0</span>,</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>        alt.value(<span class="st">"white"</span>),</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>        alt.value(<span class="st">"black"</span>),</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Combine ---</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>chart <span class="op">=</span> (heatmap <span class="op">+</span> text).properties(</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Collision Probability - P ≈ 1 − exp(−n(n−1) / 2d)"</span>,</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>    width<span class="op">=</span><span class="dv">550</span>,</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">350</span>,</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>chart</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="37">
+
+<style>
+  #altair-viz-e47646ebc9d44be28af22ea25d44f633.vega-embed {
+    width: 100%;
+    display: flex;
+  }
+
+  #altair-viz-e47646ebc9d44be28af22ea25d44f633.vega-embed details,
+  #altair-viz-e47646ebc9d44be28af22ea25d44f633.vega-embed details summary {
+    position: relative;
+  }
+</style>
+<div id="altair-viz-e47646ebc9d44be28af22ea25d44f633"></div>
+<script type="text/javascript">
+  var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-e47646ebc9d44be28af22ea25d44f633") {
+      outputDiv = document.getElementById("altair-viz-e47646ebc9d44be28af22ea25d44f633");
+    }
+
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm/vega@6?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm/vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm/vega-lite@6.1.0?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm/vega-embed@7?noext",
+    };
+
+    function maybeLoadScript(lib, version) {
+      var key = `${lib.replace("-", "")}_version`;
+      return (VEGA_DEBUG[key] == version) ?
+        Promise.resolve(paths[lib]) :
+        new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          document.getElementsByTagName("head")[0].appendChild(s);
+          s.async = true;
+          s.onload = () => {
+            VEGA_DEBUG[key] = version;
+            return resolve(paths[lib]);
+          };
+          s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+          s.src = paths[lib];
+        });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      let deps = ["vega-embed"];
+      require(deps, displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else {
+      maybeLoadScript("vega", "6")
+        .then(() => maybeLoadScript("vega-lite", "6.1.0"))
+        .then(() => maybeLoadScript("vega-embed", "7"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 300, "continuousHeight": 300}}, "layer": [{"mark": {"type": "rect", "stroke": "white", "strokeWidth": 1}, "encoding": {"color": {"field": "Collision %", "legend": {"title": "Collision %"}, "scale": {"domain": [0, 50, 100], "range": ["#2ecc71", "#f1c40f", "#e74c3c"]}, "type": "quantitative"}, "tooltip": [{"field": "Elements (n)", "title": "Elements (n)", "type": "quantitative"}, {"field": "Output Dimensions (d)", "format": ",", "title": "Output Dimension (d)", "type": "quantitative"}, {"field": "Output Power", "title": "Hash Output Power", "type": "quantitative"}, {"field": "Collision %", "format": ".1f", "title": "Collision %", "type": "quantitative"}], "x": {"axis": {"labelAngle": -45}, "field": "n_label", "sort": ["2e+76", "9e+56", "5e+37", "7e+32", "3e+18", "6e+08", "1e+04"], "title": "Number of Elements (n)", "type": "nominal"}, "y": {"field": "d_label", "sort": ["2^32", "2^64", "2^128", "2^224", "2^256", "2^384", "2^512"], "title": "Output Dimension of Hash (d)", "type": "nominal"}}}, {"mark": {"type": "text", "fontSize": 10, "fontWeight": "bold"}, "encoding": {"color": {"condition": {"test": "(datum['Collision %'] >= 0.0)", "value": "white"}, "value": "black"}, "text": {"field": "cell_text", "type": "nominal"}, "x": {"axis": {"labelAngle": -45}, "field": "n_label", "sort": ["2e+76", "9e+56", "5e+37", "7e+32", "3e+18", "6e+08", "1e+04"], "title": "Number of Elements (n)", "type": "nominal"}, "y": {"field": "d_label", "sort": ["2^32", "2^64", "2^128", "2^224", "2^256", "2^384", "2^512"], "title": "Output Dimension of Hash (d)", "type": "nominal"}}}], "data": {"name": "data-464210f76c37539d443f4b705cec5abf"}, "height": 350, "title": "Collision Probability - P \u2248 1 \u2212 exp(\u2212n(n\u22121) / 2d)", "width": 550, "$schema": "https://vega.github.io/schema/vega-lite/v6.1.0.json", "datasets": {"data-464210f76c37539d443f4b705cec5abf": [{"Elements (n)": 10000.0, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 1.2, "n_label": "1e+04", "d_label": "2^32", "cell_text": "1.2%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^64", "cell_text": "0.0%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^128", "cell_text": "0.0%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^224", "cell_text": "0.0%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^256", "cell_text": "0.0%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^384", "cell_text": "0.0%"}, {"Elements (n)": 10000.0, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "1e+04", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "6e+08", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 1.0, "n_label": "6e+08", "d_label": "2^64", "cell_text": "1.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 0.0, "n_label": "6e+08", "d_label": "2^128", "cell_text": "0.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 0.0, "n_label": "6e+08", "d_label": "2^224", "cell_text": "0.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 0.0, "n_label": "6e+08", "d_label": "2^256", "cell_text": "0.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 0.0, "n_label": "6e+08", "d_label": "2^384", "cell_text": "0.0%"}, {"Elements (n)": 610000000.0, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "6e+08", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "3e+18", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 100.0, "n_label": "3e+18", "d_label": "2^64", "cell_text": "100.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 1.0, "n_label": "3e+18", "d_label": "2^128", "cell_text": "1.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 0.0, "n_label": "3e+18", "d_label": "2^224", "cell_text": "0.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 0.0, "n_label": "3e+18", "d_label": "2^256", "cell_text": "0.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 0.0, "n_label": "3e+18", "d_label": "2^384", "cell_text": "0.0%"}, {"Elements (n)": 2.6e+18, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "3e+18", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "7e+32", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 100.0, "n_label": "7e+32", "d_label": "2^64", "cell_text": "100.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 100.0, "n_label": "7e+32", "d_label": "2^128", "cell_text": "100.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 1.0, "n_label": "7e+32", "d_label": "2^224", "cell_text": "1.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 0.0, "n_label": "7e+32", "d_label": "2^256", "cell_text": "0.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 0.0, "n_label": "7e+32", "d_label": "2^384", "cell_text": "0.0%"}, {"Elements (n)": 7.400000000000001e+32, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "7e+32", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "5e+37", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 100.0, "n_label": "5e+37", "d_label": "2^64", "cell_text": "100.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 100.0, "n_label": "5e+37", "d_label": "2^128", "cell_text": "100.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 100.0, "n_label": "5e+37", "d_label": "2^224", "cell_text": "100.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 1.0, "n_label": "5e+37", "d_label": "2^256", "cell_text": "1.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 0.0, "n_label": "5e+37", "d_label": "2^384", "cell_text": "0.0%"}, {"Elements (n)": 4.8e+37, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "5e+37", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "9e+56", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 100.0, "n_label": "9e+56", "d_label": "2^64", "cell_text": "100.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 100.0, "n_label": "9e+56", "d_label": "2^128", "cell_text": "100.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 100.0, "n_label": "9e+56", "d_label": "2^224", "cell_text": "100.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 100.0, "n_label": "9e+56", "d_label": "2^256", "cell_text": "100.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 1.0, "n_label": "9e+56", "d_label": "2^384", "cell_text": "1.0%"}, {"Elements (n)": 8.900000000000001e+56, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 0.0, "n_label": "9e+56", "d_label": "2^512", "cell_text": "0.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 4294967296, "Output Dimension": 32, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^32", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 18446744073709551616, "Output Dimension": 64, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^64", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 340282366920938463463374607431768211456, "Output Dimension": 128, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^128", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 26959946667150639794667015087019630673637144422540572481103610249216, "Output Dimension": 224, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^224", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 115792089237316195423570985008687907853269984665640564039457584007913129639936, "Output Dimension": 256, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^256", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816, "Output Dimension": 384, "Collision %": 100.0, "n_label": "2e+76", "d_label": "2^384", "cell_text": "100.0%"}, {"Elements (n)": 1.6000000000000002e+76, "Output Dimensions (d)": 13407807929942597099574024998205846127479365820592393377723561443721764030073546976801874298166903427690031858186486050853753882811946569946433649006084096, "Output Dimension": 512, "Collision %": 1.0, "n_label": "2e+76", "d_label": "2^512", "cell_text": "1.0%"}]}}, {"mode": "vega-lite"});
+</script>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/jope35\.github\.io\/hypershotgun-blog\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
