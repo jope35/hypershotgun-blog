@@ -12,7 +12,7 @@ metadata-files:
 website:
   title: "hyper-shotgun"
   description: none
-  site-url: https://jope35.github.io/hypershotgun-blog/
+  site-url: https://hypershotgun.com
   favicon: favicons/hyper_favi.png
   image: favicons/HS_logo.png
   navbar:
