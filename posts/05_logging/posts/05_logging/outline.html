@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>whois 🤖 – hyper-shotgun</title>
+<title>outline – hyper-shotgun</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,31 +20,67 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./favicons/hyper_favi.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b10d88bc01b3c2b62a30403842a2cd1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-23e64ad368ab5c316deca539f4175b7d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<link href="../../../../favicons/hyper_favi.png" rel="icon" type="image/png">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-4b10d88bc01b3c2b62a30403842a2cd1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../../../site_libs/bootstrap/bootstrap-dark-23e64ad368ab5c316deca539f4175b7d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../../../site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -245,11 +281,11 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./apple-touch-icon.png" alt="" class="navbar-logo light-content">
-    <img src="./apple-touch-icon.png" alt="" class="navbar-logo dark-content">
+    <a href="../../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../../apple-touch-icon.png" alt="" class="navbar-logo light-content">
+    <img src="../../../../apple-touch-icon.png" alt="" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../../index.html">
     <span class="navbar-title">hyper-shotgun</span>
     </a>
   </div>
@@ -260,7 +296,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./whois.html" aria-current="page"> 
+    <a class="nav-link" href="../../../../whois.html"> 
 <span class="menu-text">whois 🤖</span></a>
   </li>  
   <li class="nav-item">
@@ -282,65 +318,145 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">whois 🤖</h1>
-                      </div>
-  </div>
-  <div class="quarto-title-meta">
-    </div>
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of Contents</h2>
+   
   <ul>
-  <li><a href="#whois" id="toc-whois" class="nav-link active" data-scroll-target="#whois"><span class="header-section-number">1</span> whois</a></li>
+  <li><a href="#blog-post-outline-logging-on-databricks" id="toc-blog-post-outline-logging-on-databricks" class="nav-link active" data-scroll-target="#blog-post-outline-logging-on-databricks"><span class="header-section-number">1</span> Blog Post Outline: Logging on Databricks</a>
+  <ul class="collapse">
+  <li><a href="#introduction-scq-answer" id="toc-introduction-scq-answer" class="nav-link" data-scroll-target="#introduction-scq-answer"><span class="header-section-number">1.1</span> Introduction (SCQ → Answer)</a></li>
+  <li><a href="#key-arguments" id="toc-key-arguments" class="nav-link" data-scroll-target="#key-arguments"><span class="header-section-number">1.2</span> Key Arguments</a>
+  <ul class="collapse">
+  <li><a href="#why-you-need-it-databricks-overrides-your-logger" id="toc-why-you-need-it-databricks-overrides-your-logger" class="nav-link" data-scroll-target="#why-you-need-it-databricks-overrides-your-logger"><span class="header-section-number">1.2.1</span> 1. WHY You Need It: Databricks Overrides Your Logger</a></li>
+  <li><a href="#b.-but-why-does-databricks-do-this" id="toc-b.-but-why-does-databricks-do-this" class="nav-link" data-scroll-target="#b.-but-why-does-databricks-do-this"><span class="header-section-number">1.2.2</span> 1b. But WHY Does Databricks Do This?</a></li>
+  <li><a href="#how-it-works-the-forcetrue-fix" id="toc-how-it-works-the-forcetrue-fix" class="nav-link" data-scroll-target="#how-it-works-the-forcetrue-fix"><span class="header-section-number">1.2.3</span> 2. HOW It Works: The <code>force=True</code> Fix</a></li>
+  <li><a href="#where-your-logs-end-up-interactive-vs.-jobs-compute" id="toc-where-your-logs-end-up-interactive-vs.-jobs-compute" class="nav-link" data-scroll-target="#where-your-logs-end-up-interactive-vs.-jobs-compute"><span class="header-section-number">1.2.4</span> 3. WHERE Your Logs End Up: Interactive vs.&nbsp;Jobs Compute</a></li>
+  </ul></li>
+  <li><a href="#bonus-the-future-is-structured" id="toc-bonus-the-future-is-structured" class="nav-link" data-scroll-target="#bonus-the-future-is-structured"><span class="header-section-number">1.3</span> Bonus: The Future is Structured</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-solana column-body">
-  <div class="about-entity">
-    <div class="entity-contents">
-       <div class="about-links">
-  <a href="https://twitter.com/joostdetheije" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://www.linkedin.com/in/joostdetheije/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/jope35" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
-</div>
-      <div class="about-contents"><main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-<section id="whois" class="level2" data-number="1">
-<h2 data-number="1" data-anchor-id="whois"><span class="header-section-number">1</span> whois</h2>
+
+
+
+<section id="blog-post-outline-logging-on-databricks" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Blog Post Outline: Logging on Databricks</h1>
+<section id="introduction-scq-answer" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="introduction-scq-answer"><span class="header-section-number">1.1</span> Introduction (SCQ → Answer)</h2>
 <ul>
-<li>Machine Learning Scientist 🤖</li>
-<li>loves to puzzle 🧩</li>
-<li>Amsterdam area 🇳🇱🇪🇺</li>
+<li><strong>Situation</strong>: Databricks developers constantly switch between two modes: <strong>Interactive</strong> (notebooks for development) and <strong>Non-Interactive</strong> (workflows/jobs for production). Both modes need proper logging for debugging and observability.</li>
+<li><strong>Complication</strong>: The standard Python <code>logging</code> module — the obvious choice — behaves erratically on Databricks. Logs are swallowed in notebooks, formatting is hijacked, and developers fall back to <code>print()</code> everywhere, sacrificing structure and observability in production.</li>
+<li><strong>Question</strong>: How do we get Python’s <code>logging</code> module to behave like a standard Python process on Databricks, regardless of compute mode?</li>
+<li><strong>Answer</strong>: Use <code>force=True</code> in <code>logging.basicConfig</code>. This single argument reclaims control of the root logger from Databricks, making logging work identically in both Interactive notebooks and automated Jobs.</li>
 </ul>
-<!-- ## Education
-## Experience -->
+</section>
+<section id="key-arguments" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="key-arguments"><span class="header-section-number">1.2</span> Key Arguments</h2>
+<section id="why-you-need-it-databricks-overrides-your-logger" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="why-you-need-it-databricks-overrides-your-logger"><span class="header-section-number">1.2.1</span> 1. WHY You Need It: Databricks Overrides Your Logger</h3>
+<ul>
+<li>In a standard Python process, <code>logging.basicConfig</code> configures the root logger on first call.</li>
+<li>Databricks attaches its own handlers to the root logger at startup to capture output for its UI.</li>
+<li>Because handlers already exist, your <code>basicConfig</code> call is <strong>silently ignored</strong> — your format, level, and handlers never take effect.</li>
+<li>This is why <code>logger.info()</code> produces nothing in a notebook cell, while <code>print()</code> works fine.</li>
+</ul>
+</section>
+<section id="b.-but-why-does-databricks-do-this" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="b.-but-why-does-databricks-do-this"><span class="header-section-number">1.2.2</span> 1b. But WHY Does Databricks Do This?</h3>
+<ul>
+<li>Databricks notebooks are <strong>not a terminal</strong>. They are a web UI backed by an IPython kernel on a remote driver process. The platform needs to route Python output from that remote process back into a specific notebook cell in a browser.</li>
+<li>The handlers Databricks attaches serve three purposes:
+<ol type="1">
+<li><strong>Notebook cell routing</strong>: Intercept log output and display it in the correct cell via the IPython display system.</li>
+<li><strong>Noise filtering</strong>: The root logger level is set to <code>WARNING</code> by default — intentionally preventing noisy libraries (Spark internals, Py4J, urllib3) from flooding cell output.</li>
+<li><strong>Log4j bridging</strong>: Bridging Python logging into the JVM-side Log4j infrastructure so driver logs from Python and Scala appear in the same place.</li>
+</ol></li>
+<li><strong>“But won’t <code>force=True</code> break something?”</strong> — In practice, no. <code>StreamHandler(sys.stderr)</code> still writes to <code>stderr</code>, which is the same underlying stream Databricks captures. You are taking control of the <em>format</em> and <em>level</em>, not bypassing the platform’s output capture. Library-specific loggers (e.g., MLflow) use their own named loggers and are unaffected.</li>
+<li><strong>One caveat</strong>: By lowering the level from <code>WARNING</code> to <code>INFO</code>, you will see more output from third-party libraries. This is why the <code>py4j</code> suppression line exists — and you may need similar lines for other noisy loggers (<code>urllib3</code>, <code>azure</code>, etc.).</li>
+</ul>
+</section>
+<section id="how-it-works-the-forcetrue-fix" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="how-it-works-the-forcetrue-fix"><span class="header-section-number">1.2.3</span> 2. HOW It Works: The <code>force=True</code> Fix</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1"></a><span class="im">import</span> logging</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>logging.basicConfig(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    level<span class="op">=</span>logging.INFO,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="bu">format</span><span class="op">=</span><span class="st">"</span><span class="sc">%(asctime)s</span><span class="st"> - </span><span class="sc">%(levelname)s</span><span class="st"> - </span><span class="sc">%(message)s</span><span class="st">"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    handlers<span class="op">=</span>[logging.StreamHandler()],</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    force<span class="op">=</span><span class="va">True</span>,  <span class="co"># CRITICAL: Removes existing handlers attached by Databricks</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9"></a></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co"># Suppress internal Spark noise (Py4J is very chatty)</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>logging.getLogger(<span class="st">"py4j"</span>).setLevel(logging.ERROR)</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a>logger <span class="op">=</span> logging.getLogger(<span class="va">__name__</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong><code>force=True</code></strong> (Python 3.8+): Removes all existing handlers on the root logger <em>before</em> applying your configuration. This is the key that makes your setup take precedence over Databricks’ defaults.</li>
+<li><strong><code>StreamHandler()</code></strong>: Directs logs to <code>stderr</code>. Databricks captures this stream and displays it in <strong>both</strong> the notebook cell output (Interactive) and the driver logs (Jobs).</li>
+<li><strong><code>py4j</code> suppression</strong>: PySpark uses Py4J to communicate with the JVM. It is extremely verbose. Suppressing it to <code>ERROR</code> keeps your application logs readable.</li>
+<li><strong>Result</strong>: One configuration, consistent behavior. Write it once in a shared module, import it everywhere.</li>
+</ul>
+</section>
+<section id="where-your-logs-end-up-interactive-vs.-jobs-compute" class="level3" data-number="1.2.4">
+<h3 data-number="1.2.4" class="anchored" data-anchor-id="where-your-logs-end-up-interactive-vs.-jobs-compute"><span class="header-section-number">1.2.4</span> 3. WHERE Your Logs End Up: Interactive vs.&nbsp;Jobs Compute</h3>
+<ul>
+<li><strong>All-Purpose Compute (Interactive)</strong>:
+<ul>
+<li><code>StreamHandler</code> forces logs into the notebook cell output — visible immediately during development.</li>
+<li>Logs are ephemeral: they disappear when the cluster terminates or restarts.</li>
+</ul></li>
+<li><strong>Jobs Compute (Automated)</strong>:
+<ul>
+<li>The Databricks Jobs Service automatically captures <code>stdout</code>/<code>stderr</code> and persists them in the Job “Output” tab (~60-day retention).</li>
+<li>Because our <code>StreamHandler</code> writes to <code>stderr</code>, logs are automatically captured — no extra configuration needed.</li>
+</ul></li>
+<li><strong>Cluster Log Delivery (Safety Net)</strong>:
+<ul>
+<li>For long-term retention beyond 60 days (compliance, auditing), enable <strong>Cluster Log Delivery</strong> in the Compute settings to route logs to DBFS/S3/ADLS.</li>
+<li>For All-Purpose clusters, this is the <em>only</em> way to persist logs after termination.</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="bonus-the-future-is-structured" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="bonus-the-future-is-structured"><span class="header-section-number">1.3</span> Bonus: The Future is Structured</h2>
+<ul>
+<li>PySpark 4.0 (Databricks Runtime 17.0+) introduces <code>pyspark.logger.PySparkLogger</code>, a built-in structured JSON logger that extends Python’s standard <code>logging.Logger</code> class.</li>
+<li>It outputs logs in JSON format out of the box — no custom formatting needed. This makes logs machine-parseable for downstream ingestion and analysis.</li>
+<li>It supports passing <strong>keyword arguments as structured context</strong>, which are included in the JSON output alongside the message.</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1"></a><span class="im">from</span> pyspark.logger <span class="im">import</span> PySparkLogger</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Drop-in replacement for logging.getLogger()</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>logger <span class="op">=</span> PySparkLogger.getLogger(<span class="st">"MyApp"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># Standard logging calls — but output is structured JSON</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>logger.info(<span class="st">"Pipeline started"</span>, stage<span class="op">=</span><span class="st">"ingestion"</span>, source<span class="op">=</span><span class="st">"s3://my-bucket"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>logger.warning(<span class="st">"Rows dropped due to nulls"</span>, count<span class="op">=</span><span class="dv">42</span>, table<span class="op">=</span><span class="st">"orders"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># Example output:</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co"># {"ts": "2026-02-11 10:30:01,123", "level": "INFO", "logger": "MyApp",</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co">#  "msg": "Pipeline started", "context": {"stage": "ingestion", "source": "s3://my-bucket"}}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>Key advantage over the <code>force=True</code> approach</strong>: You get structured context fields (key-value pairs) attached to each log entry without building a custom JSON formatter. This is invaluable for querying logs at scale (e.g., “show me all errors where <code>stage=transformation</code>”).</li>
+<li><strong>Compatibility</strong>: <code>PySparkLogger</code> extends <code>logging.Logger</code>, so it works with standard Python logging handlers, filters, and existing <code>getLogger()</code> patterns. You can add a <code>FileHandler</code> or route it to any destination just like a normal logger.</li>
+<li>The <code>force=True</code> pattern remains the foundation for older runtimes, but <code>PySparkLogger</code> is where Databricks logging is heading.</li>
+</ul>
 
 
 </section>
-</main></div>
-    </div>
-    <img src="favicons/HS_logo.png" class="about-image
-  rounded " style="width: 15em;">
-  </div>
-</div>
- <!-- /main -->
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -356,6 +472,13 @@ ul.task-list li input[type="checkbox"] {
       window.document.body.appendChild(a);
     }
     setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     

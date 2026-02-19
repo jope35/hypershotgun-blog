@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/whois.html</loc>
-    <lastmod>2026-02-12T12:46:39.341Z</lastmod>
+    <loc>https://hypershotgun.com/whois.html</loc>
+    <lastmod>2026-02-19T08:51:55.710Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2026-02-12T12:46:39.313Z</lastmod>
+    <loc>https://hypershotgun.com/posts/stepcat/stepcat.html</loc>
+    <lastmod>2026-02-19T08:51:55.710Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/stepcat/stepcat.html</loc>
-    <lastmod>2026-02-12T12:46:39.341Z</lastmod>
+    <loc>https://hypershotgun.com/posts/gitgud/gitconfig.html</loc>
+    <lastmod>2026-02-19T08:51:55.701Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/DPD/dependency.html</loc>
-    <lastmod>2026-02-12T12:46:39.308Z</lastmod>
+    <loc>https://hypershotgun.com/posts/boring_forecast/boring_linear_forecast.html</loc>
+    <lastmod>2026-02-19T08:51:55.688Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/index.html</loc>
-    <lastmod>2026-02-12T12:46:39.282Z</lastmod>
+    <loc>https://hypershotgun.com/index.html</loc>
+    <lastmod>2026-02-19T08:51:55.663Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/04_feature_hash/feature_hashing.html</loc>
-    <lastmod>2026-02-12T12:46:39.301Z</lastmod>
+    <loc>https://hypershotgun.com/posts/05_logging/posts/05_logging/outline.html</loc>
+    <lastmod>2026-02-19T08:51:55.679Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/01_pyspark_style/pyspark_style.html</loc>
-    <lastmod>2026-02-12T12:46:39.285Z</lastmod>
+    <loc>https://hypershotgun.com/posts/DPD/dependency.html</loc>
+    <lastmod>2026-02-19T08:51:55.684Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/posts/gitgud/gitconfig.html</loc>
-    <lastmod>2026-02-12T12:46:39.330Z</lastmod>
+    <loc>https://hypershotgun.com/posts/01_pyspark_style/pyspark_style.html</loc>
+    <lastmod>2026-02-19T08:51:55.666Z</lastmod>
   </url>
   <url>
-    <loc>https://jope35.github.io/hypershotgun-blog/writing_tools/corrections.html</loc>
-    <lastmod>2026-02-12T12:46:39.341Z</lastmod>
+    <loc>https://hypershotgun.com/posts/04_feature_hash/feature_hashing.html</loc>
+    <lastmod>2026-02-19T08:51:55.677Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/writing_tools/corrections.html</loc>
+    <lastmod>2026-02-19T08:51:55.710Z</lastmod>
   </url>
 </urlset>
