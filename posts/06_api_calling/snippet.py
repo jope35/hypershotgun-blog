@@ -25,15 +25,15 @@ API_BASE_URL = "https://api.mistral.ai/v1"
 API_KEY = "your-api-key"  # pull from env vars or secret scope
 MODEL = "ministral-3b-2512"
 
-OUTPUT_PATH = "/path/to/output/enriched_data"
+OUTPUT_TABLE = "catalog.schema.enriched_data"  # three-level Unity Catalog namespace
 CHECKPOINT_PATH = "/path/to/checkpoint/llm_enrichment"
 
 # ---------------------------------------------------------------------------
 # Step 1: Prepare source data as a streaming-compatible table
 # ---------------------------------------------------------------------------
-INPUT = "path.to.delta"  # three-level Unity catalog namespace
+INPUT = "catalog.schema.source_table"  # three-level Unity Catalog namespace
 
-df_stream = spark.readStream.schema("uuid LONG, prompt STRING").delta(INPUT)
+df_stream = spark.readStream.table(INPUT)
 
 
 # ---------------------------------------------------------------------------
@@ -120,10 +120,11 @@ def process_batch(batch_df: DataFrame, batch_id: int) -> None:
     )
 
     (
-        enriched_df.write.mode("overwrite")
+        enriched_df.write.format("delta")
+        .mode("overwrite")
         .option("partitionOverwriteMode", "dynamic")
         .partitionBy("batch_id")
-        .parquet(OUTPUT_PATH)
+        .saveAsTable(OUTPUT_TABLE)
     )
 
     print(f"Batch {batch_id}: wrote {enriched_df.count()} rows")
@@ -145,7 +146,7 @@ query.awaitTermination()
 # ---------------------------------------------------------------------------
 # Step 5: Read consolidated results and show amount of errors
 # ---------------------------------------------------------------------------
-df_result = spark.read.parquet(OUTPUT_PATH)
+df_result = spark.read.table(OUTPUT_TABLE)
 print(f"Total enriched rows: {df_result.count()}")
 df_result.show(5, truncate=False)
 
