@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://hypershotgun.com/whois.html</loc>
-    <lastmod>2026-03-01T22:02:46.891Z</lastmod>
-  </url>
-  <url>
     <loc>https://hypershotgun.com/posts/stepcat/stepcat.html</loc>
-    <lastmod>2026-03-01T22:02:46.891Z</lastmod>
-  </url>
-  <url>
-    <loc>https://hypershotgun.com/posts/gitgud/gitconfig.html</loc>
-    <lastmod>2026-03-01T22:02:46.883Z</lastmod>
-  </url>
-  <url>
-    <loc>https://hypershotgun.com/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2026-03-01T22:02:46.864Z</lastmod>
-  </url>
-  <url>
-    <loc>https://hypershotgun.com/index.html</loc>
-    <lastmod>2026-03-01T22:02:46.827Z</lastmod>
+    <lastmod>2026-03-20T12:19:12.123Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/DPD/dependency.html</loc>
-    <lastmod>2026-03-01T22:02:46.857Z</lastmod>
-  </url>
-  <url>
-    <loc>https://hypershotgun.com/posts/01_pyspark_style/pyspark_style.html</loc>
-    <lastmod>2026-03-01T22:02:46.830Z</lastmod>
+    <lastmod>2026-03-20T12:19:12.090Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/04_feature_hash/feature_hashing.html</loc>
-    <lastmod>2026-03-01T22:02:46.848Z</lastmod>
+    <lastmod>2026-03-20T12:19:12.082Z</lastmod>
   </url>
   <url>
-    <loc>https://hypershotgun.com/writing_tools/corrections.html</loc>
-    <lastmod>2026-03-01T22:02:46.891Z</lastmod>
+    <loc>https://hypershotgun.com/posts/01_pyspark_style/pyspark_style.html</loc>
+    <lastmod>2026-03-20T12:19:12.066Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/index.html</loc>
+    <lastmod>2026-03-20T12:19:12.062Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/whois.html</loc>
+    <lastmod>2026-03-20T12:19:12.123Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/posts/06_api_calling/06_api_calling.html</loc>
+    <lastmod>2026-03-20T12:19:12.083Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/posts/boring_forecast/boring_linear_forecast.html</loc>
+    <lastmod>2026-03-20T12:19:12.097Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/posts/gitgud/gitconfig.html</loc>
+    <lastmod>2026-03-20T12:19:12.114Z</lastmod>
   </url>
 </urlset>
