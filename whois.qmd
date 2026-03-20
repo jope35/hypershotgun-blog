@@ -4,9 +4,9 @@ image: favicons/HS_logo.png
 about:
   template: solana
   links:
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/joostdetheije
+    # - icon: twitter
+    #   text: Twitter
+    #   href: https://twitter.com/joostdetheije
     - icon: linkedin
       text: LinkedIn
       href: https://www.linkedin.com/in/joostdetheije/
@@ -20,8 +20,5 @@ about:
 - loves to puzzle 🧩
 - Amsterdam area 🇳🇱🇪🇺
 
-<!-- ## Education
-
-
-
+<!-- ## Education 
 ## Experience -->

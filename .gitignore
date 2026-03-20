@@ -1,4 +1,4 @@
-/.quarto/
+/.quarto
 /_site/
 .ipynb_checkpoints
 .ruff_cache/
@@ -6,3 +6,12 @@
 posts/stepcat/openml_download*
 posts/stepcat/catboost_info/*
 .vscode/settings.json
+
+
+
+**/*.quarto_ipynb
+/.agents/**
+.claude/**
+/.quarto/**
+
+/.quarto/

@@ -1,5 +1,8 @@
 project:
   type: website
+  render:
+    - "*.qmd"
+    - "posts/**/*.ipynb"
   preview:
     host: "127.0.0.1"
     port: 4200
