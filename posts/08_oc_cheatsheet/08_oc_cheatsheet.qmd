@@ -1,0 +1,131 @@
+---
+title: "OpenCode shortcuts that keep your hands on the keyboard"
+author: "Joost de Theije + LLM"
+subtitle: "The shortcuts I use every day, in four groups, plus one cheatsheet"
+date: "10/30/2026"
+image: "opencode-wordmark.png"
+abstract: "The OpenCode shortcuts that I use every day: prompt syntax, the leader key, and the undo and review tools."
+draft: false
+---
+
+![](opencode-wordmark.png){fig-alt="The OpenCode wordmark on a dark background"}
+
+::: {.callout-tip}
+
+## The cheatsheet
+
+All the shortcuts on one page: [HTML](opencode-cheatsheet.html) or [PDF](opencode-cheatsheet.pdf).
+:::
+
+## Stop reaching for the mouse
+
+You are in the middle of a long task with the agent. Then you have a quick question that has nothing to do with the task. Type `/btw` and then your question. The agent answers, and the answer stays out of the context. Your main session stays clean.
+
+OpenCode has many small shortcuts like this one. Most people learn two or three and use the mouse for the rest. This post shows the shortcuts that changed how I work. I put them in four groups: talk to the agent, navigate with the leader key, undo and review, and make it your own. The full cheatsheet is linked above.
+
+## Talk to the agent
+
+Three characters do most of the work in the prompt:
+
+| Type | What it does | Use it when |
+| --- | --- | --- |
+| `@file` | Attaches a file (fuzzy search) | The agent needs a specific file. Do not let it search. |
+| `@agent` | Calls a subagent, for example `@explore` | You want a fast search that does not edit files. |
+| `!` | Runs a shell command, for example `! ls -la`. The output goes into the context. | You want the agent to see the output, without an agent turn to get it. |
+| `/` | Opens the slash commands | You want a built-in action, such as `/undo` or `/diff`. |
+
+The `@` prefix gives you the most value. When you name the file, the agent does not use tokens and time to find it.
+
+The `!` prefix does not start an agent turn, but the agent sees the output with your next prompt. For example, run `! npm test`. Then type "fix the failing test". The agent already has the test output, so it does not run the tests again.
+
+`Esc` is the fourth key to learn. It interrupts the running session. If the agent goes in the wrong direction, press `Esc` and correct the prompt. Do not wait for the agent to finish a turn that you will throw away.
+
+## Navigate with the leader key
+
+Most OpenCode shortcuts start with a leader key. The default leader is `Ctrl+X`. Press `Ctrl+X`, release it, and then press the next key. You have 2 seconds for the second key.
+
+These four leader shortcuts cover most of my day:
+
+| Keys | Action |
+| --- | --- |
+| `Ctrl+X` `n` | Start a new session |
+| `Ctrl+X` `l` | List sessions and switch to one |
+| `Ctrl+X` `m` | Select a model |
+| `Ctrl+X` `a` or  `Shift+Tab` | Select an agent |
+
+A new session for each task keeps the context small. With `Ctrl+X` `l` you can go back to an old session at any time.
+
+One more shortcut does not use the leader. `Shift+Tab` cycles between the primary agents. The two that I use are **build** and **plan**. The build agent has all the tools. The plan agent cannot edit your files. I start a task in plan, read the plan, and then press `Shift+Tab` to let build do the work.
+
+## Undo, review and stay in control
+
+An agent that edits files is only useful if you can roll back its work. OpenCode gives you three tools for this.
+
+**Undo and redo.** `Ctrl+X` `u` (or `/undo`) removes the last message. It also reverts the file changes from that message. `Ctrl+X` `r` (or `/redo`) brings the work back. You can try an idea and remove it again in one keystroke.
+
+**Review.** `/diff` shows all the files that the agent changed. Inside the diff view, `n` and `p` move between files and `m` marks a file as reviewed. This is faster than a switch to your editor or to `git diff`.
+
+**Compact.** Long sessions fill the context, and you slowly wander into the stupid area of the context (70%-80%). `Ctrl+X` `c` (or `/compact`) summarizes the session and makes space again. However, when you hit this limit, it is better to start a new fresh session.
+
+These three tools are the reason that I let the agent run on its own. If the result is bad, the cost is one undo.
+
+## Make it your own
+
+When the defaults are not sufficient, you can add your own commands and keys.
+
+A custom command is a Markdown file. Put it in `.opencode/commands/` at the root of your project, or in `~/.config/opencode/commands/` for all projects. The file name is the command name. For example, `explain.md` becomes `/explain`.
+
+| Scope | Folder |
+| --- | --- |
+| One project | `.opencode/commands/` in the project root |
+| All projects | `~/.config/opencode/commands/` |
+
+This is `.opencode/commands/explain.md`:
+
+```markdown
+---
+description: Explain code in plain words  # optional, shows in the command list
+---
+
+Explain $ARGUMENTS in plain words. Keep it short.
+Use the terms from @docs/glossary.md.
+Recent changes: !`git log --oneline -3`
+```
+
+You type:
+
+```text
+/explain src/app.py
+```
+
+The agent gets:
+
+```text
+Explain src/app.py in plain words. Keep it short.
+Use the terms from [docs/glossary.md attached]
+Recent changes: a1b2c3d Fix login timeout
+e4f5a6b Add retry to API client
+c7d8e9f Rename config loader
+```
+
+- **`$ARGUMENTS`** gets all the text that you type after the command name. Thus, one command works for every file: `/explain src/db.py` gives the same prompt for a different file. If the command needs more than one input, use `$1`, `$2` and more. For example, `/compare a.py b.py` puts `a.py` in `$1` and `b.py` in `$2`.
+- **`@docs/glossary.md`** attaches the file content to the prompt, the same as `@` in a normal prompt. Use it for a file that the command always needs, such as a style guide or a glossary. You do not have to attach it each time.
+- **`` !`git log --oneline -3` ``** runs the shell command in the project root before the prompt goes to the agent. The output replaces the command in the prompt. Thus, the agent gets the current state, such as recent commits or `git diff`, without a tool call.
+
+```json
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "keybinds": { "leader": "ctrl+x" },
+  "leader": { "timeout": 2000 }
+}
+```
+
+This file is global only. There is no project version of it.
+
+## Recap
+
+- **Talk to the agent:** `@` for files and subagents, `!` for shell commands, `/` for slash commands, `Esc` to interrupt.
+- **Navigate with the leader key:** `Ctrl+X` and then `n`, `l`, `m` or `a`. `Shift+Tab` switches between build and plan.
+- **Undo and review:** `/undo` and `/redo`, `/diff` to review, and `/compact` when the context gets long.
+- **Make it your own:** custom commands in `.opencode/commands/`, keys and the leader timeout in `cli.json`.
+- **Side questions:** `/btw` keeps them out of the context.
