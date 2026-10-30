@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>hyper-shotgun</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -35,19 +41,18 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-4b10d88bc01b3c2b62a30403842a2cd1.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-efd6ff7163e34c65f10ccb003a1f55f5.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-5c5b2c2b5b013704e55447cc32bdc740.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-a757c82a4843946d94a3b5dcc6044d2b.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-5c5b2c2b5b013704e55447cc32bdc740.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-23e64ad368ab5c316deca539f4175b7d.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-c9f347a8cf114457100e16c958a8cfc9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-3762d5d5ee23cfdc55ca917ae81661e2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-241a5511c27eacba91f3ef8a88425d88.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-3762d5d5ee23cfdc55ca917ae81661e2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -85,7 +90,8 @@ ul.task-list li input[type="checkbox"] {
 
     const options = {
       valueNames: ['listing-image','listing-description','listing-date','listing-title','listing-author','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
+      page: 7,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
       searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
     };
 
@@ -105,7 +111,7 @@ ul.task-list li input[type="checkbox"] {
   </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -379,7 +385,33 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1772582400000" data-listing-file-modified-sort="1774009152083" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2362">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1793318400000" data-listing-file-modified-sort="1793375083204" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1076">
+<div class="thumbnail"><a href="./posts/08_oc_cheatsheet/08_oc_cheatsheet.html" class="no-external">
+
+<img loading="lazy" src="./posts/08_oc_cheatsheet/opencode-wordmark.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/08_oc_cheatsheet/08_oc_cheatsheet.html" class="no-external">OpenCode shortcuts that keep your hands on the keyboard</a>
+</h3>
+<div class="delink listing-description"><a href="./posts/08_oc_cheatsheet/08_oc_cheatsheet.html" class="no-external">
+<p>The OpenCode shortcuts that I use every day: prompt syntax, the leader key, and the undo and review tools.</p>
+</a></div>
+</div>
+<div class="metadata">
+<a href="./posts/08_oc_cheatsheet/08_oc_cheatsheet.html" class="no-external">
+<div class="listing-date">
+2026-10-30
+</div>
+<div class="listing-author">
+Joost de Theije + LLM
+</div>
+<div class="listing-reading-time">6 min</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1772582400000" data-listing-file-modified-sort="1793375083204" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2362">
 <div class="thumbnail"><a href="./posts/06_api_calling/06_api_calling.html" class="no-external">
 
 <img loading="lazy" src="./posts/06_api_calling/artifacts/monkey-phone-call.gif" class="thumbnail-image">
@@ -405,7 +437,7 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1768867200000" data-listing-file-modified-sort="1774009152082" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1181">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1768867200000" data-listing-file-modified-sort="1793375083203" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1181">
 <div class="thumbnail"><a href="./posts/04_feature_hash/feature_hashing.html" class="no-external">
 
 <img loading="lazy" src="./posts/04_feature_hash/artifacts/splash.png" class="thumbnail-image">
@@ -431,7 +463,7 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1737763200000" data-listing-file-modified-sort="1774009152066" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3324">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1737763200000" data-listing-file-modified-sort="1793375083195" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3324">
 <div class="thumbnail"><a href="./posts/01_pyspark_style/pyspark_style.html" class="no-external">
 
 <img loading="lazy" src="./posts/01_pyspark_style/artifacts/splash.png" class="thumbnail-image">
@@ -457,7 +489,7 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1713830400000" data-listing-file-modified-sort="1774009152114" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="548">
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1713830400000" data-listing-file-modified-sort="1793375083221" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="548">
 <div class="thumbnail"><a href="./posts/gitgud/gitconfig.html" class="no-external">
 
 <img loading="lazy" src="./posts/gitgud/artifacts/github-mark.png" class="thumbnail-image">
@@ -483,7 +515,7 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1710374400000" data-listing-file-modified-sort="1774009152123" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1523">
+<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1710374400000" data-listing-file-modified-sort="1793375083226" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1523">
 <div class="thumbnail"><a href="./posts/stepcat/stepcat.html" class="no-external">
 
 <img loading="lazy" src="./posts/stepcat/artifacts/dots.gif" class="thumbnail-image">
@@ -509,7 +541,7 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1707609600000" data-listing-file-modified-sort="1774009152090" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2185">
+<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1707609600000" data-listing-file-modified-sort="1793375083209" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2185">
 <div class="thumbnail"><a href="./posts/DPD/dependency.html" class="no-external">
 
 <img loading="lazy" src="./posts/DPD/artifacts/ice_lines.gif" class="thumbnail-image">
@@ -535,10 +567,10 @@ Joost de Theije + LLM
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1677974400000" data-listing-file-modified-sort="1774009152097" data-listing-date-modified-sort="1713571200000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1392">
+<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1677974400000" data-listing-file-modified-sort="1793375083213" data-listing-date-modified-sort="1713571200000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1392">
 <div class="thumbnail"><a href="./posts/boring_forecast/boring_linear_forecast.html" class="no-external">
 
-<img loading="lazy" src="./posts/boring_forecast/artifacts/ratio.gif" class="thumbnail-image">
+<img loading="lazy" data-src="./posts/boring_forecast/artifacts/ratio.gif" class="thumbnail-image">
 
 </a></div>
 <div class="body">
@@ -563,6 +595,9 @@ Joost de Theije + LLM
 </div>
 </div>
 <div class="listing-no-matching d-none">No matching items</div>
+<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

@@ -2,38 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://hypershotgun.com/posts/stepcat/stepcat.html</loc>
-    <lastmod>2026-03-20T12:19:12.123Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.226Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/DPD/dependency.html</loc>
-    <lastmod>2026-03-20T12:19:12.090Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.209Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/04_feature_hash/feature_hashing.html</loc>
-    <lastmod>2026-03-20T12:19:12.082Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.203Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/01_pyspark_style/pyspark_style.html</loc>
-    <lastmod>2026-03-20T12:19:12.066Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.195Z</lastmod>
+  </url>
+  <url>
+    <loc>https://hypershotgun.com/posts/08_oc_cheatsheet/08_oc_cheatsheet.html</loc>
+    <lastmod>2026-10-30T15:44:43.204Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/index.html</loc>
-    <lastmod>2026-03-20T12:19:12.062Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.193Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/whois.html</loc>
-    <lastmod>2026-03-20T12:19:12.123Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.226Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/06_api_calling/06_api_calling.html</loc>
-    <lastmod>2026-03-20T12:19:12.083Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.204Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/boring_forecast/boring_linear_forecast.html</loc>
-    <lastmod>2026-03-20T12:19:12.097Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.213Z</lastmod>
   </url>
   <url>
     <loc>https://hypershotgun.com/posts/gitgud/gitconfig.html</loc>
-    <lastmod>2026-03-20T12:19:12.114Z</lastmod>
+    <lastmod>2026-10-30T15:44:43.221Z</lastmod>
   </url>
 </urlset>

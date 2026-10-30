@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OpenCode Cheat Sheet</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    width: 297mm; height: 210mm;
+    font-family: "Avenir Next", Avenir, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 6.5pt; line-height: 1.3; color: #2f2f2f;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    background: #fff;
+  }
+  .page { width: 297mm; height: 210mm; padding: 8mm 10mm 7mm; display: flex; flex-direction: column; }
+
+  /* ---------- header ---------- */
+  header { display: flex; align-items: flex-start; gap: 16px; padding-bottom: 7px; border-bottom: 2px solid #1c1c1c; margin-bottom: 8px; }
+  .brand { display: flex; align-items: center; gap: 9px; padding-top: 2px; }
+  .wordmark { height: 26px; width: auto; display: block; }
+  .vbadge { font-size: 6.8pt; font-weight: 700; letter-spacing: 0.06em; color: #fff; background: #b4553f; border-radius: 3px; padding: 2px 4.5px 1.5px; line-height: 1; }
+  .headtext { flex: 1; min-width: 0; }
+  .headline { font-size: 12.2pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1a1a1a; line-height: 1.15; }
+  .headline em { font-style: normal; color: #b4553f; }
+  .dek { font-size: 7.1pt; color: #555; margin-top: 3px; max-width: 7.3in; }
+  .links { text-align: right; font-size: 6.4pt; color: #666; line-height: 1.5; white-space: nowrap; padding-top: 3px; }
+  .links b { color: #1a1a1a; font-weight: 600; }
+
+  /* ---------- layout ---------- */
+  .cols { flex: 1; display: flex; gap: 13px; min-height: 0; }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+  /* ---------- sections ---------- */
+  .sec { break-inside: avoid; }
+  .bar { color: #fff; font-size: 7.5pt; font-weight: 700; letter-spacing: 0.075em; text-transform: uppercase;
+         padding: 2.5px 6px 2.2px; border-radius: 2px; margin-bottom: 3.5px; }
+  .bar .k { float: right; font-weight: 500; letter-spacing: 0.02em; opacity: .92; text-transform: none; font-size: 6.6pt; }
+
+  .amber  { background: #C9902A; }
+  .blue   { background: #4C7FA8; }
+  .red    { background: #B4553F; }
+  .green  { background: #5E8C4A; }
+  .purple { background: #6E5A8E; }
+  .teal   { background: #2F7E7E; }
+  .brown  { background: #8A6D3B; }
+  .slate  { background: #5A6B7B; }
+
+  .sub { font-weight: 700; font-size: 6.7pt; color: #333; margin: 3px 0 1px; }
+  .amber + .sub  { color: #9a6c14; }
+  .blue + .sub   { color: #3a678c; }
+  .red + .sub    { color: #943f2d; }
+  .green + .sub  { color: #476f36; }
+  .purple + .sub { color: #57466f; }
+  .teal + .sub   { color: #236363; }
+
+  p { margin: 1px 0 2px; }
+  .note { color: #666; font-size: 6.2pt; }
+  .hint { color: #777; font-size: 6.1pt; font-style: italic; }
+
+  /* ---------- tables ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  tr { break-inside: avoid; }
+  td { padding: 0.95px 0; vertical-align: top; }
+  td.k { width: 41%; padding-right: 5px; white-space: nowrap; }
+  td.k.wide { width: 52%; }
+  .d { color: #555; }
+
+  kbd {
+    font-family: Menlo, "SF Mono", monospace; font-size: 6.1pt; font-weight: 600;
+    background: #f0efec; border: 0.5px solid #d8d6d1; border-bottom-width: 1px;
+    border-radius: 2px; padding: 0.4px 3px; color: #1d1d1d; white-space: nowrap;
+  }
+  code { font-family: Menlo, "SF Mono", monospace; font-size: 6.2pt; color: #1d1d1d; }
+  .plus { color: #999; padding: 0 1px; font-size: 6pt; }
+
+  pre {
+    font-family: Menlo, "SF Mono", monospace; font-size: 5.9pt; line-height: 1.42;
+    background: #f3f2ef; border-left: 2px solid #d5d3cc; border-radius: 1px;
+    padding: 4px 6px; margin: 2px 0 3px; color: #222; white-space: pre-wrap;
+  }
+  pre .c { color: #8a8a8a; }
+  pre b { color: #7a3f2c; font-weight: 600; }
+
+  /* JSON syntax highlighting */
+  .j-punct { color: #9a9a9a; }
+  .j-key   { color: #8a4b2a; }
+  .j-str   { color: #3f6b31; }
+  .j-num   { color: #2f5f8a; }
+  .j-bool  { color: #2f5f8a; font-weight: 600; }
+  .j-null  { color: #2f5f8a; font-style: italic; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 9px; }
+  .kv { display: flex; gap: 4px; padding: 1.05px 0; }
+  .kv .kk { flex: none; width: 38%; }
+
+  /* keycap-inline rows for leader */
+  .leader td.k { width: 9%; }
+  .leader td.k kbd { min-width: 13px; text-align: center; display: inline-block; }
+
+  .callout { background: #f7f4ed; border: 0.5px solid #e2d9c6; border-radius: 2px; padding: 3px 5px; color: #6b5a35; font-size: 6.1pt; margin: 3px 0 2px; }
+  .callout b { color: #4a3b1c; }
+
+  footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #ddd; margin-top: 6px; padding-top: 4px; font-size: 5.9pt; color: #888; }
+  .footmark { font-weight: 700; color: #444; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="brand">
+      <svg class='wordmark' height='26' role='img' aria-label='opencode' viewBox='0 0 640 115' fill='none' xmlns='http://www.w3.org/2000/svg'><g clip-path='url(#clip0_1401_86330)'><mask id='mask0_1401_86330' style='mask-type:luminance' maskUnits='userSpaceOnUse' x='0' y='0' width='640' height='115'><path d='M640 0H0V115H640V0Z' fill='white'/></mask><g mask='url(#mask0_1401_86330)'><path d='M49.2346 82.1433H16.4141V49.2861H49.2346V82.1433Z' fill='#CFCECD'/><path d='M49.2308 32.8573H16.4103V82.143H49.2308V32.8573ZM65.641 98.5716H0V16.4287H65.641V98.5716Z' fill='#656363'/><path d='M131.281 82.1433H98.4609V49.2861H131.281V82.1433Z' fill='#CFCECD'/><path d='M98.4649 82.143H131.285V32.8573H98.4649V82.143ZM147.696 98.5716H98.4649V115H82.0547V16.4287H147.696V98.5716Z' fill='#656363'/><path d='M229.746 65.7139V82.1424H180.516V65.7139H229.746Z' fill='#CFCECD'/><path d='M229.743 65.7144H180.512V82.143H229.743V98.5716H164.102V16.4287H229.743V65.7144ZM180.512 49.2859H213.332V32.8573H180.512V49.2859Z' fill='#656363'/><path d='M295.383 98.5718H262.562V49.2861H295.383V98.5718Z' fill='#CFCECD'/><path d='M295.387 32.8573H262.567V98.5716H246.156V16.4287H295.387V32.8573ZM311.797 98.5716H295.387V32.8573H311.797V98.5716Z' fill='#656363'/><path d='M393.848 82.1433H344.617V49.2861H393.848V82.1433Z' fill='#CFCECD'/><path d='M393.844 32.8573H344.613V82.143H393.844V98.5716H328.203V16.4287H393.844V32.8573Z' fill='#211E1E'/><path d='M459.485 82.1433H426.664V49.2861H459.485V82.1433Z' fill='#CFCECD'/><path d='M459.489 32.8573H426.668V82.143H459.489V32.8573ZM475.899 98.5716H410.258V16.4287H475.899V98.5716Z' fill='#211E1E'/><path d='M541.539 82.1433H508.719V49.2861H541.539V82.1433Z' fill='#CFCECD'/><path d='M541.535 32.8571H508.715V82.1428H541.535V32.8571ZM557.946 98.5714H492.305V16.4286H541.535V0H557.946V98.5714Z' fill='#211E1E'/><path d='M639.996 65.7139V82.1424H590.766V65.7139H639.996Z' fill='#CFCECD'/><path d='M590.77 32.8573V49.2859H623.59V32.8573H590.77ZM640 65.7144H590.77V82.143H640V98.5716H574.359V16.4287H640V65.7144Z' fill='#211E1E'/></g></g><defs><clipPath id='clip0_1401_86330'><rect width='640' height='115' fill='white'/></clipPath></defs></svg>
+      <div class="vbadge">v2</div>
+    </div>
+    <div class="headtext">
+      <div class="headline">OpenCode <em>Cheat Sheet</em></div>
+      <div class="dek">OpenCode v2 — the open source AI coding agent for your terminal. Talk to your codebase, run tools, edit files, and ship — with any model, any provider, fully local-first.</div>
+    </div>
+    <div class="links">
+      <b>opencode.ai/v2/docs</b><br>
+      github.com/anomalyco/opencode<br>
+      discord.gg/opencode
+    </div>
+  </header>
+
+  <div class="cols">
+
+    <!-- ================= COLUMN 1 ================= -->
+    <div class="col">
+
+      <div class="sec">
+        <div class="bar amber">Get Started</div>
+        <table>
+          <tr><td class="k"><kbd>opencode</kbd></td><td class="d">Start the TUI in the current directory</td></tr>
+          <tr><td class="k"><kbd>opencode /path</kbd></td><td class="d">Start in a specific project</td></tr>
+          <tr><td class="k"><kbd>opencode run "…"</kbd></td><td class="d">One-shot, non-interactive prompt</td></tr>
+          <tr><td class="k"><kbd>opencode auth login</kbd></td><td class="d">Add a provider &amp; API key</td></tr>
+        </table>
+        <div class="sub">Install</div>
+<pre>curl -fsSL https://opencode.ai/v2/install | bash
+npm install -g @opencode/cli
+brew install anomalyco/tap/opencode-v2</pre>
+      </div>
+
+      <div class="sec">
+        <div class="bar blue">Prompt Syntax</div>
+        <table>
+          <tr><td class="k"><kbd>@</kbd> file</td><td class="d">Attach a file; add <code>#20-45</code> for a line range</td></tr>
+          <tr><td class="k"><kbd>@</kbd> agent</td><td class="d">Invoke a subagent (e.g. <code>@explore</code>)</td></tr>
+          <tr><td class="k"><kbd>!</kbd> command</td><td class="d">Enter shell mode; output joins the context</td></tr>
+          <tr><td class="k"><kbd>/</kbd> command</td><td class="d">Run a built-in or custom slash command</td></tr>
+        </table>
+      </div>
+
+      <div class="sec">
+        <div class="bar red">Leader Key <span class="k">Ctrl + X, then…</span></div>
+        <p class="note">Press <kbd>Ctrl</kbd><span class="plus">+</span><kbd>X</kbd>, then the key — <b>2 s</b> window (<code>leader_timeout</code>). While it works, <kbd>Ctrl</kbd><span class="plus">+</span><kbd>X</kbd> <kbd>Enter</kbd> queues a prompt.</p>
+        <table class="leader">
+          <tr><td class="k"><kbd>n</kbd></td><td class="d">New session <span class="hint">/new</span></td></tr>
+          <tr><td class="k"><kbd>l</kbd></td><td class="d">List / switch sessions <span class="hint">/sessions</span></td></tr>
+          <tr><td class="k"><kbd>m</kbd></td><td class="d">Select model <span class="hint">/models</span></td></tr>
+          <tr><td class="k"><kbd>a</kbd></td><td class="d">Select agent <span class="hint">/agents</span></td></tr>
+          <tr><td class="k"><kbd>c</kbd></td><td class="d">Compact / summarize session</td></tr>
+          <tr><td class="k"><kbd>u</kbd></td><td class="d">Undo last message + changes</td></tr>
+          <tr><td class="k"><kbd>r</kbd></td><td class="d">Redo undone work</td></tr>
+          <tr><td class="k"><kbd>x</kbd></td><td class="d">Export session to editor</td></tr>
+          <tr><td class="k"><kbd>e</kbd></td><td class="d">Edit prompt in <code>$EDITOR</code></td></tr>
+          <tr><td class="k"><kbd>g</kbd></td><td class="d">Session timeline</td></tr>
+          <tr><td class="k"><kbd>s</kbd></td><td class="d">Status view</td></tr>
+          <tr><td class="k"><kbd>t</kbd></td><td class="d">Toggle terminal pane</td></tr>
+          <tr><td class="k"><kbd>w</kbd></td><td class="d">Close session tab</td></tr>
+          <tr><td class="k"><kbd>y</kbd></td><td class="d">Copy message</td></tr>
+          <tr><td class="k"><kbd>q</kbd></td><td class="d">Exit OpenCode</td></tr>
+        </table>
+        <p class="note" style="font-size:5.8pt;margin:1px 0 0"><b>No leader:</b> <kbd>F2</kbd> models · <kbd>Ctrl</kbd>+<kbd>A</kbd> providers<br><kbd>Ctrl</kbd>+<kbd>Tab</kbd> tabs · <kbd>Ctrl</kbd>+<kbd>T</kbd> variant · <kbd>Ctrl</kbd>+<kbd>R</kbd> rename</p>
+      </div>
+
+      <div class="sec">
+        <div class="bar green">Input &amp; Editing</div>
+        <table>
+          <tr><td class="k"><kbd>Enter</kbd></td><td class="d">Send prompt</td></tr>
+          <tr><td class="k"><kbd>Shift</kbd>+<kbd>Enter</kbd></td><td class="d">New line — also <kbd>Ctrl</kbd>/<kbd>Alt</kbd>+<kbd>Enter</kbd>, <kbd>Ctrl</kbd>+<kbd>J</kbd></td></tr>
+          <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>A</kbd> / <kbd>E</kbd></td><td class="d">Start / end of line</td></tr>
+          <tr><td class="k"><kbd>Alt</kbd><span class="plus">+</span><kbd>B</kbd> / <kbd>F</kbd></td><td class="d">Word backward / forward</td></tr>
+          <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>K</kbd> / <kbd>U</kbd></td><td class="d">Kill to end / start of line</td></tr>
+          <tr><td class="k"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>W</kbd></td><td class="d">Kill previous word</td></tr>
+          <tr><td class="k"><kbd>Esc</kbd></td><td class="d">Interrupt the running session</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ================= COLUMN 2 ================= -->
+    <div class="col">
+
+      <div class="sec">
+        <div class="bar green">Slash Commands</div>
+        <table>
+          <tr><td class="k"><kbd>/new</kbd> <span class="hint">/clear</span></td><td class="d">New session</td></tr>
+          <tr><td class="k"><kbd>/sessions</kbd></td><td class="d">Resume a session <span class="hint">/resume</span></td></tr>
+          <tr><td class="k"><kbd>/models</kbd></td><td class="d">List models</td></tr>
+          <tr><td class="k"><kbd>/agents</kbd></td><td class="d">Switch primary agent</td></tr>
+          <tr><td class="k"><kbd>/compact</kbd></td><td class="d">Compact context <span class="hint">/summarize</span></td></tr>
+          <tr><td class="k"><kbd>/undo</kbd> · <kbd>/redo</kbd></td><td class="d">Revert / restore messages &amp; files</td></tr>
+          <tr><td class="k"><kbd>/editor</kbd> · <kbd>/export</kbd></td><td class="d">Compose or export via <code>$EDITOR</code></td></tr>
+          <tr><td class="k"><kbd>/diff</kbd></td><td class="d">Review changed files</td></tr>
+          <tr><td class="k"><kbd>/btw</kbd> &lt;q&gt;</td><td class="d">Side question; answer stays out of context</td></tr>
+          <tr><td class="k"><kbd>/highlights</kbd></td><td class="d">What's new in this release</td></tr>
+          <tr><td class="k"><kbd>/connect</kbd></td><td class="d">Add a provider</td></tr>
+          <tr><td class="k"><kbd>/help</kbd> · <kbd>/exit</kbd></td><td class="d">Help dialog / quit</td></tr>
+        </table>
+      </div>
+
+      <div class="sec">
+        <div class="bar purple">Custom Commands</div>
+        <p class="note">Drop a Markdown file in <code>.opencode/commands/</code> (project) or <code>~/.config/opencode/commands/</code> (global). File name = command name.</p>
+<pre><span class="c">--- .opencode/commands/test.md ---</span>
+<b>description:</b> Run tests with coverage
+<b>agent:</b> build
+<b>model:</b> anthropic/claude-sonnet-5-5
+<span class="c">---</span>
+Run the suite. Focus on failures: <b>$ARGUMENTS</b>
+Recent commits: !`git log --oneline -10`</pre>
+        <p class="note">Placeholders: <code>$ARGUMENTS</code>, <code>$1</code>, <code>$2</code>… · <code>!`cmd`</code> injects output · <code>@file</code> injects a file.</p>
+      </div>
+
+      <div class="sec">
+        <div class="bar teal">Agents</div>
+        <table>
+          <tr><td class="k"><b>build</b> · primary</td><td class="d">Default. All tools, may ask questions</td></tr>
+          <tr><td class="k"><b>plan</b> · primary</td><td class="d">Edits denied except <code>~/.opencode/plan</code></td></tr>
+          <tr><td class="k"><b>general</b> · sub</td><td class="d">Full tools; no questions or subagents</td></tr>
+          <tr><td class="k"><b>explore</b> · sub</td><td class="d">Fast search; no edits or subagents</td></tr>
+        </table>
+        <p class="note"><kbd>Shift</kbd>+<kbd>Tab</kbd> cycles agents. Invoke a subagent with <code>@name</code>. Navigate child sessions with <kbd>↓</kbd> to enter, <kbd>←</kbd>/<kbd>→</kbd> to cycle, <kbd>↑</kbd> to return.</p>
+      </div>
+
+      <div class="sec">
+        <div class="bar brown">Configuration</div>
+        <table>
+          <tr><td class="k"><code>opencode.json(c)</code></td><td class="d">Project &amp; server settings</td></tr>
+          <tr><td class="k"><code>cli.json</code></td><td class="d">CLI/TUI settings — global only</td></tr>
+          <tr><td class="k"><code>~/.config/opencode/</code></td><td class="d">Agents, commands, plugins</td></tr>
+        </table>
+<pre><span class="j-punct">{</span>
+  <span class="j-key">"$schema"</span><span class="j-punct">:</span> <span class="j-str">"https://opencode.ai/v2/cli.json"</span><span class="j-punct">,</span>
+  <span class="j-key">"theme"</span><span class="j-punct">:</span> <span class="j-punct">{</span> <span class="j-key">"name"</span><span class="j-punct">:</span> <span class="j-str">"tokyonight"</span><span class="j-punct">,</span> <span class="j-key">"mode"</span><span class="j-punct">:</span> <span class="j-str">"system"</span> <span class="j-punct">},</span>
+  <span class="j-key">"tabs"</span><span class="j-punct">:</span> <span class="j-punct">{</span> <span class="j-key">"mode"</span><span class="j-punct">:</span> <span class="j-str">"auto"</span><span class="j-punct">,</span> <span class="j-key">"layout"</span><span class="j-punct">:</span> <span class="j-str">"horizontal"</span> <span class="j-punct">},</span>
+  <span class="j-key">"keybinds"</span><span class="j-punct">:</span> <span class="j-punct">{</span> <span class="j-key">"leader"</span><span class="j-punct">:</span> <span class="j-str">"ctrl+x"</span> <span class="j-punct">},</span>
+  <span class="j-key">"leader"</span><span class="j-punct">:</span> <span class="j-punct">{</span> <span class="j-key">"timeout"</span><span class="j-punct">:</span> <span class="j-num">2000</span> <span class="j-punct">}</span>
+<span class="j-punct">}</span></pre>
+        <p class="note">Project settings live in <code>opencode.json(c)</code>; <code>cli.json</code> has no project-local file and reloads live.</p>
+      </div>
+
+    </div>
+
+    <!-- ================= COLUMN 3 ================= -->
+    <div class="col">
+
+      <div class="sec">
+        <div class="bar blue">CLI Commands</div>
+        <table>
+          <tr><td class="k"><kbd>opencode</kbd></td><td class="d">Start the TUI</td></tr>
+          <tr><td class="k"><kbd>opencode run "…"</kbd></td><td class="d">One-shot; <code>--format json</code> for scripts</td></tr>
+          <tr><td class="k"><kbd>opencode mini</kbd></td><td class="d">Minimal interactive interface</td></tr>
+          <tr><td class="k"><kbd>opencode session</kbd></td><td class="d">list · delete · export · import</td></tr>
+          <tr><td class="k"><kbd>opencode auth</kbd></td><td class="d">login · list · logout · switch</td></tr>
+          <tr><td class="k"><kbd>opencode models</kbd></td><td class="d">List <code>provider/model</code> pairs</td></tr>
+          <tr><td class="k"><kbd>opencode mcp</kbd></td><td class="d">add · list · auth · logout</td></tr>
+          <tr><td class="k"><kbd>opencode plugin</kbd></td><td class="d">add · list · update · check</td></tr>
+          <tr><td class="k"><kbd>opencode stats</kbd></td><td class="d">Usage &amp; cost <span class="d">(--days 7)</span></td></tr>
+          <tr><td class="k"><kbd>opencode serve</kbd></td><td class="d">API server</td></tr>
+          <tr><td class="k"><kbd>opencode pair</kbd></td><td class="d">Web/app link + QR (5 min)</td></tr>
+          <tr><td class="k"><kbd>opencode service</kbd></td><td class="d">start · stop · status · set</td></tr>
+          <tr><td class="k"><kbd>opencode reload</kbd></td><td class="d">Reload config, keep sessions</td></tr>
+          <tr><td class="k"><kbd>opencode api</kbd></td><td class="d">Call the running server</td></tr>
+          <tr><td class="k"><kbd>opencode debug</kbd></td><td class="d">config · paths · agents</td></tr>
+          <tr><td class="k"><kbd>opencode upgrade</kbd></td><td class="d">Update <span class="hint">alias: update</span></td></tr>
+        </table>
+      </div>
+
+      <div class="sec">
+        <div class="bar red">Permissions</div>
+        <p class="note">In <code>opencode.json(c)</code>. Ordered rules; the <b>last match wins</b> — each is <code>action</code> + <code>resource</code> + <code>effect</code>.</p>
+<pre><span class="j-key">"permissions"</span><span class="j-punct">:</span> <span class="j-punct">[</span>
+  <span class="j-punct">{</span> <span class="j-key">"action"</span><span class="j-punct">:</span> <span class="j-str">"shell"</span><span class="j-punct">,</span> <span class="j-key">"resource"</span><span class="j-punct">:</span> <span class="j-str">"*"</span><span class="j-punct">,</span> <span class="j-key">"effect"</span><span class="j-punct">:</span> <span class="j-str">"ask"</span> <span class="j-punct">},</span>
+  <span class="j-punct">{</span> <span class="j-key">"action"</span><span class="j-punct">:</span> <span class="j-str">"shell"</span><span class="j-punct">,</span> <span class="j-key">"resource"</span><span class="j-punct">:</span> <span class="j-str">"git *"</span><span class="j-punct">,</span> <span class="j-key">"effect"</span><span class="j-punct">:</span> <span class="j-str">"allow"</span> <span class="j-punct">},</span>
+  <span class="j-punct">{</span> <span class="j-key">"action"</span><span class="j-punct">:</span> <span class="j-str">"shell"</span><span class="j-punct">,</span> <span class="j-key">"resource"</span><span class="j-punct">:</span> <span class="j-str">"rm *"</span><span class="j-punct">,</span> <span class="j-key">"effect"</span><span class="j-punct">:</span> <span class="j-str">"deny"</span> <span class="j-punct">}</span>
+<span class="j-punct">]</span></pre>
+        <table>
+          <tr><td class="k">Actions</td><td class="d"><code>read edit glob grep shell subagent skill webfetch websearch external_directory question execute</code></td></tr>
+          <tr><td class="k">Defaults</td><td class="d">Base policy allows; <code>.env</code> reads ask; no match → <b>ask</b></td></tr>
+          <tr><td class="k">Approvals</td><td class="d"><b>once</b> · <b>always</b> (saves a project rule) · <b>reject</b></td></tr>
+        </table>
+        <p class="note">Agent rules append via <code>agents.&lt;id&gt;.permissions</code>. <kbd>opencode run --auto</kbd> accepts whatever is not denied.</p>
+      </div>
+
+      <div class="sec">
+        <div class="bar green">Tabs, Panes &amp; Diffs</div>
+        <table>
+          <tr><td class="k wide"><kbd>Ctrl+Tab</kbd> / <kbd>Ctrl+Shift+Tab</kbd></td><td class="d">Next / previous tab</td></tr>
+          <tr><td class="k wide"><kbd>Ctrl+X W</kbd> / <kbd>Ctrl+Shift+T</kbd></td><td class="d">Close / reopen tab</td></tr>
+          <tr><td class="k"><kbd>Ctrl+O</kbd></td><td class="d">Recent sessions &amp; projects</td></tr>
+          <tr><td class="k"><kbd>Ctrl+X T</kbd></td><td class="d">Toggle terminal pane</td></tr>
+          <tr><td class="k"><kbd>Ctrl+X ←</kbd> / <kbd>→</kbd></td><td class="d">Focus session / right pane</td></tr>
+          <tr><td class="k"><kbd>Ctrl+X ↑</kbd></td><td class="d">Close terminal pane</td></tr>
+        </table>
+        <p class="note">In <kbd>/diff</kbd>: <kbd>d</kbd> scope · <kbd>j</kbd>/<kbd>k</kbd> move · <kbd>n</kbd>/<kbd>p</kbd> file · <kbd>m</kbd> reviewed · <kbd>v</kbd> split · <kbd>f</kbd> fullscreen · <kbd>?</kbd> help</p>
+      </div>
+
+      <div class="sec">
+        <div class="bar purple">Environment</div>
+        <table>
+          <tr><td class="k"><code>OPENCODE_CLI_CONFIG_CONTENT</code></td><td class="d">Inline <code>cli.json</code> settings</td></tr>
+          <tr><td class="k"><code>OPENCODE_CONFIG</code></td><td class="d">Path to a config file</td></tr>
+          <tr><td class="k"><code>OPENCODE_CONFIG_DIR</code></td><td class="d">Extra config directory</td></tr>
+          <tr><td class="k"><code>OPENCODE_SERVER_PASSWORD</code></td><td class="d">Server basic auth</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div>Compiled from the live OpenCode v2 docs at <b>opencode.ai/v2/docs</b> — keybinds, TUI, CLI, settings, permissions · October 2026</div>
+    <div class="footmark">OPENCODE V2</div>
+  </footer>
+
+</div>
+</body>
+</html>
